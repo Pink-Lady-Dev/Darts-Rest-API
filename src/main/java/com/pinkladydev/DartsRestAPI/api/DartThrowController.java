@@ -18,8 +18,6 @@ public class DartThrowController {
     }
 
     @PostMapping
-    //@RequestBody User player,
-    //, @RequestBody boolean isDouble, @RequestBody boolean isTriple
     public void addDartThrow (@RequestBody DartThrow dartThrow) {
         this.dartThrowService.addDartThrow(dartThrow);
     }
@@ -28,11 +26,5 @@ public class DartThrowController {
     public DartThrow getUncheckedDarts() {
 
         return this.dartThrowService.popDartThrow();
-        /*List<DartThrow> temp = new ArrayList<>();
-        for (DartThrow dt: this.dartThrowService.getUncheckedDarts()){
-            temp.add(new DartThrow(dt));
-            this.dartThrowService.removeDartThrow(dt.getId());
-        }
-        return temp;//this.dartThrowService.getUncheckedDarts();*/
     }
 }

@@ -14,6 +14,5 @@ public interface DartThrowDao {
     int removeDartThrow(String id);
 
     DartThrow popDartThrow();
-    // TODO : Add Delete so that it can delete that the angular site says it already has
 
 }

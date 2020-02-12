@@ -12,8 +12,6 @@ public class FakeUserDataAccessService implements UserDao {
 
     private static List<User> fakeDB = new ArrayList<>();
 
-
-
     @Override
     public int insertUser(UUID id, User user){
         fakeDB.add(new User(id, user.getName()));
