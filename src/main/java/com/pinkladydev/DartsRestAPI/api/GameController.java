@@ -27,6 +27,18 @@ public class GameController {
     /**   GET game data for id **/
     /**   POST new game with id  **/
 
+
+    @GetMapping("/")
+    public String hello() {
+        return "Hello";
+    }
+
+    @GetMapping("/private")
+    public String priv() {
+        return "Private";
+    }
+
+
     @GetMapping("/game/{gameId}")
     public Game getGameData(@PathVariable String gameId) {
         Game temp = gameService.getGameData(gameId);

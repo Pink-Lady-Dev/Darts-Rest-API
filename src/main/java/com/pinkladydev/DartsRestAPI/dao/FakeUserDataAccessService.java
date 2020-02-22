@@ -21,9 +21,24 @@ public class FakeUserDataAccessService implements UserDao {
     @Override
     public List<User> getAllUsers() {
         if (fakeDB.isEmpty()){
+
+            fakeDB.add(new User("user", "user"));
             fakeDB.add(new User(UUID.randomUUID(), "Jake Carlson"));
             fakeDB.add(new User(UUID.randomUUID(), "Nick Clason"));
         }
         return fakeDB;
+    }
+
+    @Override
+    public User getUser(String userId) {
+        for (User u : fakeDB)
+            if (u.getName().equals(userId))
+                return u;
+        return null;
+    }
+
+    @Override
+    public int size() {
+        return fakeDB.size();
     }
 }

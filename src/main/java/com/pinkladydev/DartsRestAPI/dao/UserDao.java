@@ -15,6 +15,8 @@ public interface UserDao {
         return insertUser(id, user);
     }
 
+    User getUser(String userId);
     // TODO get user by id
 
+    int size();
 }
