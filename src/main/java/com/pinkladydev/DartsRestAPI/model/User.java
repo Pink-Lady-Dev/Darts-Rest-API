@@ -9,6 +9,7 @@ public class User {
     private final String  id;
     private final String name;
 
+    // TODO add player dart stats
 
     public User(@JsonProperty("id") UUID id,
                 @JsonProperty("name") String name)

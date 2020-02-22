@@ -15,4 +15,6 @@ public interface UserDao {
         return insertUser(id, user);
     }
 
+    // TODO get user by id
+
 }
