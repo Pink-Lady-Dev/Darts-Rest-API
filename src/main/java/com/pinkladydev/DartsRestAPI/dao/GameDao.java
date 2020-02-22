@@ -1,10 +1,6 @@
 package com.pinkladydev.DartsRestAPI.dao;
 
-import com.pinkladydev.DartsRestAPI.model.DartThrow;
 import com.pinkladydev.DartsRestAPI.model.Game;
-import com.pinkladydev.DartsRestAPI.model.User;
-
-import java.util.List;
 
 public interface GameDao {
 

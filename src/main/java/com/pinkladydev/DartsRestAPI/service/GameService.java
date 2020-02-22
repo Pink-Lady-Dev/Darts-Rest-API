@@ -1,7 +1,7 @@
 package com.pinkladydev.DartsRestAPI.service;
 
 import com.pinkladydev.DartsRestAPI.dao.GameDao;
-import com.pinkladydev.DartsRestAPI.model.DartThrow;
+import com.pinkladydev.DartsRestAPI.model.Dart;
 import com.pinkladydev.DartsRestAPI.model.Game;
 import com.pinkladydev.DartsRestAPI.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +32,12 @@ public class GameService {
         return getGameData(gameId).getUsers();
     }
 
-    public void addDart(String gameId, String userId, DartThrow dartThrow) {
-        getGameData(gameId).getGameUser(userId).addDart(dartThrow);
+    public void addDart(String gameId, String userId, Dart dart) {
+        getGameData(gameId).getGameUser(userId).addDart(dart);
     }
 
-    public DartThrow removeDart(String gameId, String userId, DartThrow dartThrow) {
-        return getGameData(gameId).getGameUser(userId).removeDart(dartThrow);
+    public Dart removeDart(String gameId, String userId, Dart dart) {
+        return getGameData(gameId).getGameUser(userId).removeDart(dart);
     }
 
 }

@@ -10,29 +10,29 @@ public class GameUser{
 
     private final User user;
     private Hashtable<String, Integer> score;
-    private List<DartThrow> darts;
+    private List<Dart> darts;
     private Game.GAME_TYPE game_type;
 
     public GameUser(User user, Game.GAME_TYPE game_type) {
         this.user = user;
         this.score = new Hashtable<String, Integer>();
-        this.darts = new ArrayList<DartThrow>();
+        this.darts = new ArrayList<Dart>();
         this.game_type = game_type;
     }
 
 
     /** SCORE UPDATERS **/
 
-    public void updateScore(DartThrow dartThrow, boolean isRemove){
+    public void updateScore(Dart dart, boolean isRemove){
         switch (getGame_type()){
             case X01:
-                updateX01(dartThrow, isRemove);
+                updateX01(dart, isRemove);
                 break;
         }
     }
 
-    public void updateX01(DartThrow dartThrow, boolean isRemove){
-        int points = dartThrow.getPoints();
+    public void updateX01(Dart dart, boolean isRemove){
+        int points = dart.getPoints();
         if (isRemove) {
             points *= -1;
         }
@@ -46,18 +46,18 @@ public class GameUser{
         this.score.put(key, value);
     }
 
-    public void addDart(DartThrow dartThrow){
-        darts.add(dartThrow);
-        updateScore(dartThrow, false);
+    public void addDart(Dart dart){
+        darts.add(dart);
+        updateScore(dart, false);
     }
 
-    public DartThrow removeDart(DartThrow dartThrow){
-        darts.remove(dartThrow);
-        return dartThrow;
+    public Dart removeDart(Dart dart){
+        darts.remove(dart);
+        return dart;
     }
 
-    public DartThrow removeDart(){
-        DartThrow temp = darts.get(darts.size() - 1);
+    public Dart removeDart(){
+        Dart temp = darts.get(darts.size() - 1);
         darts.remove(darts.size() - 1);
         return temp;
     }
@@ -71,7 +71,7 @@ public class GameUser{
         return game_type;
     }
 
-    public List<DartThrow> getDarts() {
+    public List<Dart> getDarts() {
         return darts;
     }
 

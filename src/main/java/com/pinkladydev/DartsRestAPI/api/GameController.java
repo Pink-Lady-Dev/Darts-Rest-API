@@ -1,17 +1,14 @@
 package com.pinkladydev.DartsRestAPI.api;
 
-import com.pinkladydev.DartsRestAPI.model.DartThrow;
+import com.pinkladydev.DartsRestAPI.model.Dart;
 import com.pinkladydev.DartsRestAPI.model.Game;
 import com.pinkladydev.DartsRestAPI.model.GameUser;
 import com.pinkladydev.DartsRestAPI.model.User;
 import com.pinkladydev.DartsRestAPI.service.GameService;
-import com.pinkladydev.DartsRestAPI.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @RequestMapping("")
 @RestController
@@ -62,22 +59,21 @@ public class GameController {
 
     @GetMapping("/game/{gameId}/user/{userId}")
     public GameUser getUserGameData(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId) {
-        System.out.println(gameId + " " + userId);
         return gameService.getGameData(gameId).getGameUser(userId);
     }
 
     @PostMapping("/game/{gameId}/user/{userId}")
-    public void addUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId, @RequestBody DartThrow dartThrow){
-        gameService.addDart(gameId, userId, dartThrow);
+    public void addUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId, @RequestBody Dart dart){
+        gameService.addDart(gameId, userId, dart);
     }
 
     @DeleteMapping("/game/{gameId}/user/{userId}")
-    public DartThrow removeUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId, @RequestBody DartThrow dartThrow){
-        return gameService.removeDart(gameId, userId, dartThrow);
+    public Dart removeUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId, @RequestBody Dart dart){
+        return gameService.removeDart(gameId, userId, dart);
     }
 
 //    @DeleteMapping("/game/{gameId}/user/{userId}")
-//    public DartThrow removeUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId){
+//    public Dart removeUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId){
 //        return gameService.getGameData(gameId).getGameUser(userId).removeDart();
 //    }
 }

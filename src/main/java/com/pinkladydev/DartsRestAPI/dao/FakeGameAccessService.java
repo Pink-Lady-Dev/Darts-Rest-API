@@ -1,6 +1,5 @@
 package com.pinkladydev.DartsRestAPI.dao;
 
-import com.pinkladydev.DartsRestAPI.model.DartThrow;
 import com.pinkladydev.DartsRestAPI.model.Game;
 import com.pinkladydev.DartsRestAPI.model.User;
 import org.springframework.stereotype.Repository;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 
 //TODO a lot of this functionality actually should live in the service

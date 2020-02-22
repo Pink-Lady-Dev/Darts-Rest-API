@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.UUID;
 
-public class DartThrow {
+public class Dart {
 
     // Identifying Information
     private final User player;
@@ -21,17 +21,17 @@ public class DartThrow {
     private final boolean isDouble;
     private final boolean isTriple;
 
-    public DartThrow(DartThrow dartThrow) {
-        this.player = dartThrow.player;
-        this.id = dartThrow.id;
-        this.throwNumber = dartThrow.throwNumber;
-        this.points = dartThrow.points;
-        this.pie = dartThrow.pie;
-        this.isDouble = dartThrow.isDouble;
-        this.isTriple = dartThrow.isTriple;
+    public Dart(Dart dart) {
+        this.player = dart.player;
+        this.id = dart.id;
+        this.throwNumber = dart.throwNumber;
+        this.points = dart.points;
+        this.pie = dart.pie;
+        this.isDouble = dart.isDouble;
+        this.isTriple = dart.isTriple;
     }
 
-    public DartThrow(
+    public Dart(
             @JsonProperty("player") User player,
             @JsonProperty("throwNumber") int  throwNumber,
             @JsonProperty("pie") int pie,

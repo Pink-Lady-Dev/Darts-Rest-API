@@ -3,21 +3,16 @@ package com.pinkladydev.DartsRestAPI.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 
 public class Game {
 
-    enum GAME_TYPE
-    {
+    enum GAME_TYPE {
         X01
     }
-
 
     private String  id;
     Hashtable<String, GameUser> gameUsers;
@@ -70,7 +65,7 @@ public class Game {
         return temp;
     }
 
-    public List<DartThrow> getUserDarts(String userId){
+    public List<Dart> getUserDarts(String userId){
         return getGameUser(userId).getDarts();
     }
 
