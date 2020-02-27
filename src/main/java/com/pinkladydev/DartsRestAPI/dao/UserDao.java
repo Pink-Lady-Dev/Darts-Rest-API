@@ -7,13 +7,8 @@ import java.util.UUID;
 
 public interface UserDao {
 
-    int insertUser(UUID id, User user);
+    int insertUser(User user);
     List<User> getAllUsers();
-
-    default int insertUser(User user){
-        UUID id = UUID.randomUUID();
-        return insertUser(id, user);
-    }
 
     User getUser(String userId);
     // TODO get user by id

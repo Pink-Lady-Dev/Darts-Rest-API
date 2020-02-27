@@ -24,12 +24,6 @@ public class FakeGameAccessService implements GameDao {
                         game -> (game.getId().equals(gameId)))
                 .findFirst().orElse(null);
 
-        if (temp == null)
-        {
-            User[] tempUs = {new User("Jake Carlson", UUID.randomUUID().toString()), new User("Nick Clason", UUID.randomUUID().toString())};
-            games.add(new Game(gameId, tempUs, "X01"));
-            temp = new Game(gameId, tempUs, "X01");
-        }
         return temp;
     }
 

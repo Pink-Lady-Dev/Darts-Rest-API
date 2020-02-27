@@ -3,6 +3,7 @@ package com.pinkladydev.DartsRestAPI.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,31 +15,36 @@ public class Game {
         X01
     }
 
-    private String  id;
-    Hashtable<String, GameUser> gameUsers;
+    private final String  id;
+    private final Hashtable<String, GameUser> gameUsers;
 
-    public Game(@JsonProperty String gameId, @JsonProperty User[] users, @JsonProperty String game_type) {
-        this.id = gameId;
 
-        GAME_TYPE game_type_ENUM = GAME_TYPE.X01;
-        if (game_type.equals("X01")){
-            game_type_ENUM = GAME_TYPE.X01;
+    public Game(
+            @JsonProperty("id") String id,
+            @JsonProperty("users") User[] users,
+            @JsonProperty("gameType") String gameType)
+    {
+        this.id = id;
+        this.gameUsers = new Hashtable<String, GameUser>();
+
+        GAME_TYPE gameTypeEnum = GAME_TYPE.X01;
+        if (gameType.equals("X01")){
+            gameTypeEnum = GAME_TYPE.X01;
         }
 
-        gameUsers = new Hashtable<String, GameUser>();
         for (User user : users){
-            GameUser tempGU = new GameUser(user, game_type_ENUM);
+            GameUser tempGU = new GameUser(user, gameTypeEnum);
 
 
-            // This may seem weird to do it this way now but this important
-            //      as it will allow us to have different methods of scoring
+            //This may seem weird to do it this way now but this important
+            //as it will allow us to have different methods of scoring
             //      (thinking of cricket specifically)
             // TODO : add game specific rules
             tempGU.addScoreKey("points", 301);
 
             this.gameUsers.put(user.getId(),tempGU);
-
         }
+
     }
 
     public String getId() {
@@ -61,8 +67,7 @@ public class Game {
     }
 
     public GameUser getGameUser(String userId) {
-        GameUser temp = gameUsers.get(userId);
-        return temp;
+        return gameUsers.get(userId);
     }
 
     public List<Dart> getUserDarts(String userId){

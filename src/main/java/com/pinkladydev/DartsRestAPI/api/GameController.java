@@ -1,11 +1,10 @@
 package com.pinkladydev.DartsRestAPI.api;
 
-import com.pinkladydev.DartsRestAPI.model.Dart;
-import com.pinkladydev.DartsRestAPI.model.Game;
-import com.pinkladydev.DartsRestAPI.model.GameUser;
-import com.pinkladydev.DartsRestAPI.model.User;
+import com.pinkladydev.DartsRestAPI.model.*;
 import com.pinkladydev.DartsRestAPI.service.GameService;
+import com.pinkladydev.DartsRestAPI.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,10 +15,25 @@ import java.util.List;
 public class GameController {
 
     private final GameService gameService;
+    private final InMemoryUserDetailsManager inMemoryUserDetailsManager;
 
     @Autowired
-    public GameController(GameService gameService){
+    public GameController(GameService gameService, InMemoryUserDetailsManager inMemoryUserDetailsManager){
         this.gameService = gameService;
+        this.inMemoryUserDetailsManager = inMemoryUserDetailsManager;
+    }
+
+
+    @PostMapping("/user")
+    public void insertUser (@RequestBody User user)
+    {
+        inMemoryUserDetailsManager.createUser(new CustomUserDetails(user));
+        gameService.insertUser(user);
+    }
+
+    @GetMapping("/user/priv")
+    public List<User> getUsers() {
+        return gameService.getAllUsers();
     }
 
 
@@ -28,16 +42,10 @@ public class GameController {
     /**   POST new game with id  **/
 
 
-    @GetMapping("/")
-    public String hello() {
-        return "Hello";
+    @GetMapping("/game/locked")
+    public String get() {
+        return "JAKE";
     }
-
-    @GetMapping("/private")
-    public String priv() {
-        return "Private";
-    }
-
 
     @GetMapping("/game/{gameId}")
     public Game getGameData(@PathVariable String gameId) {
@@ -45,13 +53,13 @@ public class GameController {
         return temp;
     }
 
-    @PostMapping("/game/{gameId}")
-    public void createGame(@RequestBody Game game) {
-        gameService.createGame(game);
+
+    //@PostMapping("/game/{gameId}")
+    @PostMapping("/game")
+    public void createGame(@RequestBody GameHelper gameHelper) {
+
+        gameService.createGame(gameHelper);
     }
-
-
-
 
     /**   PATH: /game/{gameid}/user   **/
     /**   GET users in game  **/
@@ -60,8 +68,6 @@ public class GameController {
     public List<User> getGameUsers(@PathVariable String gameId) {
         return gameService.getUsersInGame(gameId);
     }
-
-
 
 
     /**   PATH: /game/{gameid}/user/{userid}   **/
@@ -84,8 +90,4 @@ public class GameController {
         return gameService.removeDart(gameId, userId, dart);
     }
 
-//    @DeleteMapping("/game/{gameId}/user/{userId}")
-//    public Dart removeUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId){
-//        return gameService.getGameData(gameId).getGameUser(userId).removeDart();
-//    }
 }

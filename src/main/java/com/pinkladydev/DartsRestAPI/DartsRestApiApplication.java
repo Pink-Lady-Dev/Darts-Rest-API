@@ -18,10 +18,7 @@ public class DartsRestApiApplication {
 
 	@Autowired
 	public void authenticationManager(AuthenticationManagerBuilder builder, UserDao repo) throws Exception{
-		if (repo.size() == 0)
-		{
-			repo.insertUser(new User("user","user"));
-		}
+
 		builder.userDetailsService(s -> new CustomUserDetails(repo.getUser(s)));
 	}
 }

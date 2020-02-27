@@ -1,6 +1,6 @@
 package com.pinkladydev.DartsRestAPI.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -8,23 +8,25 @@ import java.util.List;
 
 public class GameUser{
 
-    private final User user;
+    private User user;
     private Hashtable<String, Integer> score;
     private List<Dart> darts;
-    private Game.GAME_TYPE game_type;
+    private Game.GAME_TYPE gameType;
 
-    public GameUser(User user, Game.GAME_TYPE game_type) {
+
+    public GameUser(User user, Game.GAME_TYPE gameType) {
         this.user = user;
         this.score = new Hashtable<String, Integer>();
         this.darts = new ArrayList<Dart>();
-        this.game_type = game_type;
-    }
 
+        this.gameType = gameType;
+
+    }
 
     /** SCORE UPDATERS **/
 
     public void updateScore(Dart dart, boolean isRemove){
-        switch (getGame_type()){
+        switch (getGameType()){
             case X01:
                 updateX01(dart, isRemove);
                 break;
@@ -62,20 +64,23 @@ public class GameUser{
         return temp;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     /**  GETTERS  **/
     public Hashtable<String, Integer> getScore() {
         return score;
     }
 
-    public Game.GAME_TYPE getGame_type() {
-        return game_type;
+    public Game.GAME_TYPE getGameType() {
+        return gameType;
     }
 
     public List<Dart> getDarts() {
         return darts;
     }
 
-    @JsonIgnore
     // @GetMapping uses all serializes all getters, so this suppresses this from being returned
     public User getUser() {
         return user;

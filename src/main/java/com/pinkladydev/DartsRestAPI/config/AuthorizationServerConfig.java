@@ -36,7 +36,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .scopes("read", "write", "trust")
                 .resourceIds("oauth2-resource")
                 .accessTokenValiditySeconds(10000)
-                .secret("{noop}password"); // TODO make environment variable
+                .secret("{noop}" + System.getenv("DART_KEY"));
+
+        System.out.println(System.getenv("DART_KEY"));
     }
 
     @Override

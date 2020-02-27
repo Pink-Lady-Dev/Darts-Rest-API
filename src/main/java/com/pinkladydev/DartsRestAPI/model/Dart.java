@@ -7,9 +7,6 @@ import java.util.UUID;
 
 public class Dart {
 
-    // Identifying Information
-    private final User player;
-
     // Game Information
     // TODO : private final Game game;
 
@@ -22,7 +19,6 @@ public class Dart {
     private final boolean isTriple;
 
     public Dart(Dart dart) {
-        this.player = dart.player;
         this.id = dart.id;
         this.throwNumber = dart.throwNumber;
         this.points = dart.points;
@@ -32,14 +28,11 @@ public class Dart {
     }
 
     public Dart(
-            @JsonProperty("player") User player,
             @JsonProperty("throwNumber") int  throwNumber,
             @JsonProperty("pie") int pie,
             @JsonProperty("double") boolean isDouble,
             @JsonProperty("triple") boolean isTriple) {
 
-        // Player Info
-        this.player = player;
 
         // Dart scoring
         this.id = UUID.randomUUID().toString();
@@ -59,10 +52,6 @@ public class Dart {
 
         this.points = this.pie * Math.max(1, (this.isDouble ? 1 : 0) * 2) * Math.max(1, (this.isTriple ? 1 : 0) * 3);
 
-    }
-
-    public User getPlayer() {
-        return player;
     }
 
     public String getId() {
