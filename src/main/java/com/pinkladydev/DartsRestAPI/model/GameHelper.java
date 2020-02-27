@@ -2,8 +2,6 @@ package com.pinkladydev.DartsRestAPI.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 public class GameHelper {

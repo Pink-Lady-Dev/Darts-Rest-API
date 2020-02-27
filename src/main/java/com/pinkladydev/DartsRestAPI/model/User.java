@@ -12,6 +12,8 @@ public class User {
     private final String password;
 
     // TODO add player dart stats
+    // we want to store wins and losses in each type of game
+    // as well as head to head matchups in each type of game
 
     public User(@JsonProperty("id") UUID id,
                 @JsonProperty("name") String name,

@@ -1,23 +1,22 @@
 package com.pinkladydev.DartsRestAPI.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameUser{
 
     private User user;
-    private Hashtable<String, Integer> score;
+    private HashMap<String, Integer> score;
     private List<Dart> darts;
     private Game.GAME_TYPE gameType;
 
 
     public GameUser(User user, Game.GAME_TYPE gameType) {
         this.user = user;
-        this.score = new Hashtable<String, Integer>();
-        this.darts = new ArrayList<Dart>();
+        this.score = new HashMap<>();
+        this.darts = new ArrayList<>();
 
         this.gameType = gameType;
 
@@ -69,7 +68,7 @@ public class GameUser{
     }
 
     /**  GETTERS  **/
-    public Hashtable<String, Integer> getScore() {
+    public Map<String, Integer> getScore() {
         return score;
     }
 

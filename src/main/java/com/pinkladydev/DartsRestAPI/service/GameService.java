@@ -49,9 +49,8 @@ public class GameService {
     }
 
 
-    public int insertUser (User user) {
-
-        return userDao.insertUser(user);
+    public void insertUser (User user) {
+        userDao.insertUser(user);
     }
 
 

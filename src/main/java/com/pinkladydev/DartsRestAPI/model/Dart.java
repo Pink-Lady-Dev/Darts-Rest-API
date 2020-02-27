@@ -1,14 +1,10 @@
 package com.pinkladydev.DartsRestAPI.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-//import org.graalvm.compiler.replacements.SnippetTemplate;
 
 import java.util.UUID;
 
 public class Dart {
-
-    // Game Information
-    // TODO : private final Game game;
 
     // Throw information
     private final String  id; // Identifier for throw
@@ -54,28 +50,8 @@ public class Dart {
 
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public int getThrowNumber() {
-        return throwNumber;
-    }
-
     public int getPoints() {
         return points;
-    }
-
-    public int getPie() {
-        return pie;
-    }
-
-    public boolean isDouble() {
-        return isDouble;
-    }
-
-    public boolean isTriple() {
-        return isTriple;
     }
 
 }

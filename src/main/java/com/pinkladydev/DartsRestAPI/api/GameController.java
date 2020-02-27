@@ -2,7 +2,6 @@ package com.pinkladydev.DartsRestAPI.api;
 
 import com.pinkladydev.DartsRestAPI.model.*;
 import com.pinkladydev.DartsRestAPI.service.GameService;
-import com.pinkladydev.DartsRestAPI.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +22,11 @@ public class GameController {
         this.inMemoryUserDetailsManager = inMemoryUserDetailsManager;
     }
 
+    /********** User ************/
+
+    /**   PATH: /user   **/
+    /**   POST new user **/
+    /**   This is the only exposed end point **/
 
     @PostMapping("/user")
     public void insertUser (@RequestBody User user)
@@ -31,34 +35,33 @@ public class GameController {
         gameService.insertUser(user);
     }
 
-    @GetMapping("/user/priv")
+    /**   PATH: /user/all   **/
+    /**   POST get list of users **/
+    /**   TODO : May not be worth keeping **/
+
+    @GetMapping("/user/all")
     public List<User> getUsers() {
         return gameService.getAllUsers();
     }
 
 
-    /**   PATH: /game/{gameid}   **/
-    /**   GET game data for id **/
-    /**   POST new game with id  **/
+    /********** Game ************/
 
+    /**   PATH: /game   **/
+    /**   POST new game **/
 
-    @GetMapping("/game/locked")
-    public String get() {
-        return "JAKE";
-    }
-
-    @GetMapping("/game/{gameId}")
-    public Game getGameData(@PathVariable String gameId) {
-        Game temp = gameService.getGameData(gameId);
-        return temp;
-    }
-
-
-    //@PostMapping("/game/{gameId}")
     @PostMapping("/game")
     public void createGame(@RequestBody GameHelper gameHelper) {
 
         gameService.createGame(gameHelper);
+    }
+
+    /**   PATH: /game/{gameid}   **/
+    /**   GET game data for id  **/
+
+    @GetMapping("/game/{gameId}")
+    public Game getGameData(@PathVariable String gameId) {
+        return gameService.getGameData(gameId);
     }
 
     /**   PATH: /game/{gameid}/user   **/

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Repository("FakeDao")
 public class FakeUserDataAccessService implements UserDao {
@@ -13,11 +12,9 @@ public class FakeUserDataAccessService implements UserDao {
     private static List<User> fakeDB = new ArrayList<>();
 
     @Override
-    public int insertUser(User user){
-
+    public void insertUser(User user){
 
         fakeDB.add(user);
-        return 1;
     }
 
     @Override
