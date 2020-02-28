@@ -54,4 +54,19 @@ public class Dart {
         return points;
     }
 
+    public int getThrowNumber() {
+        return throwNumber;
+    }
+
+    public boolean isDouble() {
+        return isDouble;
+    }
+
+    public boolean isTriple() {
+        return isTriple;
+    }
+
+    public int getPie() {
+        return pie;
+    }
 }
