@@ -3,7 +3,6 @@ package com.pinkladydev.DartsRestAPI.api;
 import com.pinkladydev.DartsRestAPI.model.*;
 import com.pinkladydev.DartsRestAPI.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,13 +13,12 @@ import java.util.List;
 public class GameController {
 
     private final GameService gameService;
-    private final InMemoryUserDetailsManager inMemoryUserDetailsManager;
 
     @Autowired
-    public GameController(GameService gameService, InMemoryUserDetailsManager inMemoryUserDetailsManager){
+    public GameController(GameService gameService){
         this.gameService = gameService;
-        this.inMemoryUserDetailsManager = inMemoryUserDetailsManager;
     }
+
 
     /********** User ************/
 
@@ -31,7 +29,6 @@ public class GameController {
     @PostMapping("/user")
     public void insertUser (@RequestBody User user)
     {
-        inMemoryUserDetailsManager.createUser(new CustomUserDetails(user));
         gameService.insertUser(user);
     }
 

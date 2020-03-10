@@ -1,6 +1,5 @@
 package com.pinkladydev.DartsRestAPI.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +16,7 @@ public class CustomUserDetails implements UserDetails {
 
     public CustomUserDetails(User byId){
         this.username = byId.getName();
-        this.password = "{noop}" + byId.getPassword();
+        this.password = byId.getPassword();
         List<GrantedAuthority> auths = new ArrayList<>();
 
         auths.add(new SimpleGrantedAuthority("USER"));
@@ -33,8 +32,7 @@ public class CustomUserDetails implements UserDetails {
     }
 
     @Override
-    @JsonIgnore
-    // @GetMapping uses all serializes all getters, so this suppresses this from being returned
+    // TODO - JSONIgnore - @GetMapping uses all serializes all getters, so this suppresses this from being returned
     public String getPassword() {
         return password;
     }
