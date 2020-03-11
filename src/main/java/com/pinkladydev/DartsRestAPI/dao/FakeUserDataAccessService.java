@@ -28,7 +28,7 @@ public class FakeUserDataAccessService implements UserDao {
             if (u.getId().equals(userId))
                 return u;
         for (User u : fakeDB)
-            if (u.getName().equals(userId))
+            if (u.getUsername().equals(userId))
                 return u;
         return null;
     }

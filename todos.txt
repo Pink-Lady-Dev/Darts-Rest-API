@@ -1,0 +1,4 @@
+Refactor User models
+Clean up all files
+Port test controller to game controller (and/or new controllers)
+Refactor package names
