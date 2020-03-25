@@ -1,14 +1,12 @@
 package com.pinkladydev.DartsRestAPI.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class User implements UserDetails {
 
@@ -16,6 +14,10 @@ public class User implements UserDetails {
     private final String username;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
+
+    private HashMap<String, Integer> score;
+    private List<Dart> darts;
+    private Game.GAME_TYPE gameType;
 
     // TODO add player dart stats
     // we want to store wins and losses in each type of game
@@ -35,6 +37,8 @@ public class User implements UserDetails {
         tempAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
 
         this.authorities = tempAuthorities;
+
+        this.darts = new ArrayList<>();
     }
 
     public User(@JsonProperty("id") String id,
@@ -51,7 +55,44 @@ public class User implements UserDetails {
         tempAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
 
         this.authorities = tempAuthorities;
+
+        this.darts = new ArrayList<>();
     }
+
+    /**   Game Initializers   **/
+    public void StartX01(int score){
+        this.score = new HashMap<>();
+        this.score.put("score", score);
+
+        gameType = Game.GAME_TYPE.X01;
+    }
+
+    /** SCORE UPDATERS **/
+
+    public void addX01(Dart dart){
+        darts.add(dart);
+        int points = dart.getPoints();
+        score.put("points", score.get("points") - points);
+
+        // TODO do checks for game over
+    }
+
+    public Dart removeX01(Dart dart){
+        int points = dart.getPoints();
+        score.put("points", score.get("points") + points);
+        darts.remove(dart);
+        return dart;
+    }
+
+
+    /**  SETTERS ( AND MANIPULATORS )  **/
+    public Dart removeDart(){
+        Dart temp = darts.get(darts.size() - 1);
+        darts.remove(darts.size() - 1);
+        return temp;
+    }
+
+    /**  GETTERS  **/
 
     public String getId() {
         return id;
@@ -63,13 +104,14 @@ public class User implements UserDetails {
     }
 
     @Override
-    // @JsonIgnore
+    @JsonIgnore
     // @GetMapping uses all serializes all getters, so this suppresses this from being returned
     public String getPassword() {
         return password;
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
@@ -93,6 +135,25 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public Map<String, Integer> getScore() {
+        return score;
+    }
+
+    public Game.GAME_TYPE getGameType() {
+        return gameType;
+    }
+
+    public List<Dart> getDarts() {
+        return darts;
+    }
+
+
+
+
+
+
+
 
 
 

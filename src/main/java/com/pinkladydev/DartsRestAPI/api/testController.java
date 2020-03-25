@@ -3,7 +3,7 @@ package com.pinkladydev.DartsRestAPI.api;
 import com.pinkladydev.DartsRestAPI.config.JwtUtil;
 import com.pinkladydev.DartsRestAPI.model.AuthenticationRequest;
 import com.pinkladydev.DartsRestAPI.model.AuthenticationResponce;
-import com.pinkladydev.DartsRestAPI.service.UsersDetailsService;
+import com.pinkladydev.DartsRestAPI.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,13 +20,13 @@ public class testController {
 
     private final AuthenticationManager authenticationManager;
 
-    private final UsersDetailsService usersDetailsService;
+    private final UserService userService;
 
     private final JwtUtil jwtTokenUtil;
 
-    public testController(AuthenticationManager authenticationManager, UsersDetailsService userDetailsService, JwtUtil jwtTokenUtil) {
+    public testController(AuthenticationManager authenticationManager, UserService userDetailsService, JwtUtil jwtTokenUtil) {
         this.authenticationManager = authenticationManager;
-        this.usersDetailsService = userDetailsService;
+        this.userService = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
@@ -45,7 +45,7 @@ public class testController {
             throw new Exception("Incorrect Username or Password");
         }
 
-        final UserDetails userDetails = usersDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 

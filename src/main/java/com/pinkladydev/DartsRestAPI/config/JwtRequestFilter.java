@@ -1,6 +1,6 @@
 package com.pinkladydev.DartsRestAPI.config;
 
-import com.pinkladydev.DartsRestAPI.service.UsersDetailsService;
+import com.pinkladydev.DartsRestAPI.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +19,7 @@ import java.io.IOException;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
-    private UsersDetailsService usersDetailsService;
+    private UserService userService;
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -37,13 +37,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = this.usersDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = this.userService.loadUserByUsername(username);
             if (jwtUtil.validateToken(jwt, userDetails)){
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
+
+        // TODO when editing users -- we need to use something like this to make sure that users are only
+        //      able to edit their own profiles
+        //      if (  httpServletRequest.getRequestURI() contains some userId)
+        //          allow access
+        //          System.out.println("Method: " + httpServletRequest.getMethod());=
+
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
+
 }

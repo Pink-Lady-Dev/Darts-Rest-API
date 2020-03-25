@@ -1,6 +1,6 @@
 package com.pinkladydev.DartsRestAPI.config;
 
-import com.pinkladydev.DartsRestAPI.service.UsersDetailsService;
+import com.pinkladydev.DartsRestAPI.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,14 +16,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired
-    private UsersDetailsService usersDetailsService;
+    private UserService userService;
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(usersDetailsService);
+        auth.userDetailsService(userService);
     }
 
     @Override

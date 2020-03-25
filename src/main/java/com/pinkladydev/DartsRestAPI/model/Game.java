@@ -16,7 +16,7 @@ public class Game {
     }
 
     private final String  id;
-    private final HashMap<String, GameUser> gameUsers;
+    private final HashMap<String, User> gameUsers;
 
 
     public Game(
@@ -32,25 +32,18 @@ public class Game {
             gameTypeEnum = GAME_TYPE.X01;
         }
 
-        for (User user : users){
-            GameUser tempGU = new GameUser(user, gameTypeEnum);
-
-            switch (gameTypeEnum){
-                case X01:
-                    tempGU.addScoreKey("points", 301);
-                    break;
-            }
-
-            this.gameUsers.put(user.getId(),tempGU);
+        for (User gUser : users)
+        {
+            // TODO this can definitely be done functionally
+            gameUsers.put(gUser.getId(), gUser);
         }
-
     }
 
     public String getId() {
         return id;
     }
 
-    public Map<String, GameUser> getGameUsers(){
+    public Map<String, User> getGameUsers(){
         return gameUsers;
     }
 
@@ -60,19 +53,16 @@ public class Game {
         return gameUsers
                 .entrySet()
                 .stream()
-                .map(
-                        dict -> (dict.getValue().getUser())
-                ).collect(Collectors.toList());
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
     }
 
-    public GameUser getGameUser(String userId) {
+    public User getGameUser(String userId) {
         return gameUsers.get(userId);
     }
 
     public List<Dart> getUserDarts(String userId){
         return getGameUser(userId).getDarts();
     }
-
-
 
 }

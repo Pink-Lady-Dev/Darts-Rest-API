@@ -20,28 +20,6 @@ public class GameController {
     }
 
 
-    /********** User ************/
-
-    /**   PATH: /user   **/
-    /**   POST new user **/
-    /**   This is the only exposed end point **/
-
-    @PostMapping("/user")
-    public void insertUser (@RequestBody User user)
-    {
-        gameService.insertUser(user);
-    }
-
-    /**   PATH: /user/all   **/
-    /**   POST get list of users **/
-    /**   TODO : May not be worth keeping **/
-
-    @GetMapping("/user/all")
-    public List<User> getUsers() {
-        return gameService.getAllUsers();
-    }
-
-
     /********** Game ************/
 
     /**   PATH: /game   **/
@@ -76,7 +54,7 @@ public class GameController {
     /**   DELETE user dart from game  **/
 
     @GetMapping("/game/{gameId}/user/{userId}")
-    public GameUser getUserGameData(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId) {
+    public User getUserGameData(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId) {
         return gameService.getGameData(gameId).getGameUser(userId);
     }
 

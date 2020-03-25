@@ -31,7 +31,7 @@ public class GameService {
 
     public void createGame(GameHelper game) {
 
-        User[] users = game.getUsers().stream().map(x -> getUser(x)).toArray(User[]::new);
+        User[] users = game.getUsers().stream().map(x -> userDao.getUser(x)).toArray(User[]::new);
 
         gameDao.createGame(new Game(game.getId(), users, game.getGameType()));
     }
@@ -41,25 +41,12 @@ public class GameService {
     }
 
     public void addDart(String gameId, String userId, Dart dart) {
-        getGameData(gameId).getGameUser(userId).addDart(dart);
+        getGameData(gameId).getGameUser(userId).addX01(dart);
     }
 
     public Dart removeDart(String gameId, String userId, Dart dart) {
-        return getGameData(gameId).getGameUser(userId).removeDart(dart);
+        return getGameData(gameId).getGameUser(userId).removeX01(dart);
     }
 
-
-    public void insertUser (User user) {
-        userDao.insertUser(user);
-    }
-
-
-    public List<User> getAllUsers () {
-        return userDao.getAllUsers();
-    }
-
-    public User getUser(String id) {
-        return userDao.getUser(id);
-    }
 
 }
