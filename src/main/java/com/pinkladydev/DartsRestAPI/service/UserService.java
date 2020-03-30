@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -24,15 +23,6 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        // Return stuff here
-        System.out.println(userName);
-
-        if (userDao.getAllUsers().isEmpty())
-        {
-            userDao.insertUser(new User(UUID.randomUUID(), "jakeocinco", "password"));
-            userDao.insertUser(new User(UUID.randomUUID(), "nickClason", "password"));
-        }
-
         return userDao.getUser(userName);
     }
 
