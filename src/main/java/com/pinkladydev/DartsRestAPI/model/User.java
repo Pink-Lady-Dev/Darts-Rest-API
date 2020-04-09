@@ -22,30 +22,12 @@ public class User implements UserDetails {
     // TODO add player dart stats
     // we want to store wins and losses in each type of game
     // as well as head to head matchups in each type of game
-
-    public User(@JsonProperty("id") UUID id,
+    
+    public User(
                 @JsonProperty("name") String username,
                 @JsonProperty("password") String password)
     {
-        this.id = id.toString();
-        this.username = username;
-        this.password = password;
-
-        List<GrantedAuthority> tempAuthorities = new ArrayList<>();
-
-        tempAuthorities.add(new SimpleGrantedAuthority("USER"));
-        tempAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
-
-        this.authorities = tempAuthorities;
-
-        this.darts = new ArrayList<>();
-    }
-
-    public User(@JsonProperty("id") String id,
-                @JsonProperty("name") String username,
-                @JsonProperty("password") String password)
-    {
-        this.id = id;
+        this.id = UUID.randomUUID().toString();
         this.username = username;
         this.password = password;
 

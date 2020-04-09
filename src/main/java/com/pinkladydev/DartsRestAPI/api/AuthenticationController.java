@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("")
-public class testController {
+public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
 
@@ -24,7 +24,7 @@ public class testController {
 
     private final JwtUtil jwtTokenUtil;
 
-    public testController(AuthenticationManager authenticationManager, UserService userDetailsService, JwtUtil jwtTokenUtil) {
+    public AuthenticationController(AuthenticationManager authenticationManager, UserService userDetailsService, JwtUtil jwtTokenUtil) {
         this.authenticationManager = authenticationManager;
         this.userService = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
@@ -49,7 +49,7 @@ public class testController {
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthenticationResponce(jwt));
+        return ResponseEntity.ok(new AuthenticationResponce(jwt, userService.getUser(authenticationRequest.getUsername())));
     }
 
 }

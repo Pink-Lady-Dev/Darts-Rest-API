@@ -17,6 +17,7 @@ public class Game {
 
     private final String  id;
     private final HashMap<String, User> gameUsers;
+    private final GAME_TYPE gameType;
 
 
     public Game(
@@ -37,6 +38,8 @@ public class Game {
             // TODO this can definitely be done functionally
             gameUsers.put(gUser.getId(), gUser);
         }
+
+        this.gameType = gameTypeEnum;
     }
 
     public String getId() {
@@ -64,5 +67,4 @@ public class Game {
     public List<Dart> getUserDarts(String userId){
         return getGameUser(userId).getDarts();
     }
-
 }
