@@ -52,14 +52,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // TODO - set actual private key
         if ( httpServletRequest.getRequestURI().equals("/user")
                 && httpServletRequest.getMethod().equals("POST")
-                && !httpServletRequest.getHeader("Secret").equals("xxx")) {
+                && !httpServletRequest.getHeader("Secret").equals(System.getenv("SECRET_KEY"))) {
 
             throw invalidKeyWhenCreatingUser();
         }
         // TODO - set actual private key
         if ( httpServletRequest.getRequestURI().equals("/authenticate")
                 && httpServletRequest.getMethod().equals("POST")
-                && !httpServletRequest.getHeader("Secret").equals("xxx")) {
+                && !httpServletRequest.getHeader("Secret").equals(System.getenv("SECRET_KEY"))) {
 
             throw invalidKeyWhenAuthenticatingUser();
         }
