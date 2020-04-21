@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.pinkladydev.DartsRestAPI.exceptions.InvalidKeyException.invalidKeyWhenAuthenticatingUser;
+import static com.pinkladydev.DartsRestAPI.exceptions.InvalidKeyException.invalidKeyWhenCreatingUser;
+
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -45,13 +48,20 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         }
 
-        // This avoids the jwt for new users...
+        // This avoids the jwt for new users and authentication while still ensuring that there is some form of security...
         // TODO - set actual private key
         if ( httpServletRequest.getRequestURI().equals("/user")
                 && httpServletRequest.getMethod().equals("POST")
                 && !httpServletRequest.getHeader("Secret").equals("xxx")) {
-            // TODO -- only issue is that this does not actually let the user know they weren't added. try and change the return
-            return;
+
+            throw invalidKeyWhenCreatingUser();
+        }
+        // TODO - set actual private key
+        if ( httpServletRequest.getRequestURI().equals("/authenticate")
+                && httpServletRequest.getMethod().equals("POST")
+                && !httpServletRequest.getHeader("Secret").equals("xxx")) {
+
+            throw invalidKeyWhenAuthenticatingUser();
         }
 
         // TODO when editing users -- we need to use something like this to make sure that users are only
