@@ -39,6 +39,8 @@ public class User implements UserDetails {
         this.authorities = tempAuthorities;
 
         this.darts = new ArrayList<>();
+
+        StartX01(301);
     }
 
     /**   Game Initializers   **/
@@ -54,14 +56,14 @@ public class User implements UserDetails {
     public void addX01(Dart dart){
         darts.add(dart);
         int points = dart.getPoints();
-        score.put("points", score.get("points") - points);
+        score.put("score", score.get("score") - points);
 
         // TODO do checks for game over
     }
 
     public Dart removeX01(Dart dart){
         int points = dart.getPoints();
-        score.put("points", score.get("points") + points);
+        score.put("score", score.get("score") + points);
         darts.remove(dart);
         return dart;
     }

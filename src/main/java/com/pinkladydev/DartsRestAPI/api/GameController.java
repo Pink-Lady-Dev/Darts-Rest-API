@@ -39,6 +39,11 @@ public class GameController {
         return gameService.getGameData(gameId);
     }
 
+    @PostMapping("/game/{gameId}")
+    public void postGameDataToWeb(@PathVariable String gameId, @RequestBody GameNotificationRequest gameNotificationRequest) {
+         gameService.notifyWebClient(gameId, gameNotificationRequest.getWebId());
+    }
+
     /**   PATH: /game/{gameid}/user   **/
     /**   GET users in game  **/
 

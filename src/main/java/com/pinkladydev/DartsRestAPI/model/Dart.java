@@ -69,4 +69,8 @@ public class Dart {
     public int getPie() {
         return pie;
     }
+
+    public String getId() {
+        return id;
+    }
 }
