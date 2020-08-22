@@ -1,6 +1,7 @@
 package com.pinkladydev.DartsRestAPI.api;
 
 import com.pinkladydev.DartsRestAPI.model.User;
+import com.pinkladydev.DartsRestAPI.api.models.UserRequest;
 import com.pinkladydev.DartsRestAPI.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +26,9 @@ public class UserController {
     /**   This is the only exposed end point **/
 
     @PostMapping("/user")
-    public void insertUser (@RequestBody User user)
+    public void insertUser (@RequestBody UserRequest userRequest)
     {
-        userService.insertUser(user);
+        userService.insertUser(userRequest);
     }
 
     /**   PATH: /user/all   **/

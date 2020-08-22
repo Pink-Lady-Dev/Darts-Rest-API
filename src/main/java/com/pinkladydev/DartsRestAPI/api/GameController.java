@@ -1,5 +1,7 @@
 package com.pinkladydev.DartsRestAPI.api;
 
+import com.pinkladydev.DartsRestAPI.api.models.GameRequest;
+import com.pinkladydev.DartsRestAPI.api.models.GameNotificationRequest;
 import com.pinkladydev.DartsRestAPI.model.*;
 import com.pinkladydev.DartsRestAPI.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +21,13 @@ public class GameController {
         this.gameService = gameService;
     }
 
-
-    /********** Game ************/
-
     /**   PATH: /game   **/
     /**   POST new game **/
 
     @PostMapping("/game")
-    public void createGame(@RequestBody GameHelper gameHelper) {
+    public void createGame(@RequestBody GameRequest gameRequest) {
 
-        gameService.createGame(gameHelper);
+        gameService.createGame(gameRequest);
     }
 
     /**   PATH: /game/{gameid}   **/

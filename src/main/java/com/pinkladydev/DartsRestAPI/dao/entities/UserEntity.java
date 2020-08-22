@@ -1,9 +1,11 @@
 package com.pinkladydev.DartsRestAPI.dao.entities;
 
+import lombok.Builder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
 
+@Builder
 @Document(collection = "Users")
 public class UserEntity {
 
@@ -12,15 +14,14 @@ public class UserEntity {
     public String username;
     public String password;
 
-    public UserEntity( String username, String password){
-        this.username = username;
-        this.password = password;
-    }
-
     @Override
     public String toString() {
         return String.format(
                 "Customer[id=%s, firstName='%s', lastName='%s']",
                 id, username, password);
+    }
+
+    public static UserEntityBuilder aUserEntityBuilder(){
+        return UserEntity.builder();
     }
 }

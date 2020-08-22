@@ -1,8 +1,8 @@
 package com.pinkladydev.DartsRestAPI.api;
 
 import com.pinkladydev.DartsRestAPI.config.JwtUtil;
-import com.pinkladydev.DartsRestAPI.model.AuthenticationRequest;
-import com.pinkladydev.DartsRestAPI.model.AuthenticationResponce;
+import com.pinkladydev.DartsRestAPI.api.models.AuthenticationRequest;
+import com.pinkladydev.DartsRestAPI.api.models.AuthenticationResponce;
 import com.pinkladydev.DartsRestAPI.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,12 +29,7 @@ public class AuthenticationController {
         this.userService = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
     }
-
-    @RequestMapping("/hello")
-    public String hello() {
-        return "hello";
-    }
-
+    
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
         try {

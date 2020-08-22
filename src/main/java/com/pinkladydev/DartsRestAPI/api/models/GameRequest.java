@@ -1,16 +1,16 @@
-package com.pinkladydev.DartsRestAPI.model;
+package com.pinkladydev.DartsRestAPI.api.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class GameHelper {
+public class GameRequest {
 
     private final String  id;
     private final List<String> users;
     private final String gameType;
 
-    public GameHelper(
+    public GameRequest(
             @JsonProperty("id") String id,
             @JsonProperty("users") List<String> users,
             @JsonProperty("gameType") String gameType)

@@ -1,4 +1,4 @@
-package com.pinkladydev.DartsRestAPI.model;
+package com.pinkladydev.DartsRestAPI.api.models;
 
 public class AuthenticationRequest {
 

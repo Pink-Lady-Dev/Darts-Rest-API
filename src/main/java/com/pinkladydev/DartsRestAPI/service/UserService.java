@@ -2,6 +2,7 @@ package com.pinkladydev.DartsRestAPI.service;
 
 import com.pinkladydev.DartsRestAPI.dao.UserDao;
 import com.pinkladydev.DartsRestAPI.model.User;
+import com.pinkladydev.DartsRestAPI.api.models.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,8 +28,8 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void insertUser (User user) {
-        userDao.insertUser(user);
+    public void insertUser (UserRequest userRequest) {
+        userDao.insertUser(userRequest);
     }
 
     public List<User> getAllUsers () {

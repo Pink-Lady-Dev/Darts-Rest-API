@@ -1,10 +1,12 @@
 package com.pinkladydev.DartsRestAPI.dao;
 
 import com.pinkladydev.DartsRestAPI.model.User;
+import com.pinkladydev.DartsRestAPI.api.models.UserRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Repository("FakeDao")
 public class FakeUserDataAccessService implements UserDao {
@@ -12,9 +14,9 @@ public class FakeUserDataAccessService implements UserDao {
     private static List<User> fakeDB = new ArrayList<>();
 
     @Override
-    public void insertUser(User user){
+    public void insertUser(UserRequest user){
 
-        fakeDB.add(user);
+        fakeDB.add(simpleUserMap(user));
     }
 
     @Override
@@ -36,5 +38,9 @@ public class FakeUserDataAccessService implements UserDao {
     @Override
     public int size() {
         return fakeDB.size();
+    }
+
+    private User simpleUserMap(UserRequest userRequest){
+        return User.aUserBuilder().username(userRequest.getUsername()).password(userRequest.getPassword()).id(UUID.randomUUID().toString()).build();
     }
 }

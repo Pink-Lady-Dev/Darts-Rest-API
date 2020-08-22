@@ -1,13 +1,14 @@
 package com.pinkladydev.DartsRestAPI.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
+@Builder
 public class User implements UserDetails {
 
     private final String  id;
@@ -24,46 +25,37 @@ public class User implements UserDetails {
     // as well as head to head matchups in each type of game
 
     // Will use this to actually set users??
-    public User(
-                @JsonProperty("name") String username,
-                @JsonProperty("password") String password)
-    {
-        this.id = UUID.randomUUID().toString();
-        this.username = username;
-        this.password = password;
+//    public User(
+//                @JsonProperty("name") String username,
+//                @JsonProperty("password") String password)
+//    {
+//        this.id = UUID.randomUUID().toString();
+//        this.username = username;
+//        this.password = password;
+//
+//        List<GrantedAuthority> tempAuthorities = new ArrayList<>();
+//
+//        tempAuthorities.add(new SimpleGrantedAuthority("USER"));
+//        tempAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
+//
+//        this.authorities = tempAuthorities;
+//
+//        this.darts = new ArrayList<>();
+//
+//        StartX01(301);
+//    }
 
-        List<GrantedAuthority> tempAuthorities = new ArrayList<>();
-
-        tempAuthorities.add(new SimpleGrantedAuthority("USER"));
-        tempAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
-
-        this.authorities = tempAuthorities;
-
-        this.darts = new ArrayList<>();
-
-        StartX01(301);
-    }
-
-    public User(
-            String username,
-            String password,
-            String id)
-    {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-
-        List<GrantedAuthority> tempAuthorities = new ArrayList<>();
-
-        tempAuthorities.add(new SimpleGrantedAuthority("USER"));
-        tempAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
-
-        this.authorities = tempAuthorities;
-
-        this.darts = new ArrayList<>();
-
-        StartX01(301);
-    }
+//    public User(
+//            String username,
+//            String password,
+//            String id)
+//    {
+//        this.id = id;
+//        this.username = username;
+//        this.password = password;
+//
+//        StartX01(301);
+//    }
 
     /**   Game Initializers   **/
     public void StartX01(int score){
@@ -154,14 +146,17 @@ public class User implements UserDetails {
         return darts;
     }
 
+    public static UserBuilder aUserBuilder(){
+
+        List<GrantedAuthority> tempAuthorities = new ArrayList<>();
+        tempAuthorities.add(new SimpleGrantedAuthority("USER"));
+        tempAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
 
 
-
-
-
-
-
-
-
-
+        return User.builder()
+                .authorities(tempAuthorities)
+                .darts(new ArrayList<>())
+                .score(new HashMap<>())
+                .gameType(Game.GAME_TYPE.X01);
+    }
 }

@@ -1,4 +1,6 @@
-package com.pinkladydev.DartsRestAPI.model;
+package com.pinkladydev.DartsRestAPI.api.models;
+
+import com.pinkladydev.DartsRestAPI.model.User;
 
 public class AuthenticationResponce {
 

@@ -1,4 +1,4 @@
-package com.pinkladydev.DartsRestAPI.model;
+package com.pinkladydev.DartsRestAPI.api.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

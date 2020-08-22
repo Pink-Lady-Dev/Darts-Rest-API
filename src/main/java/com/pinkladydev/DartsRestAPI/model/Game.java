@@ -3,10 +3,10 @@ package com.pinkladydev.DartsRestAPI.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 public class Game {
@@ -53,11 +53,8 @@ public class Game {
     @JsonIgnore
     // @GetMapping uses all serializes all getters, so this suppresses this from being returned
     public List<User> getUsers() {
-        return gameUsers
-                .entrySet()
-                .stream()
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
+        return new ArrayList<>(gameUsers
+                .values());
     }
 
     public User getGameUser(String userId) {

@@ -1,5 +1,6 @@
 package com.pinkladydev.DartsRestAPI.service;
 
+import com.pinkladydev.DartsRestAPI.api.models.GameRequest;
 import com.pinkladydev.DartsRestAPI.dao.GameDao;
 import com.pinkladydev.DartsRestAPI.dao.UserDao;
 import com.pinkladydev.DartsRestAPI.model.*;
@@ -22,7 +23,7 @@ public class GameService {
     private SimpMessagingTemplate template;
 
     @Autowired
-    public GameService(@Qualifier("FakeGameDao") GameDao gameDao,@Qualifier("FakeDao") UserDao userDao){
+    public GameService(@Qualifier("FakeGameDao") GameDao gameDao,@Qualifier("Mongo") UserDao userDao){
         this.gameDao = gameDao;
         this.userDao = userDao;
         this.webId = null;
@@ -32,10 +33,12 @@ public class GameService {
         return gameDao.getGameData(gameID);
     }
 
-    public void createGame(GameHelper game) {
+    public void createGame(GameRequest game) {
 
-        User[] users = game.getUsers().stream().map(userDao::getUser).toArray(User[]::new);
-
+        User[] users = game.getUsers().stream().map(x -> userDao.getUser(x)).toArray(User[]::new);
+        for (int i = 0; i < users.length; i++){
+            users[i].StartX01(301);
+        }
         gameDao.createGame(new Game(game.getId(), users, game.getGameType()));
 
     }
@@ -45,7 +48,8 @@ public class GameService {
     }
 
     public void addDart(String gameId, String userId, Dart dart) {
-        getGameData(gameId).getGameUser(userId).addX01(dart);
+        User u = getGameData(gameId).getGameUser(userId);
+        u.addX01(dart);
 
         User user  = getUsersInGame(gameId).stream().filter(x -> x.getId().equals(userId)).findFirst().orElseThrow(RuntimeException::new);
         template.convertAndSend("/topic/notification/" + this.webId, new DartNotification(dart, user.getUsername(), user.getScore().get("score")));
