@@ -17,7 +17,7 @@ public class UserService implements UserDetailsService {
     private final UserDao userDao;
 
     @Autowired
-    public UserService(@Qualifier("FakeDao") UserDao userDao) {
+    public UserService(@Qualifier("Mongo") UserDao userDao) {
         this.userDao = userDao;
     }
 

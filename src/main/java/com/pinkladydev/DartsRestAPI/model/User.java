@@ -22,12 +22,34 @@ public class User implements UserDetails {
     // TODO add player dart stats
     // we want to store wins and losses in each type of game
     // as well as head to head matchups in each type of game
-    
+
+    // Will use this to actually set users??
     public User(
                 @JsonProperty("name") String username,
                 @JsonProperty("password") String password)
     {
         this.id = UUID.randomUUID().toString();
+        this.username = username;
+        this.password = password;
+
+        List<GrantedAuthority> tempAuthorities = new ArrayList<>();
+
+        tempAuthorities.add(new SimpleGrantedAuthority("USER"));
+        tempAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
+
+        this.authorities = tempAuthorities;
+
+        this.darts = new ArrayList<>();
+
+        StartX01(301);
+    }
+
+    public User(
+            String username,
+            String password,
+            String id)
+    {
+        this.id = id;
         this.username = username;
         this.password = password;
 
