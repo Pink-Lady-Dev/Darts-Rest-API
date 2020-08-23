@@ -4,6 +4,7 @@ import com.pinkladydev.DartsRestAPI.model.User;
 import com.pinkladydev.DartsRestAPI.api.models.UserRequest;
 import com.pinkladydev.DartsRestAPI.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class UserController {
     /**   This is the only exposed end point **/
 
     @PostMapping("/user")
+    @ResponseStatus(HttpStatus.CREATED)
     public void insertUser (@RequestBody UserRequest userRequest)
     {
         userService.insertUser(userRequest);
@@ -40,13 +42,4 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @PostMapping("/user/{userId}/password")
-    public void changePassword(){
-
-    }
-
-    @PostMapping("/user/{userId}/email")
-    public void changeEmail(){
-
-    }
 }

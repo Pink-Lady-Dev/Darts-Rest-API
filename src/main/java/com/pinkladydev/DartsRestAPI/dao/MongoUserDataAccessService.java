@@ -1,10 +1,11 @@
 package com.pinkladydev.DartsRestAPI.dao;
 
+import com.mongodb.MongoException;
+import com.pinkladydev.DartsRestAPI.api.models.UserRequest;
 import com.pinkladydev.DartsRestAPI.dao.entities.UserEntity;
 import com.pinkladydev.DartsRestAPI.dao.entities.mappers.UserEntityToUserMapper;
 import com.pinkladydev.DartsRestAPI.dao.repositories.UserRepository;
 import com.pinkladydev.DartsRestAPI.model.User;
-import com.pinkladydev.DartsRestAPI.api.models.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 import static com.pinkladydev.DartsRestAPI.dao.entities.mappers.UserEntityToUserMapper.mapUserEntityToUser;
 import static com.pinkladydev.DartsRestAPI.dao.entities.mappers.UserRequestToUserEntityMapper.mapUserRequestToUserEntity;
+import static com.pinkladydev.DartsRestAPI.exceptions.UserSaveFailure.failureToSaveUserToMongo;
 
 @Repository("Mongo")
 public class MongoUserDataAccessService implements UserDao {
@@ -22,7 +24,11 @@ public class MongoUserDataAccessService implements UserDao {
 
     @Override
     public void insertUser(UserRequest userRequest){
-        userRepository.save(mapUserRequestToUserEntity(userRequest));
+        try{
+            userRepository.save(mapUserRequestToUserEntity(userRequest));
+        } catch (MongoException mongoException) {
+            throw failureToSaveUserToMongo(mongoException.getMessage());
+        }
     }
 
     // This one should probably be deleted
@@ -34,8 +40,7 @@ public class MongoUserDataAccessService implements UserDao {
     @Override
     public User getUser(String userId) {
         UserEntity userEntity = userRepository.findUserEntityById(userId);
-        User u = userEntity != null ? mapUserEntityToUser(userEntity) : getUserByUsername(userId);
-        return u;
+        return userEntity != null ? mapUserEntityToUser(userEntity) : getUserByUsername(userId);
     }
 
     // This one should probably be deleted

@@ -10,6 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GameService {
@@ -35,10 +36,8 @@ public class GameService {
 
     public void createGame(GameRequest game) {
 
-        User[] users = game.getUsers().stream().map(x -> userDao.getUser(x)).toArray(User[]::new);
-        for (int i = 0; i < users.length; i++){
-            users[i].StartX01(301);
-        }
+        List<User> users = game.getUsers().stream().map(x -> userDao.getUser(x)).collect(Collectors.toList());
+        users.forEach(user -> user.StartX01(301));
         gameDao.createGame(new Game(game.getId(), users, game.getGameType()));
 
     }

@@ -22,7 +22,7 @@ public class Game {
 
     public Game(
             @JsonProperty("id") String id,
-            @JsonProperty("users") User[] users,
+            @JsonProperty("users") List<User> users,
             @JsonProperty("gameType") String gameType)
     {
         this.id = id;

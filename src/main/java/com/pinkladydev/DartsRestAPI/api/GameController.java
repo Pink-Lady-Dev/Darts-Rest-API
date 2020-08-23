@@ -1,10 +1,13 @@
 package com.pinkladydev.DartsRestAPI.api;
 
-import com.pinkladydev.DartsRestAPI.api.models.GameRequest;
 import com.pinkladydev.DartsRestAPI.api.models.GameNotificationRequest;
-import com.pinkladydev.DartsRestAPI.model.*;
+import com.pinkladydev.DartsRestAPI.api.models.GameRequest;
+import com.pinkladydev.DartsRestAPI.model.Dart;
+import com.pinkladydev.DartsRestAPI.model.Game;
+import com.pinkladydev.DartsRestAPI.model.User;
 import com.pinkladydev.DartsRestAPI.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +28,8 @@ public class GameController {
     /**   POST new game **/
 
     @PostMapping("/game")
+    @ResponseStatus(HttpStatus.CREATED)
     public void createGame(@RequestBody GameRequest gameRequest) {
-
         gameService.createGame(gameRequest);
     }
 

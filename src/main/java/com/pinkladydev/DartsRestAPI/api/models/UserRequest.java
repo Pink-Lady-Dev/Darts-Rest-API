@@ -8,7 +8,7 @@ public class UserRequest {
     private final String password;
 
     public UserRequest(
-            @JsonProperty("name") String username,
+            @JsonProperty("username") String username,
             @JsonProperty("password") String password)
     {
         this.username = username;
