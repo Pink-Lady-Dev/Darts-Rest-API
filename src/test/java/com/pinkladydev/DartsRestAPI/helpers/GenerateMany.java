@@ -8,7 +8,7 @@ public class GenerateMany {
 
     public static <G> List<G> generateListOf(Generator<G> my, Integer size){
         List<G> ll = new ArrayList<>();
-        IntStream.rangeClosed(0, size).forEach((i) -> ll.add( my.generate()));
+        IntStream.rangeClosed(0, size - 1).forEach((i) -> ll.add( my.generate()));
         return ll;
     }
 }

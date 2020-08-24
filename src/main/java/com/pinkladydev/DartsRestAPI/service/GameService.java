@@ -20,13 +20,13 @@ public class GameService {
 
     private String webId;
 
-    @Autowired
     private SimpMessagingTemplate template;
 
     @Autowired
-    public GameService(@Qualifier("FakeGameDao") GameDao gameDao,@Qualifier("Mongo") UserDao userDao){
+    public GameService(@Qualifier("FakeGameDao") GameDao gameDao,@Qualifier("Mongo") UserDao userDao, SimpMessagingTemplate template){
         this.gameDao = gameDao;
         this.userDao = userDao;
+        this.template = template;
         this.webId = null;
     }
 
@@ -35,9 +35,9 @@ public class GameService {
     }
 
     public void createGame(GameRequest game) {
-
-        List<User> users = game.getUsers().stream().map(x -> userDao.getUser(x)).collect(Collectors.toList());
+        List<User> users = game.getUsers().stream().map(userDao::getUser).collect(Collectors.toList());
         users.forEach(user -> user.StartX01(301));
+
         gameDao.createGame(new Game(game.getId(), users, game.getGameType()));
 
     }
@@ -50,8 +50,8 @@ public class GameService {
         User u = getGameData(gameId).getGameUser(userId);
         u.addX01(dart);
 
-        User user  = getUsersInGame(gameId).stream().filter(x -> x.getId().equals(userId)).findFirst().orElseThrow(RuntimeException::new);
-        template.convertAndSend("/topic/notification/" + this.webId, new DartNotification(dart, user.getUsername(), user.getScore().get("score")));
+        // WE should check if this is actually listening ( aka if webId is empty or not)
+        template.convertAndSend("/topic/notification/" + this.webId, new DartNotification(dart, u.getUsername(), u.getScore().get("score")));
     }
 
     public Dart removeDart(String gameId, String userId, Dart dart) {
@@ -60,14 +60,19 @@ public class GameService {
 
     public void notifyWebClient(String gameId, String webId)
     {
-        Game game = getGameData(gameId);
+        this.webId = webId;
 
         template.convertAndSend("/topic/notification/" + webId, new GameMetaNotification(
-                game.getUsers(),
-                "XO1"));
+                getGameData(gameId).getUsers(),
+                "X01"));
 
-        this.webId = webId;
     }
 
+    public String getWebId() {
+        return webId;
+    }
 
+    public void setWebId(String webId) {
+        this.webId = webId;
+    }
 }

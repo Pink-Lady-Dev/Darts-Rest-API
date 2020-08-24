@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.pinkladydev.DartsRestAPI.exceptions.UserDataFailure.UsernameOrIdNotFoundInMongo;
+
 @Service
 public class UserService implements UserDetailsService {
 
@@ -23,8 +25,12 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        return userDao.getUser(userName);
+    public UserDetails loadUserByUsername(String userName) {
+        try{
+            return userDao.getUser(userName);
+        } catch (UsernameNotFoundException usernameNotFoundException) {
+            throw UsernameOrIdNotFoundInMongo(userName, usernameNotFoundException.getMessage());
+        }
     }
 
 

@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static com.pinkladydev.DartsRestAPI.exceptions.UserSaveFailure.failureToSaveUserToMongo;
+import static com.pinkladydev.DartsRestAPI.exceptions.UserDataFailure.failureToSaveUserToMongo;
 import static com.pinkladydev.DartsRestAPI.helpers.Chance.getRandomAlphaNumericString;
 import static com.pinkladydev.DartsRestAPI.helpers.Chance.getRandomNumberBetween;
 import static org.junit.jupiter.api.Assertions.assertEquals;

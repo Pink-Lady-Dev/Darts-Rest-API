@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import static com.pinkladydev.DartsRestAPI.dao.entities.mappers.UserEntityToUserMapper.mapUserEntityToUser;
 import static com.pinkladydev.DartsRestAPI.dao.entities.mappers.UserRequestToUserEntityMapper.mapUserRequestToUserEntity;
-import static com.pinkladydev.DartsRestAPI.exceptions.UserSaveFailure.failureToSaveUserToMongo;
+import static com.pinkladydev.DartsRestAPI.exceptions.UserDataFailure.failureToSaveUserToMongo;
 
 @Repository("Mongo")
 public class MongoUserDataAccessService implements UserDao {
