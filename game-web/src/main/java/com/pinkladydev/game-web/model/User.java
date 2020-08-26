@@ -17,8 +17,8 @@ public class User implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities;
 
     private HashMap<String, Integer> score;
-    private List<Dart> darts;
-    private Game.GAME_TYPE gameType;
+    private List<com.pinkladydev.DartsRestAPI.model.Dart> darts;
+    private com.pinkladydev.DartsRestAPI.model.Game.GAME_TYPE gameType;
 
     // TODO add player dart stats
     // we want to store wins and losses in each type of game
@@ -62,12 +62,12 @@ public class User implements UserDetails {
         this.score = new HashMap<>();
         this.score.put("score", score);
 
-        gameType = Game.GAME_TYPE.X01;
+        gameType = com.pinkladydev.DartsRestAPI.model.Game.GAME_TYPE.X01;
     }
 
     /** SCORE UPDATERS **/
 
-    public void addX01(Dart dart){
+    public void addX01(com.pinkladydev.DartsRestAPI.model.Dart dart){
         darts.add(dart);
         int points = dart.getPoints();
         score.put("score", score.get("score") - points);
@@ -75,7 +75,7 @@ public class User implements UserDetails {
         // TODO do checks for game over
     }
 
-    public Dart removeX01(Dart dart){
+    public com.pinkladydev.DartsRestAPI.model.Dart removeX01(com.pinkladydev.DartsRestAPI.model.Dart dart){
         int points = dart.getPoints();
         score.put("score", score.get("score") + points);
         darts.remove(dart);
@@ -84,8 +84,8 @@ public class User implements UserDetails {
 
 
     /**  SETTERS ( AND MANIPULATORS )  **/
-    public Dart removeDart(){
-        Dart temp = darts.get(darts.size() - 1);
+    public com.pinkladydev.DartsRestAPI.model.Dart removeDart(){
+        com.pinkladydev.DartsRestAPI.model.Dart temp = darts.get(darts.size() - 1);
         darts.remove(darts.size() - 1);
         return temp;
     }
@@ -138,11 +138,11 @@ public class User implements UserDetails {
         return score;
     }
 
-    public Game.GAME_TYPE getGameType() {
+    public com.pinkladydev.DartsRestAPI.model.Game.GAME_TYPE getGameType() {
         return gameType;
     }
 
-    public List<Dart> getDarts() {
+    public List<com.pinkladydev.DartsRestAPI.model.Dart> getDarts() {
         return darts;
     }
 
@@ -157,6 +157,6 @@ public class User implements UserDetails {
                 .authorities(tempAuthorities)
                 .darts(new ArrayList<>())
                 .score(new HashMap<>())
-                .gameType(Game.GAME_TYPE.X01);
+                .gameType(com.pinkladydev.DartsRestAPI.model.Game.GAME_TYPE.X01);
     }
 }

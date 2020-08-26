@@ -40,11 +40,11 @@ class GameServiceTest {
     @MockBean
     private SimpMessagingTemplate template;
 
-    private GameService gameService;
+    private com.pinkladydev.DartsRestAPI.service.GameService gameService;
 
     @BeforeEach
     public void setup(){
-        this.gameService = new GameService(gameDao, userDao, template);
+        this.gameService = new com.pinkladydev.DartsRestAPI.service.GameService(gameDao, userDao, template);
     }
 
     @Test

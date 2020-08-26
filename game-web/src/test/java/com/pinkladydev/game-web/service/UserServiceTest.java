@@ -32,11 +32,11 @@ class UserServiceTest {
     private UserDao userDao;
 
 
-    private UserService userService;
+    private com.pinkladydev.DartsRestAPI.service.UserService userService;
 
     @BeforeEach
     public void setup(){
-        this.userService = new UserService(userDao);
+        this.userService = new com.pinkladydev.DartsRestAPI.service.UserService(userDao);
     }
 
     @Test
@@ -63,7 +63,7 @@ class UserServiceTest {
 
     @Test
     void insertUser_shouldThrowUserDataFailure_whenInsertUserThrowsUserDataFailure() {
-        final String exceptionMessage = Chance.getRandomAlphaNumericString(Chance.getRandomNumberBetween(5,50));
+        final String exceptionMessage = Chance.getRandomAlphaNumericString(getRandomNumberBetween(5,50));
         final UserRequest userRequest = randomUserRequest();
 
         doThrow(failureToSaveUserToMongo(exceptionMessage)).when(userDao).insertUser(eq(userRequest));
