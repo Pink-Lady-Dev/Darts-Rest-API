@@ -3,10 +3,9 @@ package com.pinkladydev.gameWeb.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pinkladydev.gameWeb.api.models.UserRequest;
 import com.pinkladydev.gameWeb.helpers.ChanceUser;
-import com.pinkladydev.gameWeb.model.User;
-import com.pinkladydev.gameWeb.service.UserService;
+import com.pinkladydev.user.User;
+import com.pinkladydev.user.UserService;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,8 +18,8 @@ import java.util.List;
 import static com.pinkladydev.chance.Chance.getRandomAlphaNumericString;
 import static com.pinkladydev.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.chance.GenerateMany.generateListOf;
-import static com.pinkladydev.gameWeb.exceptions.UserDataFailure.failureToSaveUserToMongo;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.pinkladydev.gameWeb.helpers.ChanceUser.randomUserRequest;
+import static com.pinkladydev.user.UserDataFailure.failureToSaveUserToMongo;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -39,31 +38,23 @@ class UserControllerTest {
 
     @Test
     void insertUser_shouldReturnWithCreated_andCallInsertUser() throws Exception {
-        final UserRequest userRequest = new UserRequest(
-                getRandomAlphaNumericString(getRandomNumberBetween(5,25)),
-                getRandomAlphaNumericString(getRandomNumberBetween(5,25))
-        );
-        final ArgumentCaptor<UserRequest> argument = ArgumentCaptor.forClass(UserRequest.class);
+        final UserRequest userRequest = randomUserRequest();
 
         this.mockMvc.perform(post("/user/")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(userRequest)))
                 .andExpect(status().isCreated());
 
-        verify(userService, times(1)).insertUser(argument.capture());
-        assertEquals(userRequest.getUsername(), argument.getValue().getUsername());
-        assertEquals(userRequest.getPassword(), argument.getValue().getPassword());
+        verify(userService, times(1)).insertUser(userRequest.getUsername(), userRequest.getPassword());
     }
 
     @Test
     void insertUser_shouldReturnWithServiceUnavailable_whenUserSaveFailureIsThrown() throws Exception {
-        final UserRequest userRequest = new UserRequest(
-                getRandomAlphaNumericString(getRandomNumberBetween(5,25)),
-                getRandomAlphaNumericString(getRandomNumberBetween(5,25))
-        );
+        final UserRequest userRequest = randomUserRequest();
 
         final String exceptionMessage = getRandomAlphaNumericString(getRandomNumberBetween(5,25));
-        doThrow(failureToSaveUserToMongo(exceptionMessage)).when(userService).insertUser(any());
+        doThrow(failureToSaveUserToMongo(exceptionMessage)).when(userService)
+                .insertUser(userRequest.getUsername(),userRequest.getPassword());
 
         this.mockMvc.perform(post("/user/")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -74,10 +65,6 @@ class UserControllerTest {
 
     @Test
     void getUsers_shouldReturnWithOk_andReturnAllUsers() throws Exception {
-        final UserRequest userRequest = new UserRequest(
-                getRandomAlphaNumericString(getRandomNumberBetween(5,25)),
-                getRandomAlphaNumericString(getRandomNumberBetween(5,25))
-        );
         final List<User> users = generateListOf(ChanceUser::randomUser, getRandomNumberBetween(2,4));
 
         when(userService.getAllUsers()).thenReturn(users);

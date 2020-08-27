@@ -1,20 +1,15 @@
-package com.pinkladydev.gameWeb.dao;
+package com.pinkladydev.user;
 
 import com.mongodb.MongoException;
-import com.pinkladydev.gameWeb.api.models.UserRequest;
-import com.pinkladydev.gameWeb.dao.entities.UserEntity;
-import com.pinkladydev.gameWeb.dao.entities.mappers.UserEntityToUserMapper;
-import com.pinkladydev.gameWeb.dao.repositories.UserRepository;
-import com.pinkladydev.gameWeb.model.User;
-import com.pinkladydev.gameWeb.exceptions.UserDataFailure;
+import com.pinkladydev.user.entities.UserEntity;
+import com.pinkladydev.user.entities.mappers.UserEntityToUserMapper;
+import com.pinkladydev.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.pinkladydev.gameWeb.dao.entities.mappers.UserEntityToUserMapper.mapUserEntityToUser;
-import static com.pinkladydev.gameWeb.dao.entities.mappers.UserRequestToUserEntityMapper.mapUserRequestToUserEntity;
 
 @Repository("Mongo")
 public class MongoUserDataAccessService implements UserDao {
@@ -23,9 +18,9 @@ public class MongoUserDataAccessService implements UserDao {
     private UserRepository userRepository;
 
     @Override
-    public void insertUser(UserRequest userRequest){
+    public void insertUser(String username, String password){
         try{
-            userRepository.save(mapUserRequestToUserEntity(userRequest));
+            userRepository.save(UserEntity.aUserEntityBuilder().username(username).password(password).build());
         } catch (MongoException mongoException) {
             throw UserDataFailure.failureToSaveUserToMongo(mongoException.getMessage());
         }
@@ -40,7 +35,7 @@ public class MongoUserDataAccessService implements UserDao {
     @Override
     public User getUser(String userId) {
         UserEntity userEntity = userRepository.findUserEntityById(userId);
-        return userEntity != null ? mapUserEntityToUser(userEntity) : getUserByUsername(userId);
+        return userEntity != null ? UserEntityToUserMapper.mapUserEntityToUser(userEntity) : getUserByUsername(userId);
     }
 
     // This one should probably be deleted
@@ -51,7 +46,7 @@ public class MongoUserDataAccessService implements UserDao {
 
     private User getUserByUsername(String username){
         UserEntity userEntity = userRepository.findUserEntityByUsername(username);
-        return userEntity != null ? mapUserEntityToUser(userEntity) : null;
+        return userEntity != null ? UserEntityToUserMapper.mapUserEntityToUser(userEntity) : null;
     }
 }
 

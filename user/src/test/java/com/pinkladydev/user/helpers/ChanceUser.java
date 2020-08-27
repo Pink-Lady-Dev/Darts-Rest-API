@@ -1,6 +1,6 @@
-package com.pinkladydev.gameWeb.helpers;
+package com.pinkladydev.user.helpers;
 
-import com.pinkladydev.gameWeb.api.models.UserRequest;
+
 import com.pinkladydev.user.User;
 
 import static com.pinkladydev.chance.Chance.getRandomAlphaNumericString;
@@ -15,11 +15,5 @@ public class ChanceUser {
                 .password(getRandomAlphaNumericString(getRandomNumberBetween(5,20)))
                 .id(getRandomAlphaNumericString(getRandomNumberBetween(5,20)))
                 .build();
-    }
-
-    public static UserRequest randomUserRequest(){
-        return new UserRequest(
-                getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
-                getRandomAlphaNumericString(getRandomNumberBetween(5,20)));
     }
 }

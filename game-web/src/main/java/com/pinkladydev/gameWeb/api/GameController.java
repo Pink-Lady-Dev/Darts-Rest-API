@@ -2,19 +2,29 @@ package com.pinkladydev.gameWeb.api;
 
 import com.pinkladydev.gameWeb.api.models.GameNotificationRequest;
 import com.pinkladydev.gameWeb.api.models.GameRequest;
-import com.pinkladydev.gameWeb.model.Dart;
 import com.pinkladydev.gameWeb.model.Game;
-import com.pinkladydev.gameWeb.model.User;
 import com.pinkladydev.gameWeb.service.GameService;
+import com.pinkladydev.user.Dart;
+import com.pinkladydev.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
 
 @RequestMapping("")
 @RestController
 @CrossOrigin(origins = "*")
+@EnableWebMvc
 public class GameController {
 
     private final GameService gameService;

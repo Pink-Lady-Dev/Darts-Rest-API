@@ -1,6 +1,6 @@
 package com.pinkladydev.gameWeb.config;
 
-import com.pinkladydev.gameWeb.service.UserService;
+import com.pinkladydev.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;

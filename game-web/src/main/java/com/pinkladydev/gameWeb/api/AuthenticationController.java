@@ -1,9 +1,9 @@
 package com.pinkladydev.gameWeb.api;
 
-import com.pinkladydev.gameWeb.config.JwtUtil;
 import com.pinkladydev.gameWeb.api.models.AuthenticationRequest;
 import com.pinkladydev.gameWeb.api.models.AuthenticationResponce;
-import com.pinkladydev.gameWeb.service.UserService;
+import com.pinkladydev.gameWeb.config.JwtUtil;
+import com.pinkladydev.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

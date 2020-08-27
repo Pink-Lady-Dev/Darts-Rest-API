@@ -1,6 +1,6 @@
 package com.pinkladydev.gameWeb.api.models;
 
-import com.pinkladydev.gameWeb.model.User;
+import com.pinkladydev.user.User;
 
 public class AuthenticationResponce {
 

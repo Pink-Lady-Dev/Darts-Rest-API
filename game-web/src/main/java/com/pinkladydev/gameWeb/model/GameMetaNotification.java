@@ -1,5 +1,7 @@
 package com.pinkladydev.gameWeb.model;
 
+import com.pinkladydev.user.User;
+
 import java.util.List;
 
 public class GameMetaNotification {

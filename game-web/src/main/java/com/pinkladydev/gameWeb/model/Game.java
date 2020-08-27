@@ -2,6 +2,9 @@ package com.pinkladydev.gameWeb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pinkladydev.user.Dart;
+import com.pinkladydev.user.GameType;
+import com.pinkladydev.user.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,13 +14,10 @@ import java.util.Map;
 
 public class Game {
 
-    enum GAME_TYPE {
-        X01
-    }
 
     private final String  id;
     private final HashMap<String, User> gameUsers;
-    private final GAME_TYPE gameType;
+    private final GameType gameType;
 
 
     public Game(
@@ -28,9 +28,9 @@ public class Game {
         this.id = id;
         this.gameUsers = new HashMap<>();
 
-        GAME_TYPE gameTypeEnum = GAME_TYPE.X01;
+        GameType gameTypeEnum = GameType.X01;
         if (gameType.equals("X01")){
-            gameTypeEnum = GAME_TYPE.X01;
+            gameTypeEnum = GameType.X01;
         }
 
         for (User gUser : users)

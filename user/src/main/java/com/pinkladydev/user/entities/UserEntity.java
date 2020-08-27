@@ -1,4 +1,4 @@
-package com.pinkladydev.gameWeb.dao.entities;
+package com.pinkladydev.user.entities;
 
 import lombok.Builder;
 import org.springframework.data.mongodb.core.mapping.Document;

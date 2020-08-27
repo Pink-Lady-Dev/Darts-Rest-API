@@ -1,9 +1,5 @@
-package com.pinkladydev.gameWeb.service;
+package com.pinkladydev.user;
 
-import com.pinkladydev.gameWeb.dao.UserDao;
-import com.pinkladydev.gameWeb.model.User;
-import com.pinkladydev.gameWeb.api.models.UserRequest;
-import com.pinkladydev.gameWeb.exceptions.UserDataFailure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,8 +29,8 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void insertUser (UserRequest userRequest) {
-        userDao.insertUser(userRequest);
+    public void insertUser (String username, String password) {
+        userDao.insertUser(username, password);
     }
 
     public List<User> getAllUsers () {

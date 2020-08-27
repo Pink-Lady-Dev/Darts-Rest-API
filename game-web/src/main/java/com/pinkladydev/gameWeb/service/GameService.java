@@ -2,12 +2,12 @@ package com.pinkladydev.gameWeb.service;
 
 import com.pinkladydev.gameWeb.api.models.GameRequest;
 import com.pinkladydev.gameWeb.dao.GameDao;
-import com.pinkladydev.gameWeb.dao.UserDao;
-import com.pinkladydev.gameWeb.model.Dart;
 import com.pinkladydev.gameWeb.model.DartNotification;
 import com.pinkladydev.gameWeb.model.Game;
 import com.pinkladydev.gameWeb.model.GameMetaNotification;
-import com.pinkladydev.gameWeb.model.User;
+import com.pinkladydev.user.Dart;
+import com.pinkladydev.user.User;
+import com.pinkladydev.user.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

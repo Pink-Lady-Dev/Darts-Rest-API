@@ -1,4 +1,4 @@
-package com.pinkladydev.gameWeb.model;
+package com.pinkladydev.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
@@ -6,7 +6,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Builder
 public class User implements UserDetails {
@@ -18,7 +22,7 @@ public class User implements UserDetails {
 
     private HashMap<String, Integer> score;
     private List<Dart> darts;
-    private Game.GAME_TYPE gameType;
+    private GameType gameType;
 
     // TODO add player dart stats
     // we want to store wins and losses in each type of game
@@ -62,7 +66,7 @@ public class User implements UserDetails {
         this.score = new HashMap<>();
         this.score.put("score", score);
 
-        gameType = Game.GAME_TYPE.X01;
+        gameType = GameType.X01;
     }
 
     /** SCORE UPDATERS **/
@@ -138,7 +142,7 @@ public class User implements UserDetails {
         return score;
     }
 
-    public Game.GAME_TYPE getGameType() {
+    public GameType getGameType() {
         return gameType;
     }
 
@@ -157,6 +161,6 @@ public class User implements UserDetails {
                 .authorities(tempAuthorities)
                 .darts(new ArrayList<>())
                 .score(new HashMap<>())
-                .gameType(Game.GAME_TYPE.X01);
+                .gameType(GameType.X01);
     }
 }

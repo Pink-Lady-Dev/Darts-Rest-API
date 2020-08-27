@@ -1,4 +1,4 @@
-package com.pinkladydev.gameWeb.exceptions;
+package com.pinkladydev.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

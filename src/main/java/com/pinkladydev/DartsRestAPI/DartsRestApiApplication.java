@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 // TODO - investigate using basePackagesClasses -- seems safer more direct
-@SpringBootApplication(scanBasePackages="com.pinkladydev.gameWeb")
-@EnableMongoRepositories(basePackageClasses = {com.pinkladydev.gameWeb.dao.repositories.UserRepository.class})
+@SpringBootApplication(scanBasePackages={"com.pinkladydev.gameWeb","com.pinkladydev.user"})
+@EnableMongoRepositories(basePackageClasses = {com.pinkladydev.user.repositories.UserRepository.class})
 public class DartsRestApiApplication {
 
 	public static void main(String[] args) {

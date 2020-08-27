@@ -1,10 +1,7 @@
-package com.pinkladydev.gameWeb.service;
+package com.pinkladydev.user;
 
-import com.pinkladydev.gameWeb.api.models.UserRequest;
-import com.pinkladydev.gameWeb.dao.UserDao;
-import com.pinkladydev.gameWeb.exceptions.UserDataFailure;
-import com.pinkladydev.gameWeb.helpers.ChanceUser;
-import com.pinkladydev.gameWeb.model.User;
+import com.pinkladydev.user.helpers.ChanceUser;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,14 +14,13 @@ import java.util.List;
 import static com.pinkladydev.chance.Chance.getRandomAlphaNumericString;
 import static com.pinkladydev.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.chance.GenerateMany.generateListOf;
-import static com.pinkladydev.gameWeb.exceptions.UserDataFailure.failureToSaveUserToMongo;
-import static com.pinkladydev.gameWeb.helpers.ChanceUser.randomUser;
-import static com.pinkladydev.gameWeb.helpers.ChanceUser.randomUserRequest;
+import static com.pinkladydev.user.UserDataFailure.failureToSaveUserToMongo;
+import static com.pinkladydev.user.helpers.ChanceUser.randomUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes= UserService.class)
+@SpringBootTest(classes = {UserService.class})
 class UserServiceTest {
 
     @MockBean
@@ -52,23 +48,26 @@ class UserServiceTest {
 
     @Test
     void insertUser_shouldCallInsertUser() {
-        final UserRequest userRequest = randomUserRequest();
+        final String username = getRandomAlphaNumericString(getRandomNumberBetween(5,20));
+        final String password = getRandomAlphaNumericString(getRandomNumberBetween(5,20));
 
-        doNothing().when(userDao).insertUser(eq(userRequest));
+        doNothing().when(userDao).insertUser(username, password);
 
-        userService.insertUser(userRequest);
-        verify(userDao, times(1)).insertUser(userRequest);
+        userService.insertUser(username,password);
+        verify(userDao, times(1)).insertUser(username, password);
     }
 
 
     @Test
     void insertUser_shouldThrowUserDataFailure_whenInsertUserThrowsUserDataFailure() {
         final String exceptionMessage = getRandomAlphaNumericString(getRandomNumberBetween(5,50));
-        final UserRequest userRequest = randomUserRequest();
 
-        doThrow(failureToSaveUserToMongo(exceptionMessage)).when(userDao).insertUser(eq(userRequest));
+        final String username = getRandomAlphaNumericString(getRandomNumberBetween(5,20));
+        final String password = getRandomAlphaNumericString(getRandomNumberBetween(5,20));
 
-        assertThrows(UserDataFailure.class, () -> userService.insertUser(userRequest), "");
+        doThrow(failureToSaveUserToMongo(exceptionMessage)).when(userDao).insertUser(username, password);
+
+        assertThrows(UserDataFailure.class, () -> userService.insertUser(username,password), "");
     }
 
     @Test
@@ -79,12 +78,12 @@ class UserServiceTest {
         final List<User> actual = userService.getAllUsers();
 
         verify(userDao, times(1)).getAllUsers();
-        assertThat(actual).isEqualTo(users);
+        Assertions.assertThat(actual).isEqualTo(users);
     }
 
     @Test
     void getUser_shouldReturnCorrectUser() {
-        final User user = randomUser();
+        final User user = ChanceUser.randomUser();
 
         when(userDao.getUser(user.getId())).thenReturn(user);
         final User actual = userService.getUser(user.getId());

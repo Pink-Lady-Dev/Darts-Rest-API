@@ -1,6 +1,6 @@
-package com.pinkladydev.gameWeb.dao.repositories;
+package com.pinkladydev.user.repositories;
 
-import com.pinkladydev.gameWeb.dao.entities.UserEntity;
+import com.pinkladydev.user.entities.UserEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

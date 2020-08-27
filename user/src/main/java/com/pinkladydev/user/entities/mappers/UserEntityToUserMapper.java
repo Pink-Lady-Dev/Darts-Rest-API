@@ -1,7 +1,7 @@
-package com.pinkladydev.gameWeb.dao.entities.mappers;
+package com.pinkladydev.user.entities.mappers;
 
-import com.pinkladydev.gameWeb.dao.entities.UserEntity;
-import com.pinkladydev.gameWeb.model.User;
+import com.pinkladydev.user.User;
+import com.pinkladydev.user.entities.UserEntity;
 
 public class UserEntityToUserMapper {
 
