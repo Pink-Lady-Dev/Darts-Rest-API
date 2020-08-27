@@ -41,6 +41,10 @@ test {
 }
 
 dependencies {
+    implementation project (':game-web')
+
+    // TODO - Can probably remove most of these
+    // TODO - Inspect dependencies and versions for each module
     implementation 'org.springframework.boot:spring-boot-starter:2.3.3.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.3.3.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:2.3.3.RELEASE'
@@ -53,13 +57,10 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
     implementation 'org.projectlombok:lombok:1.18.10'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
     implementation 'org.springframework.boot:spring-boot-starter-websocket:2.3.3.RELEASE'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.3.3.RELEASE'
-
-
-    implementation project (':game-web')
-
 }
 
 //dependencies {
