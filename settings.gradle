@@ -4,4 +4,5 @@
 
 rootProject.name = 'Darts-Rest-API'
 include 'game-web'
+include 'chance'
 

@@ -19,8 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.pinkladydev.gameWeb.helpers.Chance.*;
-import static com.pinkladydev.gameWeb.helpers.GenerateMany.generateListOf;
+import static com.pinkladydev.chance.Chance.*;
+import static com.pinkladydev.chance.GenerateMany.generateListOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

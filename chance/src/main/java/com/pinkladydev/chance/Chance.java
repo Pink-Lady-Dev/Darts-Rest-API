@@ -1,4 +1,4 @@
-package com.pinkladydev.gameWeb.helpers;
+package com.pinkladydev.chance;
 
 import java.util.Random;
 

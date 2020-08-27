@@ -3,8 +3,8 @@ package com.pinkladydev.gameWeb.helpers;
 import com.pinkladydev.gameWeb.api.models.UserRequest;
 import com.pinkladydev.gameWeb.model.User;
 
-import static com.pinkladydev.gameWeb.helpers.Chance.getRandomAlphaNumericString;
-import static com.pinkladydev.gameWeb.helpers.Chance.getRandomNumberBetween;
+import static com.pinkladydev.chance.Chance.getRandomAlphaNumericString;
+import static com.pinkladydev.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.gameWeb.model.User.aUserBuilder;
 
 public class ChanceUser {

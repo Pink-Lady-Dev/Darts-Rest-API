@@ -14,12 +14,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
+import static com.pinkladydev.chance.Chance.getRandomAlphaNumericString;
+import static com.pinkladydev.chance.Chance.getRandomNumberBetween;
+import static com.pinkladydev.chance.GenerateMany.generateListOf;
 import static com.pinkladydev.gameWeb.exceptions.UserDataFailure.failureToSaveUserToMongo;
-import static com.pinkladydev.gameWeb.helpers.Chance.getRandomAlphaNumericString;
-import static com.pinkladydev.gameWeb.helpers.Chance.getRandomNumberBetween;
 import static com.pinkladydev.gameWeb.helpers.ChanceUser.randomUser;
 import static com.pinkladydev.gameWeb.helpers.ChanceUser.randomUserRequest;
-import static com.pinkladydev.gameWeb.helpers.GenerateMany.generateListOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
