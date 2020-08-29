@@ -14,9 +14,6 @@ repositories {
 }
 
 dependencies {
-    implementation project (':game')
-    implementation project (':user')
-
     implementation 'org.springframework.boot:spring-boot-starter:2.3.3.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.3.3.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:2.3.3.RELEASE'
@@ -34,7 +31,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.3.3.RELEASE'
     //testCompile group: 'junit', name: 'junit', version: '4.12'
 
-    testImplementation project (':chance')
+    testImplementation project (':components:chance')
 }
 
 bootJar {
@@ -44,5 +41,3 @@ bootJar {
 jar {
     enabled = true
 }
-
-

@@ -3,8 +3,8 @@
  */
 
 rootProject.name = 'Darts-Rest-API'
-include 'game'
-include 'game-web'
-include 'chance'
-include 'user'
+include ':components:game'
+include ':components:game-web'
+include ':components:chance'
+include ':components:user'
 

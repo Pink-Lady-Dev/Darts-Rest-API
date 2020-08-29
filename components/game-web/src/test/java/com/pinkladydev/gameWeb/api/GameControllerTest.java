@@ -58,10 +58,6 @@ class GameControllerTest {
                 .andExpect(status().isCreated());
 
         verify(gameService, times(1)).createGame(gameRequest.getId(), gameRequest.getUsers(), gameRequest.getGameType());
-//
-//        assertEquals(gameRequest.getId(),argument.getValue().getId());
-//        assertEquals(gameRequest.getUsers(), argument.getValue().getUsers());
-//        assertEquals(gameRequest.getGameType(),argument.getValue().getGameType());
     }
 
     @Test
