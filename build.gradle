@@ -30,8 +30,9 @@ test {
 }
 
 dependencies {
-    implementation project (':game-web')
     implementation project (':user')
+    implementation project (':game')
+    implementation project (':game-web')
 
     // TODO - Can probably remove most of these
     // TODO - Inspect dependencies and versions for each module

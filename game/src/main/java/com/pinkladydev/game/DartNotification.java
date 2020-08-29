@@ -1,4 +1,4 @@
-package com.pinkladydev.gameWeb.model;
+package com.pinkladydev.game;
 
 import com.pinkladydev.user.Dart;
 

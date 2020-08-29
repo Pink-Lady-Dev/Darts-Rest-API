@@ -1,10 +1,5 @@
-package com.pinkladydev.gameWeb.service;
+package com.pinkladydev.game;
 
-import com.pinkladydev.gameWeb.api.models.GameRequest;
-import com.pinkladydev.gameWeb.dao.GameDao;
-import com.pinkladydev.gameWeb.model.DartNotification;
-import com.pinkladydev.gameWeb.model.Game;
-import com.pinkladydev.gameWeb.model.GameMetaNotification;
 import com.pinkladydev.user.Dart;
 import com.pinkladydev.user.User;
 import com.pinkladydev.user.UserDao;
@@ -38,11 +33,11 @@ public class GameService {
         return gameDao.getGameData(gameID);
     }
 
-    public void createGame(GameRequest game) {
-        List<User> users = game.getUsers().stream().map(userDao::getUser).collect(Collectors.toList());
+    public void createGame(String id, List<String> usernames, String gameType) {
+        List<User> users =usernames.stream().map(userDao::getUser).collect(Collectors.toList());
         users.forEach(user -> user.StartX01(301));
 
-        gameDao.createGame(new Game(game.getId(), users, game.getGameType()));
+        gameDao.createGame(new Game(id, users, gameType));
 
     }
 

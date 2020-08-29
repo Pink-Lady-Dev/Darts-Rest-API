@@ -1,9 +1,9 @@
 package com.pinkladydev.gameWeb.api;
 
+import com.pinkladydev.game.Game;
+import com.pinkladydev.game.GameService;
 import com.pinkladydev.gameWeb.api.models.GameNotificationRequest;
 import com.pinkladydev.gameWeb.api.models.GameRequest;
-import com.pinkladydev.gameWeb.model.Game;
-import com.pinkladydev.gameWeb.service.GameService;
 import com.pinkladydev.user.Dart;
 import com.pinkladydev.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class GameController {
     @PostMapping("/game")
     @ResponseStatus(HttpStatus.CREATED)
     public void createGame(@RequestBody GameRequest gameRequest) {
-        gameService.createGame(gameRequest);
+        gameService.createGame(gameRequest.getId(), gameRequest.getUsers(), gameRequest.getGameType());
     }
 
     /**   PATH: /game/{gameid}   **/

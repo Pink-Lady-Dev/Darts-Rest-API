@@ -1,10 +1,5 @@
-package com.pinkladydev.gameWeb.service;
+package com.pinkladydev.game;
 
-import com.pinkladydev.gameWeb.api.models.GameRequest;
-import com.pinkladydev.gameWeb.dao.GameDao;
-import com.pinkladydev.gameWeb.helpers.ChanceUser;
-import com.pinkladydev.gameWeb.model.Game;
-import com.pinkladydev.gameWeb.model.GameMetaNotification;
 import com.pinkladydev.user.Dart;
 import com.pinkladydev.user.User;
 import com.pinkladydev.user.UserDao;
@@ -68,14 +63,10 @@ class GameServiceTest {
         userList.forEach(user -> when(userDao.getUser(user.getId())).thenReturn(user));
         doNothing().when(gameDao).createGame(any());
 
-        final GameRequest gameRequest = new GameRequest(gameId,
-                userList.stream().map(User::getId).collect(Collectors.toList()),
-                "X01");
-
         final Game expectedGame = new Game(gameId, userList, "X01");
         final ArgumentCaptor<Game> actualArgument = ArgumentCaptor.forClass(Game.class);
 
-        gameService.createGame(gameRequest);
+        gameService.createGame(gameId, userList.stream().map(User::getId).collect(Collectors.toList()), "x01");
 
         verify(gameDao, times(1)).createGame(actualArgument.capture());
         assertEquals(expectedGame.getId(), actualArgument.getValue().getId());

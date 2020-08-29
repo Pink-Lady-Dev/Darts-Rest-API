@@ -1,10 +1,10 @@
 package com.pinkladydev.gameWeb.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pinkladydev.game.Game;
+import com.pinkladydev.game.GameService;
 import com.pinkladydev.gameWeb.api.models.GameRequest;
 import com.pinkladydev.gameWeb.helpers.ChanceUser;
-import com.pinkladydev.gameWeb.model.Game;
-import com.pinkladydev.gameWeb.service.GameService;
 import com.pinkladydev.user.Dart;
 import com.pinkladydev.user.User;
 import org.junit.jupiter.api.Test;
@@ -57,11 +57,11 @@ class GameControllerTest {
                     .content(gameRequestString))
                 .andExpect(status().isCreated());
 
-        verify(gameService, times(1)).createGame(argument.capture());
-
-        assertEquals(gameRequest.getId(),argument.getValue().getId());
-        assertEquals(gameRequest.getUsers(), argument.getValue().getUsers());
-        assertEquals(gameRequest.getGameType(),argument.getValue().getGameType());
+        verify(gameService, times(1)).createGame(gameRequest.getId(), gameRequest.getUsers(), gameRequest.getGameType());
+//
+//        assertEquals(gameRequest.getId(),argument.getValue().getId());
+//        assertEquals(gameRequest.getUsers(), argument.getValue().getUsers());
+//        assertEquals(gameRequest.getGameType(),argument.getValue().getGameType());
     }
 
     @Test

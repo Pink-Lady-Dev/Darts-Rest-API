@@ -1,6 +1,5 @@
-package com.pinkladydev.gameWeb.dao;
+package com.pinkladydev.game;
 
-import com.pinkladydev.gameWeb.model.Game;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

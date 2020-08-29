@@ -1,6 +1,4 @@
-package com.pinkladydev.gameWeb.dao;
-
-import com.pinkladydev.gameWeb.model.Game;
+package com.pinkladydev.game;
 
 public interface GameDao {
 
