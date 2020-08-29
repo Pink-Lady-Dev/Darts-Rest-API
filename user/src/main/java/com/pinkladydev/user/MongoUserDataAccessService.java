@@ -10,17 +10,23 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.pinkladydev.user.entities.UserEntity.aUserEntityBuilder;
+
 
 @Repository("Mongo")
 public class MongoUserDataAccessService implements UserDao {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public MongoUserDataAccessService(UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void insertUser(String username, String password){
         try{
-            userRepository.save(UserEntity.aUserEntityBuilder().username(username).password(password).build());
+            userRepository.save(aUserEntityBuilder().username(username).password(password).build());
         } catch (MongoException mongoException) {
             throw UserDataFailure.failureToSaveUserToMongo(mongoException.getMessage());
         }
