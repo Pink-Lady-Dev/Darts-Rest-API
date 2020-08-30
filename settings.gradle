@@ -4,7 +4,7 @@
 
 rootProject.name = 'Darts-Rest-API'
 include ':components:game'
-include ':components:game-web'
+include ':components:web'
 include ':components:chance'
 include ':components:user'
 

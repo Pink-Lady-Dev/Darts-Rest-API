@@ -32,7 +32,7 @@ test {
 dependencies {
     implementation project (':components:user')
     implementation project (':components:game')
-    implementation project (':components:game-web')
+    implementation project (':components:web')
 
     // TODO - Can probably remove most of these
     // TODO - Inspect dependencies and versions for each module
