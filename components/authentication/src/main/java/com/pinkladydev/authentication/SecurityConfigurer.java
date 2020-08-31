@@ -1,4 +1,4 @@
-package com.pinkladydev.web.config;
+package com.pinkladydev.authentication;
 
 import com.pinkladydev.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,10 @@
 package com.pinkladydev.web.api;
 
+import com.pinkladydev.user.UserService;
+import com.pinkladydev.game.GameService;
+import com.pinkladydev.authentication.JwtUtil;
 import com.pinkladydev.web.api.models.AuthenticationRequest;
 import com.pinkladydev.web.api.models.AuthenticationResponce;
-import com.pinkladydev.web.config.JwtUtil;
-import com.pinkladydev.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

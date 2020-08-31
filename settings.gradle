@@ -7,4 +7,5 @@ include ':components:game'
 include ':components:web'
 include ':components:chance'
 include ':components:user'
+include ':components:authentication'
 

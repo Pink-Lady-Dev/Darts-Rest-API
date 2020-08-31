@@ -1,4 +1,4 @@
-package com.pinkladydev.web.exceptions;
+package com.pinkladydev.authentication;
 
 public class DartsException extends RuntimeException {
 

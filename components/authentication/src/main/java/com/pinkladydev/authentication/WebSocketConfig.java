@@ -1,4 +1,4 @@
-package com.pinkladydev.web.config;
+package com.pinkladydev.authentication;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

@@ -1,4 +1,4 @@
-package com.pinkladydev.web.exceptions;
+package com.pinkladydev.authentication;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

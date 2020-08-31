@@ -1,4 +1,4 @@
-package com.pinkladydev.web.config;
+package com.pinkladydev.authentication;
 
 import com.pinkladydev.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +14,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static com.pinkladydev.web.exceptions.InvalidKeyException.invalidKeyWhenAuthenticatingUser;
-import static com.pinkladydev.web.exceptions.InvalidKeyException.invalidKeyWhenCreatingUser;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -54,14 +51,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 && httpServletRequest.getMethod().equals("POST")
                 && !httpServletRequest.getHeader("Secret").equals(System.getenv("SECRET_KEY"))) {
 
-            throw invalidKeyWhenCreatingUser();
+            throw InvalidKeyException.invalidKeyWhenCreatingUser();
         }
         // TODO - set actual private key
         if ( httpServletRequest.getRequestURI().equals("/authenticate")
                 && httpServletRequest.getMethod().equals("POST")
                 && !httpServletRequest.getHeader("Secret").equals(System.getenv("SECRET_KEY"))) {
 
-            throw invalidKeyWhenAuthenticatingUser();
+            throw InvalidKeyException.invalidKeyWhenAuthenticatingUser();
         }
 
         // TODO when editing users -- we need to use something like this to make sure that users are only

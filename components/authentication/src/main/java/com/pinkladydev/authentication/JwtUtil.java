@@ -1,4 +1,4 @@
-package com.pinkladydev.web.config;
+package com.pinkladydev.authentication;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
