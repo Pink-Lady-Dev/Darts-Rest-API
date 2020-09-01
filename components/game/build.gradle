@@ -1,0 +1,30 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'java'
+}
+
+group 'com.pinkladydev'
+version '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project (':components:user')
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.3.3.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket:2.3.3.RELEASE'
+
+    testImplementation project (':components:chance')
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.3.3.RELEASE'
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
