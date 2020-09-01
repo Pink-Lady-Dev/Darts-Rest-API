@@ -1,30 +1,28 @@
 package com.pinkladydev.darts.game;
 
-import com.pinkladydev.darts.user.Dart;
-import com.pinkladydev.darts.user.User;
-import com.pinkladydev.darts.user.UserDao;
+import com.pinkladydev.darts.player.Dart;
+import com.pinkladydev.darts.player.GameType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.pinkladydev.darts.game.Game.startX01;
 
 @Service
 public class GameService {
 
     private final GameDao gameDao;
-    private final UserDao userDao;
 
     private String webId;
 
     private SimpMessagingTemplate template;
 
     @Autowired
-    public GameService(@Qualifier("FakeGameDao") GameDao gameDao,@Qualifier("Mongo") UserDao userDao, SimpMessagingTemplate template){
+    public GameService(@Qualifier("FakeGameDao") GameDao gameDao, SimpMessagingTemplate template){
         this.gameDao = gameDao;
-        this.userDao = userDao;
         this.template = template;
         this.webId = null;
     }
@@ -34,19 +32,22 @@ public class GameService {
     }
 
     public void createGame(String id, List<String> usernames, String gameType) {
-        List<User> users =usernames.stream().map(userDao::getUser).collect(Collectors.toList());
-        users.forEach(user -> user.StartX01(301));
 
-        gameDao.createGame(new Game(id, users, gameType));
+        // Maybe save this till game ends ??
+        // Do we want to save state during game or keep a list in live mem
+        if (gameType.equals("X01")){
+            gameDao.createGame(startX01(usernames, 301));
+        }
+
 
     }
 
-    public List<User> getUsersInGame(String gameId) {
-        return getGameData(gameId).getUsers();
+    public List<GamePlayer> getUsersInGame(String gameId) {
+        return getGameData(gameId).getGamePlayers();
     }
 
     public void addDart(String gameId, String userId, Dart dart) {
-        User u = getGameData(gameId).getGameUser(userId);
+        GamePlayer u = getGameData(gameId).getGameUser(userId);
         u.addX01(dart);
 
         // WE should check if this is actually listening ( aka if webId is empty or not)
@@ -62,7 +63,7 @@ public class GameService {
         this.webId = webId;
 
         template.convertAndSend("/topic/notification/" + webId, new GameMetaNotification(
-                getGameData(gameId).getUsers(),
+                getGameData(gameId).getGamePlayers(),
                 "X01"));
 
     }

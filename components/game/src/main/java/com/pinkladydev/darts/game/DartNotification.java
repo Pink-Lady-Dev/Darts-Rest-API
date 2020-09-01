@@ -1,6 +1,6 @@
 package com.pinkladydev.darts.game;
 
-import com.pinkladydev.darts.user.Dart;
+import com.pinkladydev.darts.player.Dart;
 
 public class DartNotification {
 

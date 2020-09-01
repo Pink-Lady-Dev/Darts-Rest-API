@@ -1,64 +1,51 @@
 package com.pinkladydev.darts.game;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.pinkladydev.darts.user.Dart;
-import com.pinkladydev.darts.user.GameType;
-import com.pinkladydev.darts.user.User;
+import com.pinkladydev.darts.player.Dart;
+import com.pinkladydev.darts.player.GameType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
+
+import static java.util.stream.Collectors.toList;
 
 
 public class Game {
 
 
     private final String  id;
-    private final HashMap<String, User> gameUsers;
-    private final GameType gameType;
+    private List<GamePlayer> gamePlayers;
+    private GameType gameType;
 
 
-    public Game(
-            @JsonProperty("id") String id,
-            @JsonProperty("users") List<User> users,
-            @JsonProperty("gameType") String gameType)
+    private Game()
     {
-        this.id = id;
-        this.gameUsers = new HashMap<>();
+        this.id = UUID.randomUUID().toString();
+        this.gamePlayers = new ArrayList<>();
+    }
 
-        GameType gameTypeEnum = GameType.X01;
-        if (gameType.equals("X01")){
-            gameTypeEnum = GameType.X01;
-        }
-
-        for (User gUser : users)
-        {
-            // TODO this can definitely be done functionally
-            gameUsers.put(gUser.getId(), gUser);
-        }
-
-        this.gameType = gameTypeEnum;
+    public static Game startX01(final List<String> playerUsernames,
+                                final Integer score){
+        Game game = new Game();
+        game.gameType = GameType.X01;
+        game.gamePlayers = playerUsernames.stream().map(player -> GamePlayer.StartX01(player, score)).collect(toList());
+        return game;
     }
 
     public String getId() {
         return id;
     }
 
-    public Map<String, User> getGameUsers(){
-        return gameUsers;
+    public List<GamePlayer> getGamePlayers(){
+        return this.gamePlayers;
     }
 
-    @JsonIgnore
-    // @GetMapping uses all serializes all getters, so this suppresses this from being returned
-    public List<User> getUsers() {
-        return new ArrayList<>(gameUsers
-                .values());
-    }
 
-    public User getGameUser(String userId) {
-        return gameUsers.get(userId);
+    public GamePlayer getGameUser(String username) {
+        return this.gamePlayers.stream()
+                .filter(gamePlayer -> username.equals(gamePlayer.getUsername()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Make this no user found exception"));
     }
 
     public List<Dart> getUserDarts(String userId){

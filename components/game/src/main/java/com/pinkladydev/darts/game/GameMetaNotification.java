@@ -1,24 +1,22 @@
 package com.pinkladydev.darts.game;
 
-import com.pinkladydev.darts.user.User;
-
 import java.util.List;
 
 public class GameMetaNotification {
 
-    private final List<User> players;
+    private final List<GamePlayer> players;
     private final String gameType;
 
     // Add current game data for reconnect
 
     private final String IDENTIFIER = "GAME_META";
 
-    public GameMetaNotification(List<User> players, String gameType) {
+    public GameMetaNotification(List<GamePlayer> players, String gameType) {
         this.players = players;
         this.gameType = gameType;
     }
 
-    public List<User> getPlayers() {
+    public List<GamePlayer> getPlayers() {
         return players;
     }
 

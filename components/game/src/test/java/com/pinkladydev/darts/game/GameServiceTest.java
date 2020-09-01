@@ -1,8 +1,7 @@
 package com.pinkladydev.darts.game;
 
-import com.pinkladydev.darts.user.Dart;
-import com.pinkladydev.darts.user.User;
-import com.pinkladydev.darts.user.UserDao;
+
+import com.pinkladydev.darts.player.Dart;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -13,12 +12,13 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
-import static com.pinkladydev.darts.chance.Chance.getRandomBoolean;
 import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
+import static com.pinkladydev.darts.game.Helpers.randomDart;
+import static com.pinkladydev.darts.game.Helpers.randomGame;
+import static com.pinkladydev.darts.game.Helpers.randomX01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,24 +37,19 @@ class GameServiceTest {
     private GameDao gameDao;
 
     @MockBean
-    @Qualifier("Mongo")
-    private UserDao userDao;
-
-    @MockBean
     private SimpMessagingTemplate template;
 
     private GameService gameService;
 
     @BeforeEach
     public void setup(){
-        this.gameService = new GameService(gameDao, userDao, template);
+        this.gameService = new GameService(gameDao, template);
     }
 
     @Test
     void getGameData_shouldReturnGameDataFromDao() {
-        final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
-        final List<User> userList = generateListOf(ChanceUser::randomUser, getRandomNumberBetween(2,4));
-        final Game game = new Game(gameId, userList, "X01");
+        final Game game = randomGame();
+        final String gameId = game.getId();
 
         when(gameDao.getGameData(gameId)).thenReturn(game);
 
@@ -65,68 +60,61 @@ class GameServiceTest {
 
     @Test
     void createGame_shouldCallCreateGameOfX01_withGameInstanceGeneratedFromRequest() {
-        final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
-        final List<User> userList = generateListOf(ChanceUser::randomUser, getRandomNumberBetween(2,4));
+        final List<String> gamePlayerUsernames = generateListOf(
+                () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
+                getRandomNumberBetween(2,4));
 
-        userList.forEach(user -> when(userDao.getUser(user.getId())).thenReturn(user));
         doNothing().when(gameDao).createGame(any());
 
-        final Game expectedGame = new Game(gameId, userList, "X01");
+        // TODO write a function that generates a random game... names, type, score
+        final Game expectedGame = randomGame(gamePlayerUsernames);
         final ArgumentCaptor<Game> actualArgument = ArgumentCaptor.forClass(Game.class);
 
-        gameService.createGame(gameId, userList.stream().map(User::getId).collect(Collectors.toList()), "x01");
+        gameService.createGame(expectedGame.getId(), gamePlayerUsernames, "X01");
 
         verify(gameDao, times(1)).createGame(actualArgument.capture());
         assertEquals(expectedGame.getId(), actualArgument.getValue().getId());
-        assertEquals(expectedGame.getUsers(), actualArgument.getValue().getUsers());
-        expectedGame.getUsers().forEach(user -> {
-            assertEquals(301, actualArgument.getValue().getGameUser(user.getId()).getScore().get("score"));
+        assertEquals(expectedGame.getGamePlayers(), actualArgument.getValue().getGamePlayers());
+        expectedGame.getGamePlayers().forEach(user -> {
+            assertEquals(301, actualArgument.getValue().getGameUser(user.getUsername()).getScore().get("score"));
         });
 
     }
 
     @Test
     void getUsersInGame_shouldReturnListOfUsersInGame() {
-        final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
-        final List<User> userList = generateListOf(ChanceUser::randomUser, getRandomNumberBetween(2,4));
-        final Game game = new Game(gameId, userList, "X01");
+        final Game game = randomGame();
 
-        when(gameDao.getGameData(gameId)).thenReturn(game);
+        when(gameDao.getGameData(game.getId())).thenReturn(game);
 
-        final List<User> actual = gameService.getUsersInGame(gameId);
+        final List<GamePlayer> actual = gameService.getUsersInGame(game.getId());
 
-        assertThat(actual).isEqualTo(game.getUsers());
+        assertThat(actual).isEqualTo(game.getGamePlayers());
     }
 
     @Test
     void addDart_forX01Game_shouldUpdateUserScore_andSendMessageTemplate() {
         gameService.setWebId(getRandomNumberBetween(1,9999).toString());
 
-        final Integer pie = getRandomNumberBetween(1,20);
+        final Dart dart = randomDart();
         final Integer startingScore = (getRandomNumberBetween(0,7) * 100) + 301;
-        final Boolean isDouble = getRandomBoolean();
-        final Boolean isTriple = getRandomBoolean();
-        final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
         final String socketAddress = "/topic/notification/" + gameService.getWebId();
-        final List<User> userList = generateListOf(ChanceUser::randomUser, getRandomNumberBetween(2,4));
 
-        final Game game = new Game(gameId, userList, "X01");
-        final Dart dart = new Dart(getRandomNumberBetween(0,2), pie, isDouble, isTriple);
-        final User user = userList.get(getRandomNumberBetween(0,userList.size() - 1));
+        final Game game = randomX01();
+        final GamePlayer gamePlayer = game.getGamePlayers().get(getRandomNumberBetween(0,game.getGamePlayers().size() - 1));
 
-        user.StartX01(startingScore);
 
         final HashMap<String, Integer> expectedScore = new HashMap<>();
-        expectedScore.put("score", startingScore - scoreDart(pie, isDouble, isTriple));
+        expectedScore.put("score", startingScore - scoreDart(dart.getPie(), dart.isDouble(), dart.isTriple()));
 
-        when(gameDao.getGameData(gameId)).thenReturn(game);
+        when(gameDao.getGameData(game.getId())).thenReturn(game);
         doNothing().when(template).convertAndSend(eq(socketAddress), (Object) any());
 
         final ArgumentCaptor<Dart> actualDart = ArgumentCaptor.forClass(Dart.class);
 
-        gameService.addDart(gameId, user.getId(), dart);
+        gameService.addDart(game.getId(), gamePlayer.getUsername(), dart);
 
-        assertThat(user.getScore()).isEqualTo(expectedScore);
+        assertThat(gamePlayer.getScore()).isEqualTo(expectedScore);
         verify(template, times(1)).convertAndSend(eq(socketAddress), actualDart.capture());
     }
 
@@ -137,23 +125,21 @@ class GameServiceTest {
     @Test
     void notifyWebClient_shouldUpdateWebId_andSendGameMetaNotification() {
         final String webId = getRandomNumberBetween(1,9999).toString();
-        final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
         final String socketAddress = "/topic/notification/" + webId;
 
-        final List<User> userList = generateListOf(ChanceUser::randomUser, getRandomNumberBetween(2,4));
-        final Game game = new Game(gameId, userList, "X01");
-        final GameMetaNotification expectedGameMetaNotification = new GameMetaNotification(userList, "X01");
+        final Game game = randomGame();
+        final GameMetaNotification expectedGameMetaNotification = new GameMetaNotification(game.getGamePlayers(), "X01");
 
         doNothing().when(template).convertAndSend(eq(socketAddress), (Object) any());
-        when(gameService.getGameData(gameId)).thenReturn(game);
+        when(gameService.getGameData(game.getId())).thenReturn(game);
 
         final ArgumentCaptor<GameMetaNotification> actualGameMetaNotification = ArgumentCaptor.forClass(GameMetaNotification.class);
 
-        gameService.notifyWebClient(gameId, webId);
+        gameService.notifyWebClient(game.getId(), webId);
 
         verify(template, times(1)).convertAndSend(eq(socketAddress), actualGameMetaNotification.capture());
         assertThat(gameService.getWebId()).isEqualTo(webId);
-        assertEquals(game.getUsers(), actualGameMetaNotification.getValue().getPlayers());
+        assertEquals(game.getGamePlayers(), actualGameMetaNotification.getValue().getPlayers());
         assertEquals(expectedGameMetaNotification.getGameType(), actualGameMetaNotification.getValue().getGameType());
     }
 
