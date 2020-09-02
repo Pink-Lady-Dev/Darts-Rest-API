@@ -1,11 +1,11 @@
 package com.pinkladydev.darts.web;
 
 import com.pinkladydev.darts.game.Game;
+import com.pinkladydev.darts.game.GamePlayer;
+import com.pinkladydev.darts.game.Dart;
 import com.pinkladydev.darts.game.GameService;
 import com.pinkladydev.darts.web.models.GameNotificationRequest;
 import com.pinkladydev.darts.web.models.GameRequest;
-import com.pinkladydev.darts.user.Dart;
-import com.pinkladydev.darts.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -60,7 +60,7 @@ public class GameController {
     /**   GET users in game  **/
 
     @GetMapping("/game/{gameId}/user")
-    public List<User> getGameUsers(@PathVariable String gameId) {
+    public List<GamePlayer> getGameUsers(@PathVariable String gameId) {
         return gameService.getUsersInGame(gameId);
     }
 
@@ -71,7 +71,7 @@ public class GameController {
     /**   DELETE user dart from game  **/
 
     @GetMapping("/game/{gameId}/user/{userId}")
-    public User getUserGameData(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId) {
+    public GamePlayer getUserGameData(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId) {
         return gameService.getGameData(gameId).getGameUser(userId);
     }
 

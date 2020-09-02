@@ -8,7 +8,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 		com.pinkladydev.darts.game.GameService.class,
 		com.pinkladydev.darts.user.UserService.class,
 		com.pinkladydev.darts.authentication.SecurityConfigurer.class,
-		com.pinkladydev.darts.web.UserController.class})
+		com.pinkladydev.darts.web.UserController.class,
+		com.pinkladydev.darts.web.GameController.class})
 @EnableMongoRepositories(basePackageClasses = {com.pinkladydev.darts.user.repositories.UserRepository.class})
 public class DartsRestApiApplication {
 

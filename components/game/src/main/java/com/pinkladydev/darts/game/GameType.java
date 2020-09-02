@@ -1,4 +1,4 @@
-package com.pinkladydev.darts.player;
+package com.pinkladydev.darts.game;
 
 public enum GameType {
     X01,

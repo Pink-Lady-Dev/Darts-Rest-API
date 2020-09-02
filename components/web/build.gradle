@@ -14,8 +14,8 @@ repositories {
 }
 
 dependencies {
-    implementation project (':components:game')
     implementation project (':components:user')
+    implementation project (':components:game')
     implementation project (':components:authentication')
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.3.3.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-websocket:2.3.3.RELEASE'

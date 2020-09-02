@@ -1,7 +1,5 @@
 package com.pinkladydev.darts.game;
 
-import com.pinkladydev.darts.player.Dart;
-
 public class DartNotification {
 
     // Throw information

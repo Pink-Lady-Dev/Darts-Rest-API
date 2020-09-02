@@ -1,10 +1,9 @@
-package com.pinkladydev.darts.user;
+package com.pinkladydev.darts.game;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.UUID;
 
-// TODO - This will need to get moved to either player or game
 public class Dart {
 
     // Throw information

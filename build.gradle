@@ -4,6 +4,8 @@ plugins {
     id 'java'
 }
 
+apply plugin: 'idea'
+
 group = 'com.pinkladydev'
 version = '0.0.1-SNAPSHOT'
 description = 'Darts-Rest-API'

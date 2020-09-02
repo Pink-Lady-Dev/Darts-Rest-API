@@ -1,13 +1,12 @@
 package com.pinkladydev.darts.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pinkladydev.darts.web.GameController;
-import com.pinkladydev.darts.game.GameService;
+import com.pinkladydev.darts.game.Dart;
 import com.pinkladydev.darts.game.Game;
-import com.pinkladydev.darts.web.models.GameRequest;
-import com.pinkladydev.darts.web.helpers.ChanceUser;
-import com.pinkladydev.darts.user.Dart;
+import com.pinkladydev.darts.game.GameService;
 import com.pinkladydev.darts.user.User;
+import com.pinkladydev.darts.web.helpers.ChanceUser;
+import com.pinkladydev.darts.web.models.GameRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +19,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.pinkladydev.darts.chance.Chance.*;
+import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
+import static com.pinkladydev.darts.chance.Chance.getRandomBoolean;
+import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
+import static com.pinkladydev.darts.web.Helpers.randomGame;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -63,16 +68,14 @@ class GameControllerTest {
 
     @Test
     void getGameData_shouldReturnWithOk_andReturnGameDataFromGameService() throws Exception {
-        final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
-        final List<User> userList = generateListOf(ChanceUser::randomUser, getRandomNumberBetween(2,4));
+        final Game game = randomGame();
 
-        final Game game = new Game(gameId, userList, "X01");
-        when(gameService.getGameData(gameId)).thenReturn(game);
-        this.mockMvc.perform(get("/game/" + gameId))
+        when(gameService.getGameData(game.getId())).thenReturn(game);
+        this.mockMvc.perform(get("/game/" + game.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(asJsonString(game)));
 
-        verify(gameService, times(1)).getGameData(gameId);
+        verify(gameService, times(1)).getGameData(game.getId());
     }
 
     @Test
@@ -88,30 +91,30 @@ class GameControllerTest {
 
     @Test
     void getGameUsers_shouldReturnWithOk_andReturnGameUsers() throws Exception {
-        final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
-        final List<User> userList = generateListOf(ChanceUser::randomUser, getRandomNumberBetween(2,4));
+        final Game game = randomGame();
 
-        when(gameService.getUsersInGame(gameId)).thenReturn(userList);
+        when(gameService.getUsersInGame(game.getId())).thenReturn(game.getGamePlayers());
 
-        this.mockMvc.perform(get("/game/" + gameId + "/user/"))
+        this.mockMvc.perform(get("/game/" + game.getId() + "/user/"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(asJsonString(userList)));
+                .andExpect(content().json(asJsonString(game.getGamePlayers())));
 
-        verify(gameService, times(1)).getUsersInGame(gameId);
+        verify(gameService, times(1)).getUsersInGame(game.getId());
     }
 
     @Test
     void getUserGameData_shouldReturnWithOk_andReturnUserDateForASpecificUser() throws Exception {
-        final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
-        final List<User> userList = generateListOf(ChanceUser::randomUser, getRandomNumberBetween(2,4));
-        final User user = userList.get(0);
+        final List<String> usernames = generateListOf(
+                () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
+                getRandomNumberBetween(1,4));
+        final String playerName = usernames.get(0);
 
-        final Game game = new Game(gameId, userList, "X01");
-        when(gameService.getGameData(gameId)).thenReturn(game);
+        final Game game = randomGame(usernames);
+        when(gameService.getGameData(game.getId())).thenReturn(game);
 
-        this.mockMvc.perform(get("/game/" + gameId + "/user/" + user.getId()))
+        this.mockMvc.perform(get("/game/" + game.getId() + "/user/" + playerName))
                 .andExpect(status().isOk())
-                .andExpect(content().json(asJsonString(user)));
+                .andExpect(content().json(asJsonString(game.getGamePlayers().get(0))));
     }
 
     @Test

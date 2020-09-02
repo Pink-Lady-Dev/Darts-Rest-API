@@ -1,4 +1,7 @@
-package com.pinkladydev.darts.game;
+package com.pinkladydev.darts.web;
+
+import com.pinkladydev.darts.game.Dart;
+import com.pinkladydev.darts.game.Game;
 
 import java.util.List;
 

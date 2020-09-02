@@ -1,7 +1,5 @@
 package com.pinkladydev.darts.game;
 
-import com.pinkladydev.darts.player.Dart;
-import com.pinkladydev.darts.player.GameType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
