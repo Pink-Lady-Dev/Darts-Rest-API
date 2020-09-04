@@ -20,7 +20,7 @@ public class GameService {
     private SimpMessagingTemplate template;
 
     @Autowired
-    public GameService(@Qualifier("FakeGameDao") GameDao gameDao, SimpMessagingTemplate template){
+    public GameService(@Qualifier("MongoGame") GameDao gameDao, SimpMessagingTemplate template){
         this.gameDao = gameDao;
         this.template = template;
         this.webId = null;
@@ -30,10 +30,7 @@ public class GameService {
         return gameDao.getTotalGame(gameID);
     }
 
-    public void createGame(String id, List<String> usernames, String gameType) {
-
-        // Maybe save this till game ends ??
-        // Do we want to save state during game or keep a list in live mem
+    public void createGame(List<String> usernames, String gameType) {
 
         // Validate player username is real
         List<GamePlayer> gamePlayers;
@@ -46,27 +43,35 @@ public class GameService {
             throw new RuntimeException("e");
         }
 
-        try{
-            gamePlayers.forEach(gameDao::createGame);
-        } catch (NullPointerException nullPointerException){
-            // Failed to create game
-        }
+        gamePlayers.forEach(gameDao::save);
     }
 
-    public List<GamePlayer> getUsersInGame(String gameId) {
-        return getGameData(gameId).getGamePlayers();
+    public List<GamePlayer> getGamePlayers(String gameId) {
+        return gameDao.getGamePlayers(gameId);
     }
 
     public void addDart(String gameId, String userId, Dart dart) {
-        GamePlayer u = getGameData(gameId).getGameUser(userId);
-        u.addX01(dart);
+        GamePlayer gamePlayer = gameDao.getGamePlayer(gameId,userId);
+        gamePlayer.addDart(dart);
 
-        // WE should check if this is actually listening ( aka if webId is empty or not)
-        template.convertAndSend("/topic/notification/" + this.webId, new DartNotification(dart, u.getUsername(), u.getScore().get("score")));
+        gameDao.save(gamePlayer);
+
+        // We should check if this is actually listening ( aka if webId is empty or not)
+        template.convertAndSend(
+                "/topic/notification/" + this.webId,
+                new DartNotification(dart, gamePlayer.getUsername(), gamePlayer.getScore().get("score")));
     }
 
-    public Dart removeDart(String gameId, String userId, Dart dart) {
-        return getGameData(gameId).getGameUser(userId).removeX01(dart);
+    public void removeLastDart(String gameId, String userId) {
+        GamePlayer gamePlayer = gameDao.getGamePlayer(gameId,userId);
+        gamePlayer.removeDart();
+
+        gameDao.save(gamePlayer);
+
+        // We should check if this is actually listening ( aka if webId is empty or not)
+        template.convertAndSend(
+                "/topic/notification/" + this.webId,
+                new RemovedDartNotification(gamePlayer.getUsername(), gamePlayer.getScore().get("score")));
     }
 
     public void notifyWebClient(String gameId, String webId)

@@ -1,5 +1,8 @@
 package com.pinkladydev.darts.game;
 
+import lombok.Getter;
+
+@Getter
 public class DartNotification {
 
     // Throw information
@@ -12,6 +15,8 @@ public class DartNotification {
     private final String username;
     private final Integer score;
 
+    private final String IDENTIFIER = "DART";
+
     public DartNotification(Dart dart, String username, Integer score) {
         this.id = dart.getId();
         this.throwNumber = dart.getThrowNumber();
@@ -21,37 +26,5 @@ public class DartNotification {
         this.isTriple = dart.isTriple();
         this.username = username;
         this.score = score;
-    }
-
-    public int getPoints() {
-        return points;
-    }
-
-    public int getThrowNumber() {
-        return throwNumber;
-    }
-
-    public boolean isDouble() {
-        return isDouble;
-    }
-
-    public boolean isTriple() {
-        return isTriple;
-    }
-
-    public int getPie() {
-        return pie;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public Integer getScore() {
-        return score;
     }
 }

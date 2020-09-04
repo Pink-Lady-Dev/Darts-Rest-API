@@ -29,7 +29,7 @@ public class FakeGameAccessService implements GameDao {
     }
 
     @Override
-    public void createGame(GamePlayer gamePlayer) {
+    public void save(GamePlayer gamePlayer) {
         gamePlayers.add(gamePlayer);
     }
 

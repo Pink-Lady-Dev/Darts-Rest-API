@@ -12,7 +12,7 @@ public interface GameDao {
     Game getTotalGame(String gameId);
 
     // POST /{Game} - create new
-    void createGame(GamePlayer gamePlayer); //May need to be done with a Unique id
+    void save(GamePlayer gamePlayer); //May need to be done with a Unique id
 
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@Repository("Mongo")
+@Repository("MongoGame")
 public class GameDataAccessService implements GameDao {
 
     private final GameRepository gameRepository;
@@ -56,7 +56,7 @@ public class GameDataAccessService implements GameDao {
     }
 
     @Override
-    public void createGame(GamePlayer game) {
+    public void save(GamePlayer game) {
         gameRepository.save(GamePlayerToGamePlayerEntityMapper.map(game));
     }
 }

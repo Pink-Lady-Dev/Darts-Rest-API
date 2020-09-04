@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 class GameServiceTest {
 
     @MockBean
-    @Qualifier("FakeGameDao")
+    @Qualifier("MongoGame")
     private GameDao gameDao;
 
     @MockBean
@@ -45,7 +45,7 @@ class GameServiceTest {
     }
 
     @Test
-    void getGameData_shouldReturnGameDataFromDao() {
+    void getGameData_shouldReturnTotalGameFromDao() {
         final Game game = randomGame();
         final String gameId = game.getId();
 
@@ -57,39 +57,31 @@ class GameServiceTest {
     }
 
     @Test
-    void createGame_shouldCallCreateGameOfX01_withGameInstanceGeneratedFromRequest() {
+    void createGame_shouldCreateGameOfX01ForEachUser_whenXO1IsGameType() {
         final List<String> gamePlayerUsernames = generateListOf(
                 () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
                 getRandomNumberBetween(1,4));
 
-        doNothing().when(gameDao).createGame(any());
+        doNothing().when(gameDao).save(any());
 
-        // TODO write a function that generates a random game... names, type, score
-        final Game expectedGame = randomGame();
-        final ArgumentCaptor<GamePlayer> actualArgument = ArgumentCaptor.forClass(GamePlayer.class);
+        gameService.createGame(gamePlayerUsernames, "X01");
 
-        gameService.createGame(expectedGame.getId(), gamePlayerUsernames, "X01");
-
-        verify(gameDao, times(4)).createGame(any(GamePlayer.class));
-//        assertEquals("expectedGame.getGamePlayers().get(0).getUsername()", "actualArgument.getValue().getUsername()");
-//        assertEquals(expectedGame.getGamePlayers(), actualArgument.getValue().getGamePlayers());
-//        expectedGame.getGamePlayers().forEach(user -> {
-//            assertEquals(301, actualArgument.getValue().getGameUser(user.getUsername()).getScore().get("score"));
-//        });
-
+        verify(gameDao, times(gamePlayerUsernames.size() )).save(any(GamePlayer.class));
     }
 
     @Test
-    void getUsersInGame_shouldReturnListOfUsersInGame() {
+    void getGamePlayers_shouldReturnListOfGamePlayersInGame() {
         final Game game = randomGame();
 
-        when(gameDao.getTotalGame(game.getId())).thenReturn(game);
+        when(gameDao.getGamePlayers(game.getId())).thenReturn(game.getGamePlayers());
 
-        final List<GamePlayer> actual = gameService.getUsersInGame(game.getId());
+        final List<GamePlayer> actual = gameService.getGamePlayers(game.getId());
 
         assertThat(actual).isEqualTo(game.getGamePlayers());
     }
 
+    // Needs test in game to verify scoring and these should just make sure it calls it
+    // Agnostic of Game
     @Test
     void addDart_forX01Game_shouldUpdateUserScore_andSendMessageTemplate() {
         gameService.setWebId(getRandomNumberBetween(1,9999).toString());
@@ -102,22 +94,54 @@ class GameServiceTest {
         final GamePlayer gamePlayer = game.getGamePlayers().get(getRandomNumberBetween(0,game.getGamePlayers().size() - 1));
 
 
+        final int dartThrows = getRandomNumberBetween(2,7);
         final HashMap<String, Integer> expectedScore = new HashMap<>();
-        expectedScore.put("score", startingScore - scoreDart(dart.getPie(), dart.isDouble(), dart.isTriple()));
 
-        when(gameDao.getTotalGame(game.getId())).thenReturn(game);
+        when(gameDao.getGamePlayer(game.getId(), gamePlayer.getUsername())).thenReturn(gamePlayer);
         doNothing().when(template).convertAndSend(eq(socketAddress), (Object) any());
 
-        final ArgumentCaptor<Dart> actualDart = ArgumentCaptor.forClass(Dart.class);
+        expectedScore.put("score", startingScore);
 
-        gameService.addDart(game.getId(), gamePlayer.getUsername(), dart);
+        for (int dNumber = 0; dNumber < dartThrows; dNumber++){
+            final Dart tempDart = randomDart();
+
+            expectedScore.put("score", expectedScore.get("score") - tempDart.getPoints());
+            gameService.addDart(game.getId(), gamePlayer.getUsername(), tempDart);
+        }
 
         assertThat(gamePlayer.getScore()).isEqualTo(expectedScore);
-        verify(template, times(1)).convertAndSend(eq(socketAddress), actualDart.capture());
+        verify(template, times(dartThrows)).convertAndSend(eq(socketAddress), any(DartNotification.class));
     }
 
     @Test
-    void removeDart() {
+    void removeLastDart_forX01Game_shouldUpdateUserScore_andSendMessageTemplate() {
+
+        gameService.setWebId(getRandomNumberBetween(1,9999).toString());
+
+        final int startingScore = (getRandomNumberBetween(0,7) * 100) + 301;
+        final String socketAddress = "/topic/notification/" + gameService.getWebId();
+
+        final Game game = randomX01(startingScore).build();
+        final GamePlayer gamePlayer = game.getGamePlayers().get(getRandomNumberBetween(0,game.getGamePlayers().size() - 1));
+        final HashMap<String, Integer> expectedScore = new HashMap<>();
+
+        when(gameDao.getGamePlayer(game.getId(), gamePlayer.getUsername())).thenReturn(gamePlayer);
+        doNothing().when(template).convertAndSend(eq(socketAddress), (Object) any());
+
+        expectedScore.put("score", startingScore);
+        for (int dNumber = 0; dNumber < getRandomNumberBetween(2,6); dNumber++){
+            final Dart tempDart = randomDart();
+
+            expectedScore.put("score", expectedScore.get("score") - tempDart.getPoints());
+            gameService.addDart(game.getId(), gamePlayer.getUsername(), tempDart);
+        }
+
+        final Dart dart = randomDart();
+        gameService.addDart(game.getId(), gamePlayer.getUsername(), dart);
+        gameService.removeLastDart(game.getId(), gamePlayer.getUsername());
+
+        assertThat(gamePlayer.getScore()).isEqualTo(expectedScore);
+        verify(template, times(1)).convertAndSend(eq(socketAddress), any(RemovedDartNotification.class));
     }
 
     @Test
@@ -139,16 +163,5 @@ class GameServiceTest {
         assertThat(gameService.getWebId()).isEqualTo(webId);
         assertEquals(game.getGamePlayers(), actualGameMetaNotification.getValue().getPlayers());
         assertEquals(expectedGameMetaNotification.getGameType(), actualGameMetaNotification.getValue().getGameType());
-    }
-
-    private Integer scoreDart(Integer pie, Boolean isDouble, Boolean isTriple){
-        if (isDouble == isTriple){
-            return pie;
-        } else if (isDouble){
-            return pie * 2;
-        } else if (isTriple){
-            return pie * 3;
-        }
-        return pie;
     }
 }

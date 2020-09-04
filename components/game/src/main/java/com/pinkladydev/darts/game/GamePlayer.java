@@ -46,8 +46,19 @@ public class GamePlayer {
     }
 
     /** SCORE UPDATERS **/
+    public void addDart(Dart dart){
+        if (GameType.X01 == gameType){
+            addX01(dart);
+        }
+    }
 
-    public void addX01(Dart dart){
+    public void removeDart(){
+        if (GameType.X01 == gameType){
+            removeX01();
+        }
+    }
+
+    private void addX01(Dart dart){
         darts.add(dart);
         int points = dart.getPoints();
         score.put("score", score.get("score") - points);
@@ -55,11 +66,10 @@ public class GamePlayer {
         // TODO do checks for game over
     }
 
-    public Dart removeX01(Dart dart){
-        int points = dart.getPoints();
-        score.put("score", score.get("score") + points);
-        darts.remove(dart);
-        return dart;
+    private Dart removeX01(){
+        Dart removed = darts.remove(darts.size() - 1);
+        score.put("score", score.get("score") + removed.getPoints());
+        return removed;
     }
 
     /** Getters **/
