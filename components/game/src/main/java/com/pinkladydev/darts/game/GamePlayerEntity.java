@@ -15,6 +15,7 @@ public class GamePlayerEntity{
 
     @Id
     private final String id;
+    private final String username;
     private final String gameId;
     private final GameType gameType;
     private final Map<String, Integer> score;

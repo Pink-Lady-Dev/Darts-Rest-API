@@ -6,6 +6,7 @@ public class GamePlayerEntityToGamePlayerMapper {
 
     public static GamePlayer map(GamePlayerEntity gamePlayerEntity){
         return aGamePlayerBuilder()
+                .username(gamePlayerEntity.getUsername())
                 .gameId(gamePlayerEntity.getGameId())
                 .gameType(gamePlayerEntity.getGameType())
                 .darts(gamePlayerEntity.getDarts())

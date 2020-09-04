@@ -6,6 +6,7 @@ import com.pinkladydev.darts.game.Dart;
 import com.pinkladydev.darts.game.GameService;
 import com.pinkladydev.darts.web.models.GameNotificationRequest;
 import com.pinkladydev.darts.web.models.GameRequest;
+import com.pinkladydev.darts.web.models.GameResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -39,8 +40,8 @@ public class GameController {
 
     @PostMapping("/game")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createGame(@RequestBody GameRequest gameRequest) {
-        gameService.createGame(gameRequest.getUsers(), gameRequest.getGameType());
+    public GameResponse createGame(@RequestBody GameRequest gameRequest) {
+         return new GameResponse(gameService.createGame(gameRequest.getUsers(), gameRequest.getGameType()));
     }
 
     /**   PATH: /game/{gameid}   **/

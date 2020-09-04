@@ -30,7 +30,7 @@ public class GameService {
         return gameDao.getTotalGame(gameID);
     }
 
-    public void createGame(List<String> usernames, String gameType) {
+    public String createGame(List<String> usernames, String gameType) {
 
         // Validate player username is real
         List<GamePlayer> gamePlayers;
@@ -44,6 +44,8 @@ public class GameService {
         }
 
         gamePlayers.forEach(gameDao::save);
+
+        return gameId;
     }
 
     public List<GamePlayer> getGamePlayers(String gameId) {
