@@ -40,7 +40,7 @@ public class GameController {
     @PostMapping("/game")
     @ResponseStatus(HttpStatus.CREATED)
     public void createGame(@RequestBody GameRequest gameRequest) {
-        gameService.createGame(gameRequest.getId(), gameRequest.getUsers(), gameRequest.getGameType());
+        gameService.createGame(gameRequest.getUsers(), gameRequest.getGameType());
     }
 
     /**   PATH: /game/{gameid}   **/
@@ -61,7 +61,7 @@ public class GameController {
 
     @GetMapping("/game/{gameId}/user")
     public List<GamePlayer> getGameUsers(@PathVariable String gameId) {
-        return gameService.getUsersInGame(gameId);
+        return gameService.getGamePlayers(gameId);
     }
 
 
@@ -81,8 +81,8 @@ public class GameController {
     }
 
     @DeleteMapping("/game/{gameId}/user/{userId}")
-    public Dart removeUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId, @RequestBody Dart dart){
-        return gameService.removeDart(gameId, userId, dart);
+    public void removeUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId){
+        gameService.removeLastDart(gameId, userId);
     }
 
 }

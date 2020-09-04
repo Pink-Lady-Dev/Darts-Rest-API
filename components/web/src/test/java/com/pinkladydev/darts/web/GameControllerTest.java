@@ -20,15 +20,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
-import static com.pinkladydev.darts.chance.Chance.getRandomBoolean;
 import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
+import static com.pinkladydev.darts.web.Helpers.randomDart;
 import static com.pinkladydev.darts.web.Helpers.randomGame;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -49,11 +50,11 @@ class GameControllerTest {
         final List<String> usernames = generateListOf(ChanceUser::randomUser, getRandomNumberBetween(2,2))
                 .stream().map(User::getUsername).collect(Collectors.toList());
         final GameRequest gameRequest = new GameRequest(
-                getRandomAlphaNumericString(getRandomNumberBetween(15,20)),
                 usernames,
                 getRandomAlphaNumericString(getRandomNumberBetween(2,6)));
-        final String gameRequestString = "{\"id\":\"" + gameRequest.getId()
-                + "\",\"users\":" + stringArray(gameRequest.getUsers().stream().toArray(String[]::new))
+
+        final String gameRequestString = "{\"users\":"
+                + stringArray(gameRequest.getUsers().stream().toArray(String[]::new))
                 + ",\"gameType\":\"" + gameRequest.getGameType()
                 + "\"}";
 
@@ -63,7 +64,7 @@ class GameControllerTest {
                     .content(gameRequestString))
                 .andExpect(status().isCreated());
 
-        verify(gameService, times(1)).createGame(gameRequest.getId(), gameRequest.getUsers(), gameRequest.getGameType());
+        verify(gameService, times(1)).createGame(gameRequest.getUsers(), gameRequest.getGameType());
     }
 
     @Test
@@ -93,23 +94,19 @@ class GameControllerTest {
     void getGameUsers_shouldReturnWithOk_andReturnGameUsers() throws Exception {
         final Game game = randomGame();
 
-        when(gameService.getUsersInGame(game.getId())).thenReturn(game.getGamePlayers());
+        when(gameService.getGamePlayers(game.getId())).thenReturn(game.getGamePlayers());
 
         this.mockMvc.perform(get("/game/" + game.getId() + "/user/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(asJsonString(game.getGamePlayers())));
 
-        verify(gameService, times(1)).getUsersInGame(game.getId());
+        verify(gameService, times(1)).getGamePlayers(game.getId());
     }
 
     @Test
     void getUserGameData_shouldReturnWithOk_andReturnUserDateForASpecificUser() throws Exception {
-        final List<String> usernames = generateListOf(
-                () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
-                getRandomNumberBetween(1,4));
-        final String playerName = usernames.get(0);
-
-        final Game game = randomGame(usernames);
+        final Game game = randomGame();
+        final String playerName = game.getGamePlayers().get(0).getUsername();
         when(gameService.getGameData(game.getId())).thenReturn(game);
 
         this.mockMvc.perform(get("/game/" + game.getId() + "/user/" + playerName))
@@ -122,16 +119,12 @@ class GameControllerTest {
         final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
         final String userId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
 
-        final Integer throwNumber = getRandomNumberBetween(0,2);
-        final Integer pie = getRandomNumberBetween(1,20);
-        final Boolean isDouble = getRandomBoolean();
-        final Boolean isTriple = getRandomBoolean();
-        final Dart dart = new Dart(throwNumber,pie,isDouble,isTriple);
+        final Dart dart = randomDart();
 
-        final String dartString = "{\"throwNumber\":" + throwNumber.toString()
-                + ",\"pie\":" + pie.toString()
-                + ",\"double\":" + isDouble.toString()
-                + ",\"triple\":" + isTriple.toString()
+        final String dartString = "{\"throwNumber\":" + dart.getThrowNumber()
+                + ",\"pie\":" + dart.getPie()
+                + ",\"double\":" + dart.isDouble()
+                + ",\"triple\":" + dart.isTriple()
                 + "}";
         final ArgumentCaptor<Dart> argument = ArgumentCaptor.forClass(Dart.class);
 
@@ -150,7 +143,19 @@ class GameControllerTest {
     }
 
     @Test
-    void removeUserGameDart() {
+    void removeUserGameDart() throws Exception {
+        final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
+        final String userId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
+
+
+        final ArgumentCaptor<Dart> argument = ArgumentCaptor.forClass(Dart.class);
+
+        this.mockMvc.perform(delete("/game/" + gameId + "/user/" + userId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+
+        verify(gameService,times(1)).removeLastDart(eq(gameId),eq(userId));
     }
 
     private static String asJsonString(final Object obj) {
