@@ -6,8 +6,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
-import static com.pinkladydev.darts.game.Game.startX01;
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class GameService {
@@ -26,18 +27,30 @@ public class GameService {
     }
 
     public Game getGameData (String gameID) {
-        return gameDao.getGameData(gameID);
+        return gameDao.getTotalGame(gameID);
     }
 
     public void createGame(String id, List<String> usernames, String gameType) {
 
         // Maybe save this till game ends ??
         // Do we want to save state during game or keep a list in live mem
+
+        // Validate player username is real
+        List<GamePlayer> gamePlayers;
+        final String gameId = UUID.randomUUID().toString();
+
         if (gameType.equals("X01")){
-            gameDao.createGame(startX01(usernames, 301));
+            gamePlayers = usernames.stream().map(player -> GamePlayer.StartX01(gameId, player, 301)).collect(toList());
+        } else {
+            //throw something about improper game type
+            throw new RuntimeException("e");
         }
 
-
+        try{
+            gamePlayers.forEach(gameDao::createGame);
+        } catch (NullPointerException nullPointerException){
+            // Failed to create game
+        }
     }
 
     public List<GamePlayer> getUsersInGame(String gameId) {

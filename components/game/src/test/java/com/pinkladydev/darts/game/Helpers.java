@@ -1,11 +1,14 @@
 package com.pinkladydev.darts.game;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
 import static com.pinkladydev.darts.chance.Chance.getRandomBoolean;
 import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
+import static com.pinkladydev.darts.game.Game.aGameBuilder;
+import static java.util.stream.Collectors.toList;
 
 public class Helpers {
 
@@ -15,25 +18,30 @@ public class Helpers {
                 getRandomNumberBetween(1,4));
 
         // Make this randomize gameType
-        return randomX01(usernames);
+        return randomX01().build();
     }
 
     public static Game randomGame(List<String> usernames){
 
         // Make this randomize gameType
-        return randomX01(usernames);
+        return randomX01().build();
+    }
+    public static Game.GameBuilder randomX01(){
+        final int score = getRandomNumberBetween(3,10) * 100 + 1;
+
+        return randomX01(score);
     }
 
-    public static Game randomX01(){
-        final List<String> usernames = generateListOf(
+    public static Game.GameBuilder randomX01(final int score){
+        final String gameId = UUID.randomUUID().toString();
+        final List<GamePlayer> gamePlayers = generateListOf(
                 () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
-                getRandomNumberBetween(1,4));
+                getRandomNumberBetween(1,4)).stream().map(player -> GamePlayer.StartX01(gameId, player, score)).collect(toList());
 
-        return Game.startX01(usernames, getRandomNumberBetween(3,10) * 100 + 1);
-    }
-
-    public static Game randomX01(List<String> usernames){
-        return Game.startX01(usernames, getRandomNumberBetween(3,10) * 100 + 1);
+        return aGameBuilder()
+                .gamePlayers(gamePlayers)
+                .id(gameId)
+                .gameType(GameType.X01);
     }
 
     public static Dart randomDart(){

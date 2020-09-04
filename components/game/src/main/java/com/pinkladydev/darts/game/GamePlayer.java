@@ -1,35 +1,40 @@
 package com.pinkladydev.darts.game;
 
+import lombok.Builder;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Builder
 public class GamePlayer {
 
     private final String username;
-    private GameType gameType;
+    private final String gameId;
+    private final GameType gameType;
     private final Map<String, Integer> score;
     private final List<Dart> darts;
 
-    private GamePlayer(String username) {
-        this.username = username;
-
-        this.score = new HashMap<>();
-        this.darts = new ArrayList<>();
+    private static GamePlayer newGamePlayer(String gameId, String username, GameType gameType) {
+        return aGamePlayerBuilder()
+                .username(username)
+                .gameId(gameId)
+                .gameType(gameType)
+                .score(new HashMap<>())
+                .darts(new ArrayList<>())
+                .build();
     }
 
     /**   Game Initializers   **/
-    public static GamePlayer StartX01(String username, int score){
-        GamePlayer player = new GamePlayer(username);
-        player.gameType = GameType.X01;
+    public static GamePlayer StartX01(String gameId, String username, int score){
+        GamePlayer player = newGamePlayer(gameId, username,GameType.X01);
         player.score.put("score", score);
         return player;
     }
 
-    public static GamePlayer StartCricket(String username){
-        GamePlayer player = new GamePlayer(username);
-        player.gameType = GameType.CRICKET;
+    public static GamePlayer StartCricket(String gameId, String username){
+        GamePlayer player = newGamePlayer(gameId, username, GameType.CRICKET);
         player.score.put("20", 0);
         player.score.put("19", 0);
         player.score.put("18", 0);
@@ -73,5 +78,13 @@ public class GamePlayer {
 
     public Map<String, Integer> getScore() {
         return score;
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
+
+    public static GamePlayerBuilder aGamePlayerBuilder(){
+        return builder();
     }
 }
