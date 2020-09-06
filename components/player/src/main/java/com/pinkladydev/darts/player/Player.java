@@ -1,8 +1,12 @@
 package com.pinkladydev.darts.player;
 
-import java.util.ArrayList;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
+@Builder
 public class Player {
 
     private final String  id; // connection to user
@@ -11,12 +15,7 @@ public class Player {
     private final List<String> gameLog;
     private final List<String> leagues;
 
-    public Player(final String id, final String username) {
-        this.id = id;
-        this.username = username;
-
-        this.gameLog = new ArrayList<>();
-        this.leagues = new ArrayList<>();
-
+    public static PlayerBuilder aPlayerBuilder(){
+        return builder();
     }
 }
