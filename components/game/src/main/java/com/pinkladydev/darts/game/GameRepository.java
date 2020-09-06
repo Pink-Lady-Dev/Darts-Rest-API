@@ -10,5 +10,6 @@ public interface GameRepository extends MongoRepository<GamePlayerEntity, String
     GamePlayerEntity findGamePlayerEntityById(String Id);
 
     //Use this to get all players in game
-    List<GamePlayerEntity> findAllGamePlayerEntityByGameId(String GameId);
+    List<GamePlayerEntity> findAllGamePlayersEntityByGameId(String GameId);
+    List<GamePlayerEntity> findAllByGameId(String gameId);
 }

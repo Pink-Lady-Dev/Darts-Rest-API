@@ -106,7 +106,7 @@ class GameServiceTest {
             final Dart tempDart = randomDart();
 
             expectedScore.put("score", expectedScore.get("score") - tempDart.getPoints());
-            gameService.addDart(game.getId(), gamePlayer.getUsername(), tempDart);
+            gameService.addDart(game.getId(), gamePlayer.getUsername(), tempDart.getThrowNumber(), tempDart.getPie(), tempDart.isDouble(),tempDart.isTriple());
         }
 
         assertThat(gamePlayer.getScore()).isEqualTo(expectedScore);
@@ -133,11 +133,11 @@ class GameServiceTest {
             final Dart tempDart = randomDart();
 
             expectedScore.put("score", expectedScore.get("score") - tempDart.getPoints());
-            gameService.addDart(game.getId(), gamePlayer.getUsername(), tempDart);
+            gameService.addDart(game.getId(), gamePlayer.getUsername(), tempDart.getThrowNumber(), tempDart.getPie(), tempDart.isDouble(),tempDart.isTriple());
         }
 
         final Dart dart = randomDart();
-        gameService.addDart(game.getId(), gamePlayer.getUsername(), dart);
+        gameService.addDart(game.getId(), gamePlayer.getUsername(), dart.getThrowNumber(), dart.getPie(), dart.isDouble(),dart.isTriple());
         gameService.removeLastDart(game.getId(), gamePlayer.getUsername());
 
         assertThat(gamePlayer.getScore()).isEqualTo(expectedScore);

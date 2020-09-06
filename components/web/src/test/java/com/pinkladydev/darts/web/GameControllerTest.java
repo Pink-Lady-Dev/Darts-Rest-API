@@ -24,7 +24,6 @@ import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
 import static com.pinkladydev.darts.web.Helpers.randomDart;
 import static com.pinkladydev.darts.web.Helpers.randomGame;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -134,12 +133,7 @@ class GameControllerTest {
                 .andExpect(status().isOk());
 
 
-        verify(gameService,times(1)).addDart(eq(gameId),eq(userId),argument.capture());
-
-        assertEquals(dart.getThrowNumber(), argument.getValue().getThrowNumber());
-        assertEquals(dart.getPie(), argument.getValue().getPie());
-        assertEquals(dart.isDouble(), argument.getValue().isDouble());
-        assertEquals(dart.isTriple(), argument.getValue().isTriple());
+        verify(gameService,times(1)).addDart(gameId,userId,dart.getThrowNumber(), dart.getPie(), dart.isDouble(), dart.isTriple());
     }
 
     @Test

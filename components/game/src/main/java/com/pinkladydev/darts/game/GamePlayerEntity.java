@@ -19,7 +19,7 @@ public class GamePlayerEntity{
     private final String gameId;
     private final GameType gameType;
     private final Map<String, Integer> score;
-    private final List<Dart> darts;
+    private final List<Map<String, String>> darts;
     private final List<String> wins;
     private final List<String> losses;
 

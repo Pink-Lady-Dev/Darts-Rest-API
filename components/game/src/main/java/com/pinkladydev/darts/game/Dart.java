@@ -8,9 +8,9 @@ public class Dart {
 
     // Throw information
     private final String  id; // Identifier for throw
-    private final int throwNumber;
-    private final int points; // Calculated score
-    private final int pie; // Actual number hit
+    private final Integer throwNumber;
+    private final Integer points; // Calculated score
+    private final Integer pie; // Actual number hit
     private final boolean isDouble;
     private final boolean isTriple;
 
@@ -24,14 +24,14 @@ public class Dart {
     }
 
     public Dart(
-            @JsonProperty("throwNumber") int  throwNumber,
-            @JsonProperty("pie") int pie,
-            @JsonProperty("double") boolean isDouble,
-            @JsonProperty("triple") boolean isTriple) {
-
+            String id,
+            Integer  throwNumber,
+            Integer pie,
+            boolean isDouble,
+            boolean isTriple) {
 
         // Dart scoring
-        this.id = UUID.randomUUID().toString();
+        this.id = id;
         this.throwNumber = throwNumber;
         this.pie = pie;
 
@@ -50,23 +50,48 @@ public class Dart {
 
     }
 
-    public int getPoints() {
+    public Dart(
+            Integer  throwNumber,
+            Integer pie,
+            boolean isDouble,
+            boolean isTriple) {
+
+        this(UUID.randomUUID().toString(), throwNumber, pie, isDouble, isTriple);
+    }
+
+    public Dart(
+            @JsonProperty("throwNumber") int  throwNumber,
+            @JsonProperty("points") int points,
+            @JsonProperty("pie") int pie,
+            @JsonProperty("isDouble") boolean isDouble,
+            @JsonProperty("isTriple") boolean isTriple) {
+
+        // Dart scoring
+        this.id = "id";
+        this.throwNumber = throwNumber;
+        this.points = points;
+        this.pie = pie;
+        this.isDouble = isDouble;
+        this.isTriple = isTriple;
+    }
+
+    public Integer getPoints() {
         return points;
     }
 
-    public int getThrowNumber() {
+    public Integer getThrowNumber() {
         return throwNumber;
     }
 
-    public boolean isDouble() {
+    public Boolean isDouble() {
         return isDouble;
     }
 
-    public boolean isTriple() {
+    public Boolean isTriple() {
         return isTriple;
     }
 
-    public int getPie() {
+    public Integer getPie() {
         return pie;
     }
 

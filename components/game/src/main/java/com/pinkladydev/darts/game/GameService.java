@@ -52,7 +52,10 @@ public class GameService {
         return gameDao.getGamePlayers(gameId);
     }
 
-    public void addDart(String gameId, String userId, Dart dart) {
+    public void addDart(String gameId, String userId, int throwNumber, int pie, boolean isDouble, boolean isTriple) {
+
+        Dart dart = new Dart(throwNumber, pie, isDouble, isTriple);
+
         GamePlayer gamePlayer = gameDao.getGamePlayer(gameId,userId);
         gamePlayer.addDart(dart);
 
