@@ -1,4 +1,7 @@
-package com.pinkladydev.darts.player;
+package com.pinkladydev.darts.player.mappers;
+
+import com.pinkladydev.darts.player.Player;
+import com.pinkladydev.darts.player.PlayerEntity;
 
 import static com.pinkladydev.darts.player.Player.aPlayerBuilder;
 
