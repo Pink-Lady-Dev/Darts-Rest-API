@@ -17,4 +17,8 @@ public class PlayerService {
     public void newPlayer (String username) {
         playerDao.insertPlayer(username);
     }
+
+    public boolean doesPlayerExist(String username){
+        return playerDao.getPlayer(username) != null;
+    }
 }

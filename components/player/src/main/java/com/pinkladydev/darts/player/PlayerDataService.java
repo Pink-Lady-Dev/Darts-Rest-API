@@ -38,6 +38,6 @@ public class PlayerDataService implements PlayerDao{
 
     @Override
     public Player getPlayer(String userId) {
-        return null;
+        return PlayerEntityToPlayerMapper.map(playerRepository.findByUsername(userId));
     }
 }

@@ -1,5 +1,6 @@
 package com.pinkladydev.darts.game;
 
+import com.pinkladydev.darts.player.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,13 +16,18 @@ public class GameService {
 
     private final GameDao gameDao;
 
+    private final PlayerService playerService;
+
     private String webId;
 
     private SimpMessagingTemplate template;
 
     @Autowired
-    public GameService(@Qualifier("MongoGame") GameDao gameDao, SimpMessagingTemplate template){
+    public GameService(@Qualifier("MongoGame") final GameDao gameDao,
+                       final PlayerService playerService,
+                       final SimpMessagingTemplate template){
         this.gameDao = gameDao;
+        this.playerService = playerService;
         this.template = template;
         this.webId = null;
     }
@@ -34,6 +40,10 @@ public class GameService {
 
         // Validate player username is real
         List<GamePlayer> gamePlayers;
+        usernames.forEach((username) -> {
+            if (!playerService.doesPlayerExist(username)) {
+                throw new RuntimeException("Player does not exist");}});
+
         final String gameId = UUID.randomUUID().toString();
 
         if (gameType.equals("X01")){

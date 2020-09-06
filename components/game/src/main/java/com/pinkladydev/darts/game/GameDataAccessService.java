@@ -31,9 +31,7 @@ public class GameDataAccessService implements GameDao {
 
     @Override
     public List<GamePlayer> getGamePlayers(String gameId) {
-        List<GamePlayerEntity> gamePlayerEntities = gameRepository.findAllByGameId(gameId);
-
-        return gamePlayerEntities
+        return gameRepository.findAllByGameId(gameId)
                 .stream()
                 .map(GamePlayerEntityToGamePlayerMapper::map)
                 .collect(toList());

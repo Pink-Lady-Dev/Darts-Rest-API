@@ -1,5 +1,6 @@
 package com.pinkladydev.darts.game;
 
+import com.pinkladydev.darts.player.PlayerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -35,13 +36,16 @@ class GameServiceTest {
     private GameDao gameDao;
 
     @MockBean
+    private PlayerService playerService;
+
+    @MockBean
     private SimpMessagingTemplate template;
 
     private GameService gameService;
 
     @BeforeEach
     public void setup(){
-        this.gameService = new GameService(gameDao, template);
+        this.gameService = new GameService(gameDao, playerService, template);
     }
 
     @Test
