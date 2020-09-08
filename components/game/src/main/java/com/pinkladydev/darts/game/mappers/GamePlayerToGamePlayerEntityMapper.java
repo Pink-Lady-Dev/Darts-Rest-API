@@ -1,13 +1,16 @@
-package com.pinkladydev.darts.game;
+package com.pinkladydev.darts.game.mappers;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
+import com.pinkladydev.darts.game.Dart;
+import com.pinkladydev.darts.game.GamePlayer;
+import com.pinkladydev.darts.game.GamePlayerEntity;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.pinkladydev.darts.game.GamePlayerEntity.aGamePlayerEntityBuilder;
+import static com.pinkladydev.darts.game.HashGenerator.generateGamePlayerHash;
 import static java.util.stream.Collectors.toList;
 
 public class GamePlayerToGamePlayerEntityMapper {
@@ -15,16 +18,12 @@ public class GamePlayerToGamePlayerEntityMapper {
     public static GamePlayerEntity map(GamePlayer gamePlayer) {
 
         try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-
-            final String hash = toHexString(messageDigest.digest(
-                    (gamePlayer.getGameId() + gamePlayer.getUsername()).getBytes(StandardCharsets.UTF_8)));
-
             final List<Map<String, String>> darts = gamePlayer.getDarts()
                     .stream()
                     .map(GamePlayerToGamePlayerEntityMapper::mapDartToDictionary).collect(toList());
+
             return aGamePlayerEntityBuilder()
-                    .id(hash)
+                    .id(generateGamePlayerHash(gamePlayer.getGameId(), gamePlayer.getGameId()))
                     .gameId(gamePlayer.getGameId())
                     .username(gamePlayer.getUsername())
                     .gameType(gamePlayer.getGameType())
@@ -38,20 +37,6 @@ public class GamePlayerToGamePlayerEntityMapper {
         }
 
         return null;
-    }
-
-    public static String toHexString(byte[] bytes) {
-        StringBuilder hexString = new StringBuilder();
-
-        for (int i = 0; i < bytes.length; i++) {
-            String hex = Integer.toHexString(0xFF & bytes[i]);
-            if (hex.length() == 1) {
-                hexString.append('0');
-            }
-            hexString.append(hex);
-        }
-
-        return hexString.toString();
     }
 
     private static Map<String, String> mapDartToDictionary(Dart d){

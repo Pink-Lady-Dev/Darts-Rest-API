@@ -1,4 +1,8 @@
-package com.pinkladydev.darts.game;
+package com.pinkladydev.darts.game.mappers;
+
+import com.pinkladydev.darts.game.Dart;
+import com.pinkladydev.darts.game.GamePlayer;
+import com.pinkladydev.darts.game.GamePlayerEntity;
 
 import java.util.List;
 import java.util.Map;

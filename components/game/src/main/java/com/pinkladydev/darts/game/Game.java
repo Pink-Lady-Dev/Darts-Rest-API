@@ -20,11 +20,6 @@ public class Game {
                 .orElseThrow(() -> new RuntimeException("Make this no user found exception"));
     }
 
-    public List<Dart> getUserDarts(String userId){
-        return getGameUser(userId).getDarts();
-    }
-
-
     public static GameBuilder aGameBuilder(){
         return builder();
     }

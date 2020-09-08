@@ -1,32 +1,30 @@
 package com.pinkladydev.darts.game;
 
+import com.pinkladydev.darts.game.mappers.GamePlayerEntityToGamePlayerMapper;
+import com.pinkladydev.darts.game.mappers.GamePlayerToGamePlayerEntityMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Optional;
 
+import static com.pinkladydev.darts.game.HashGenerator.generateGamePlayerHash;
 import static java.util.stream.Collectors.toList;
 
 @Repository("MongoGame")
 public class GameDataAccessService implements GameDao {
 
     private final GameRepository gameRepository;
-    private final MessageDigest messageDigest;
 
-    public GameDataAccessService(final GameRepository gameRepository) throws NoSuchAlgorithmException {
+    @Autowired
+    public GameDataAccessService(final GameRepository gameRepository) {
         this.gameRepository = gameRepository;
-        this.messageDigest = MessageDigest.getInstance("SHA-256");
     }
 
     @Override
     public GamePlayer getGamePlayer(String gameId, String gamePlayerId) {
-        // TODO break this into its own class
-        final String hash = toHexString(this.messageDigest.digest(
-                (gameId + gamePlayerId).getBytes(StandardCharsets.UTF_8)));
-
-        return GamePlayerEntityToGamePlayerMapper.map((gameRepository.findGamePlayerEntityById(hash)));
+        return GamePlayerEntityToGamePlayerMapper.map((
+                gameRepository.findGamePlayerEntityById(generateGamePlayerHash(gameId,gamePlayerId))));
     }
 
     @Override
@@ -56,20 +54,8 @@ public class GameDataAccessService implements GameDao {
 
     @Override
     public void save(GamePlayer game) {
-        gameRepository.save(GamePlayerToGamePlayerEntityMapper.map(game));
-    }
-
-    public static String toHexString(byte[] bytes) {
-        StringBuilder hexString = new StringBuilder();
-
-        for (int i = 0; i < bytes.length; i++) {
-            String hex = Integer.toHexString(0xFF & bytes[i]);
-            if (hex.length() == 1) {
-                hexString.append('0');
-            }
-            hexString.append(hex);
-        }
-
-        return hexString.toString();
+        gameRepository.save(
+                Optional.ofNullable(GamePlayerToGamePlayerEntityMapper.map(game))
+                        .orElseThrow(() -> new RuntimeException("No game player")));
     }
 }

@@ -59,17 +59,16 @@ public class GamePlayer {
     }
 
     private void addX01(Dart dart){
-        darts.add(dart);
-        int points = dart.getPoints();
-        score.put("score", score.get("score") - points);
 
         // TODO do checks for game over
+        darts.add(dart);
+        score.put("score", score.get("score") - dart.getPoints());
+
     }
 
-    private Dart removeX01(){
-        Dart removed = darts.remove(darts.size() - 1);
+    private void removeX01(){
+        final Dart removed = darts.remove(darts.size() - 1);
         score.put("score", score.get("score") + removed.getPoints());
-        return removed;
     }
 
     /** Getters **/
