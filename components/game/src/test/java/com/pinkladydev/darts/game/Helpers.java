@@ -1,6 +1,5 @@
 package com.pinkladydev.darts.game;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,7 @@ import static java.util.stream.Collectors.toList;
 
 public class Helpers {
 
+    // TODO - break out into own files - per return type
     public static Game randomGame(){
         final List<String> usernames = generateListOf(
                 () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
@@ -56,25 +56,22 @@ public class Helpers {
     }
 
     public static GamePlayer getRandomGamePlayer(){
-        return getRandomGamePlayer(new ArrayList<>());
-    }
-
-    public static GamePlayer getRandomGamePlayer(final List<Dart> darts){
-        GamePlayer tempGamePlayer = GamePlayer.StartX01(
-                getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
-                getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
-                301
-        );
-        darts.forEach(tempGamePlayer::addDart);
-        return tempGamePlayer;
-    }
-
-    public static GamePlayer getRandomGamePlayerBuilder(){
         return GamePlayer.StartX01(
                 getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
                 getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
                 301
         );
+    }
+
+    public static GamePlayer getRandomGamePlayerWithDarts(){
+        GamePlayer tempGamePlayer = GamePlayer.StartX01(
+                getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
+                getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
+                301
+        );
+        generateListOf(Helpers::getRandomDart, getRandomNumberBetween(1,8))
+                .forEach(tempGamePlayer::addDart);
+        return tempGamePlayer;
     }
 
     public static Map<String, String> getRandomDartMap(){
@@ -114,7 +111,7 @@ public class Helpers {
                 .losses(generateListOf(() -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)), getRandomNumberBetween(0,4)))
                 .wins(generateListOf(() -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)), getRandomNumberBetween(0,4)))
                 .gameType(GameType.X01)
-                .score(scores);
-//                .darts(generateListOf(() -> getRandomDartMap(), getRandomNumberBetween(0, 12)))
+                .score(scores)
+                .darts(generateListOf(() -> getRandomDartMap(), getRandomNumberBetween(0, 12)));
     }
 }

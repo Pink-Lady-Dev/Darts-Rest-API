@@ -1,10 +1,8 @@
 package com.pinkladydev.darts.game.mappers;
 
-import com.pinkladydev.darts.chance.Chance;
 import com.pinkladydev.darts.game.Dart;
 import com.pinkladydev.darts.game.GamePlayer;
 import com.pinkladydev.darts.game.GamePlayerEntity;
-import com.pinkladydev.darts.game.Helpers;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,9 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
 import static com.pinkladydev.darts.game.GamePlayerEntity.aGamePlayerEntityBuilder;
-import static com.pinkladydev.darts.game.Helpers.getRandomGamePlayer;
+import static com.pinkladydev.darts.game.Helpers.getRandomGamePlayerWithDarts;
 import static com.pinkladydev.darts.game.mappers.GamePlayerEntityToGamePlayerMapper.map;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -24,9 +21,9 @@ class GamePlayerEntityToGamePlayerMapperTest {
 
     @Test
     void map_shouldReturnGamePlayerCorrespondingToGamePlayerEntity() {
-        final List<Dart> dartList = generateListOf(Helpers::getRandomDart, Chance.getRandomNumberBetween(0,8));
+        final GamePlayer expectedGamePlayer = getRandomGamePlayerWithDarts();
         // Use Map.of() in +1.9
-        final List<Map<String, String>> dartMapList = dartList.stream().map(dart -> {
+        final List<Map<String, String>> expectedDartMapList = expectedGamePlayer.getDarts().stream().map(dart -> {
             HashMap<String, String> map = new HashMap<String, String>(){};
             map.put("id", dart.getId());
             map.put("throwNumber", dart.getThrowNumber().toString());
@@ -36,7 +33,6 @@ class GamePlayerEntityToGamePlayerMapperTest {
             return map;
         }).collect(toList());
 
-        final GamePlayer expectedGamePlayer = getRandomGamePlayer(dartList);
         final GamePlayerEntity gamePlayerEntity = aGamePlayerEntityBuilder()
                 .gameId(expectedGamePlayer.getGameId())
                 .id(expectedGamePlayer.getGameId())
@@ -45,7 +41,7 @@ class GamePlayerEntityToGamePlayerMapperTest {
                 .wins(new ArrayList<>())
                 .losses(new ArrayList<>())
                 .score(expectedGamePlayer.getScore())
-                .darts(dartMapList)
+                .darts(expectedDartMapList)
                 .build();
 
         final GamePlayer actualGamePlayer = map(gamePlayerEntity);
@@ -53,8 +49,6 @@ class GamePlayerEntityToGamePlayerMapperTest {
 
         assertThat(actualGamePlayer)
                 .isEqualToIgnoringGivenFields(expectedGamePlayer, "darts");
-        expectedGamePlayer.getDarts().forEach(dart -> {
-            assertTrue(actualPoints.contains(dart.getPoints()));
-        });
+        expectedGamePlayer.getDarts().forEach(dart -> assertTrue(actualPoints.contains(dart.getPoints())));
     }
 }
