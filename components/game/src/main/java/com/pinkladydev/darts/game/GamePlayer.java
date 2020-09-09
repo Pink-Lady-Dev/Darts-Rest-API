@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.pinkladydev.darts.game.exceptions.GamePlayerException.InvalidCricketDartException;
+
 @Builder
 public class GamePlayer {
 
@@ -41,7 +43,7 @@ public class GamePlayer {
         player.score.put("17", 0);
         player.score.put("16", 0);
         player.score.put("15", 0);
-        player.score.put("bull", 0);
+        player.score.put("25", 0);
         return player;
     }
 
@@ -49,18 +51,21 @@ public class GamePlayer {
     public void addDart(Dart dart){
         if (GameType.X01 == gameType){
             addX01(dart);
+        } else if (GameType.CRICKET == gameType){
+            addCricket(dart);
         }
     }
 
     public void removeDart(){
         if (GameType.X01 == gameType){
             removeX01();
+        } else if (GameType.CRICKET == gameType){
+          removeCricket();
         }
     }
 
     private void addX01(Dart dart){
-
-        // TODO do checks for game over
+        // TODO do checks for game over && validity
         darts.add(dart);
         score.put("score", score.get("score") - dart.getPoints());
 
@@ -69,6 +74,22 @@ public class GamePlayer {
     private void removeX01(){
         final Dart removed = darts.remove(darts.size() - 1);
         score.put("score", score.get("score") + removed.getPoints());
+    }
+
+    private void addCricket(Dart dart){
+        // TODO do checks for game over && validity
+        if (!List.of(15,16,17,18,19,20,25).contains(dart.getPie())){
+            throw InvalidCricketDartException(dart.getPie().toString());
+        }
+
+        darts.add(dart);
+        score.put(dart.getPie().toString(), score.get(dart.getPie().toString()) + 1);
+
+    }
+
+    private void removeCricket(){
+        final Dart removed = darts.remove(darts.size() - 1);
+        score.put(removed.getPie().toString(), Math.max(score.get(removed.getPie().toString()) - 1 , 0));
     }
 
     /** Getters **/

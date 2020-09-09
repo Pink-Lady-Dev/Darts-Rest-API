@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.pinkladydev.darts.game.GamePlayerEntity.aGamePlayerEntityBuilder;
-import static com.pinkladydev.darts.game.Helpers.getRandomGamePlayerWithDarts;
+import static com.pinkladydev.darts.game.chance.ChanceGamePlayer.getRandomGamePlayerWithDarts;
 import static com.pinkladydev.darts.game.mappers.GamePlayerEntityToGamePlayerMapper.map;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

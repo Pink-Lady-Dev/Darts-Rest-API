@@ -9,7 +9,7 @@ apply plugin: 'idea'
 group = 'com.pinkladydev'
 version = '0.0.1-SNAPSHOT'
 description = 'Darts-Rest-API'
-sourceCompatibility = '1.8'
+sourceCompatibility = '1.11'
 
 repositories {
     mavenCentral()

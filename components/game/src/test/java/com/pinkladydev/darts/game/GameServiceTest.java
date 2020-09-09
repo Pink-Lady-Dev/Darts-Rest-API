@@ -15,9 +15,9 @@ import java.util.List;
 import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
 import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
-import static com.pinkladydev.darts.game.Helpers.randomDart;
-import static com.pinkladydev.darts.game.Helpers.randomGame;
-import static com.pinkladydev.darts.game.Helpers.randomX01;
+import static com.pinkladydev.darts.game.chance.ChanceDart.getRandomDart;
+import static com.pinkladydev.darts.game.chance.Helpers.randomGame;
+import static com.pinkladydev.darts.game.chance.Helpers.randomX01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -90,7 +90,7 @@ class GameServiceTest {
     void addDart_forX01Game_shouldUpdateUserScore_andSendMessageTemplate() {
         gameService.setWebId(getRandomNumberBetween(1,9999).toString());
 
-        final Dart dart = randomDart();
+        final Dart dart = getRandomDart();
         final Integer startingScore = (getRandomNumberBetween(0,7) * 100) + 301;
         final String socketAddress = "/topic/notification/" + gameService.getWebId();
 
@@ -107,7 +107,7 @@ class GameServiceTest {
         expectedScore.put("score", startingScore);
 
         for (int dNumber = 0; dNumber < dartThrows; dNumber++){
-            final Dart tempDart = randomDart();
+            final Dart tempDart = getRandomDart();
 
             expectedScore.put("score", expectedScore.get("score") - tempDart.getPoints());
             gameService.addDart(game.getId(), gamePlayer.getUsername(), tempDart.getThrowNumber(), tempDart.getPie(), tempDart.isDouble(),tempDart.isTriple());
@@ -134,13 +134,13 @@ class GameServiceTest {
 
         expectedScore.put("score", startingScore);
         for (int dNumber = 0; dNumber < getRandomNumberBetween(2,6); dNumber++){
-            final Dart tempDart = randomDart();
+            final Dart tempDart = getRandomDart();
 
             expectedScore.put("score", expectedScore.get("score") - tempDart.getPoints());
             gameService.addDart(game.getId(), gamePlayer.getUsername(), tempDart.getThrowNumber(), tempDart.getPie(), tempDart.isDouble(),tempDart.isTriple());
         }
 
-        final Dart dart = randomDart();
+        final Dart dart = getRandomDart();
         gameService.addDart(game.getId(), gamePlayer.getUsername(), dart.getThrowNumber(), dart.getPie(), dart.isDouble(),dart.isTriple());
         gameService.removeLastDart(game.getId(), gamePlayer.getUsername());
 

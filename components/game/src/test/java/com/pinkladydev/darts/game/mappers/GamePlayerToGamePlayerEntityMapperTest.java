@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static com.pinkladydev.darts.game.GamePlayer.aGamePlayerBuilder;
-import static com.pinkladydev.darts.game.Helpers.getRandomGamePlayerEntityBuilder;
+import static com.pinkladydev.darts.game.chance.Helpers.getRandomGamePlayerEntityBuilder;
 import static com.pinkladydev.darts.game.mappers.GamePlayerToGamePlayerEntityMapper.map;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
