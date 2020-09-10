@@ -65,9 +65,12 @@ public class GamePlayer {
     private Dart addX01(final Dart dart){
         int provisionalScore = score.get("score") - dart.getPoints();
 
-        DartResponseType dartResponseType = DartResponseType.SUCCESS;
+        DartResponseType dartResponseType = dart.getThrowNumber() == 2 ? DartResponseType.ROUND_OVER : DartResponseType.NEXT_THROW;
         if (provisionalScore == 0) dartResponseType = DartResponseType.GAME_OVER;
-        if (provisionalScore < 0)  dartResponseType = DartResponseType.BUST;
+        if (provisionalScore < 0) {
+            dartResponseType = DartResponseType.BUST;
+            provisionalScore = 0;
+        };
 
         dart.setDartResponseType(dartResponseType);
         darts.add(dart);
@@ -86,7 +89,7 @@ public class GamePlayer {
             throw InvalidCricketDartException(dart.getPie().toString());
         }
 
-        DartResponseType dartResponseType = DartResponseType.SUCCESS;
+        DartResponseType dartResponseType = dart.getThrowNumber() == 2 ? DartResponseType.ROUND_OVER : DartResponseType.NEXT_THROW;
         if (score.values().stream().noneMatch(pieValue -> pieValue < 3)) dartResponseType = DartResponseType.GAME_OVER;
 
         dart.setDartResponseType(dartResponseType);

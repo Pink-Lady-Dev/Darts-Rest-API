@@ -1,7 +1,6 @@
 package com.pinkladydev.darts.game.chance;
 
 import com.pinkladydev.darts.game.Dart;
-import com.pinkladydev.darts.game.DartResponseType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,24 +13,35 @@ import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 public class ChanceDart {
 
     public static Dart getRandomDart(){
+        final boolean isDouble = getRandomBoolean();
         return new Dart(
                 UUID.randomUUID().toString(),
                 getRandomNumberBetween(0,2),
                 getRandomNumberBetween(1,20),
-                getRandomBoolean(),
-                getRandomBoolean(),
-                DartResponseType.SUCCESS
+                isDouble,
+                !isDouble && getRandomBoolean()
         );
     }
 
-    public static Dart getRandomDart(List<Integer> acceptablePie){
+    public static Dart getRandomDart(final int throwNumber){
+        final boolean isDouble = getRandomBoolean();
         return new Dart(
                 UUID.randomUUID().toString(),
-                getRandomNumberBetween(0,2),
+                throwNumber,
+                getRandomNumberBetween(1,20),
+                isDouble,
+                !isDouble && getRandomBoolean()
+        );
+    }
+
+    public static Dart getRandomDart( final int throwNumber, List<Integer> acceptablePie){
+        final boolean isDouble = getRandomBoolean();
+        return new Dart(
+                UUID.randomUUID().toString(),
+                throwNumber,
                 acceptablePie.get(getRandomNumberBetween(0, acceptablePie.size() - 1)),
-                getRandomBoolean(),
-                getRandomBoolean(),
-                DartResponseType.SUCCESS);
+                isDouble,
+                !isDouble && getRandomBoolean());
     }
 
     public static Map<String, String> getRandomDartMap(){

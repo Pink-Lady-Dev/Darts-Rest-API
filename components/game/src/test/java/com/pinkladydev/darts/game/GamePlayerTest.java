@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
+import static com.pinkladydev.darts.chance.Chance.getRandomBoolean;
 import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.darts.game.chance.ChanceDart.getRandomDart;
 import static com.pinkladydev.darts.game.chance.ChanceGamePlayer.getCricketRandomGamePlayerWithDarts;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GamePlayerTest {
 
+    /** Start Games **/
     @Test
     void startX01_shouldCreateNewGamePlayerInX01Game() {
         final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(5,20));
@@ -60,54 +62,75 @@ class GamePlayerTest {
         assertEquals(cricketGamePlayer.getDarts(), new ArrayList<Dart>());
     }
 
+    /** X01 Game Scenarios **/
     @Test
-    void addDart_toXO1Game_shouldAddDartToDartList_AndSubtractItFromScore_AndReturnDart() {
+    void addDart_toXO1Game_onThrowZeroOrOne_shouldAddDartToDartList_AndSubtractItFromScore_AndReturnDartWithTypeNextThrow() {
         final GamePlayer gamePlayer = getX01RandomGamePlayerWithDarts();
         final List<String> expectedDartIdList = gamePlayer.getDarts().stream().map(Dart::getId).collect(toList());
-        final Dart dart = getRandomDart();
+        final Dart dart = getRandomDart(getRandomBoolean() ? 0 : 1);
         expectedDartIdList.add(dart.getId());
 
         final Map<String, Integer> expectedScore = gamePlayer.getScore();
         expectedScore.put("score", expectedScore.get("score") - dart.getPoints());
 
-        final Dart actualDart = gamePlayer.addDart(dart);
+        final Dart actualDart = gamePlayer.addDart(new Dart(dart));
 
         assertEquals(gamePlayer.getScore(), expectedScore);
         assertEquals(gamePlayer.getDarts().stream().map(Dart::getId).collect(toList()), expectedDartIdList);
-        assertThat(actualDart).isEqualToComparingFieldByField(dart);
+        assertEquals(actualDart.getDartResponseType(), DartResponseType.NEXT_THROW);
+        assertThat(actualDart).isEqualToIgnoringGivenFields(dart, "dartResponseType");
     }
 
     @Test
-    void addDart_toCricketGame_shouldAddDartToDartListAndAddToCorrectCategory() {
-        final GamePlayer gamePlayer = getCricketRandomGamePlayerWithDarts();
+    void addDart_toXO1Game_onThrowTwo_shouldAddDartToDartList_AndSubtractItFromScore_AndReturnDartWithTypeRoundOver() {
+        final GamePlayer gamePlayer = getX01RandomGamePlayerWithDarts();
         final List<String> expectedDartIdList = gamePlayer.getDarts().stream().map(Dart::getId).collect(toList());
-        final Dart dart = getRandomDart(List.of(15,16,17,18,19,20,25));
+        final Dart dart = getRandomDart(2);
         expectedDartIdList.add(dart.getId());
 
         final Map<String, Integer> expectedScore = gamePlayer.getScore();
-        expectedScore.put(dart.getPie().toString(), expectedScore.get(dart.getPie().toString()) + 1);
+        expectedScore.put("score", expectedScore.get("score") - dart.getPoints());
 
-        final Dart actualDart = gamePlayer.addDart(dart);
+        final Dart actualDart = gamePlayer.addDart(new Dart(dart));
 
         assertEquals(gamePlayer.getScore(), expectedScore);
         assertEquals(gamePlayer.getDarts().stream().map(Dart::getId).collect(toList()), expectedDartIdList);
-        assertThat(actualDart).isEqualToComparingFieldByField(dart);
+        assertEquals(actualDart.getDartResponseType(), DartResponseType.ROUND_OVER);
+        assertThat(actualDart).isEqualToIgnoringGivenFields(dart, "dartResponseType");
     }
 
     @Test
-    void addDart_invalidDart_toCricketGame_shouldNotChangeScoreAndThrowException() {
-        final GamePlayer gamePlayer = getCricketRandomGamePlayerWithDarts();
+    void addDart_toXO1Game_andPlayerScoreEqualsZero_shouldAddDartToDartList_AndSetScoreToZero_AndReturnDartWithTypeGameOver() {
+        final GamePlayer gamePlayer = getX01RandomGamePlayerWithDarts();
         final List<String> expectedDartIdList = gamePlayer.getDarts().stream().map(Dart::getId).collect(toList());
-        final Dart dart = getRandomDart(List.of(1,2,3,4,5,6,7,8,9,10,11,12,13,14));
+        final Dart dart = getRandomDart();
         expectedDartIdList.add(dart.getId());
 
-        final Map<String, Integer> expectedScore = gamePlayer.getScore();
-        expectedScore.put(dart.getPie().toString(), expectedScore.get(dart.getPie().toString()));
+        gamePlayer.getScore().put("score", dart.getPoints());
 
-        assertThrows(InvalidDartException.class, () -> gamePlayer.addDart(dart), "");
+        final Dart actualDart = gamePlayer.addDart(new Dart(dart));
 
-        assertEquals(gamePlayer.getScore(), expectedScore);
-        gamePlayer.getDarts().forEach(d -> assertTrue(expectedDartIdList.contains(d.getId())));
+        assertEquals(gamePlayer.getScore(), Map.of("score",0));
+        assertEquals(gamePlayer.getDarts().stream().map(Dart::getId).collect(toList()), expectedDartIdList);
+        assertEquals(actualDart.getDartResponseType(), DartResponseType.GAME_OVER);
+        assertThat(actualDart).isEqualToIgnoringGivenFields(dart, "dartResponseType");
+    }
+
+    @Test
+    void addDart_toXO1Game_andPlayerScoreGoesPastZero_shouldAddDartToDartList_AndNotChangeScore_AndReturnDartWithTypeBust() {
+        final GamePlayer gamePlayer = getX01RandomGamePlayerWithDarts();
+        final List<String> expectedDartIdList = gamePlayer.getDarts().stream().map(Dart::getId).collect(toList());
+        final Dart dart = getRandomDart();
+        expectedDartIdList.add(dart.getId());
+
+        gamePlayer.getScore().put("score", 0);
+
+        final Dart actualDart = gamePlayer.addDart(new Dart(dart));
+
+        assertEquals(gamePlayer.getScore(), Map.of("score",0 ));
+        assertEquals(gamePlayer.getDarts().stream().map(Dart::getId).collect(toList()), expectedDartIdList);
+        assertEquals(actualDart.getDartResponseType(), DartResponseType.BUST);
+        assertThat(actualDart).isEqualToIgnoringGivenFields(dart, "dartResponseType");
     }
 
     @Test
@@ -125,6 +148,80 @@ class GamePlayerTest {
 
         assertEquals(gamePlayer.getScore(), expectedScore);
         assertEquals(gamePlayer.getDarts().stream().map(Dart::getId).collect(toList()), expectedDartIdList);
+    }
+
+    /** Cricket Game Scenarios **/
+    @Test
+    void addDart_toCricketGame_onThrowZeroOrOne_shouldAddDartToDartList_AndAddToCorrectCategory_AndReturnDartWithTypeNextThrow(){
+        final GamePlayer gamePlayer = getCricketRandomGamePlayerWithDarts();
+        final List<String> expectedDartIdList = gamePlayer.getDarts().stream().map(Dart::getId).collect(toList());
+        final Dart dart = getRandomDart(getRandomBoolean() ? 0 : 1, List.of(15,16,17,18,19,20,25));
+        expectedDartIdList.add(dart.getId());
+
+        final Map<String, Integer> expectedScore = gamePlayer.getScore();
+        expectedScore.put(dart.getPie().toString(), expectedScore.get(dart.getPie().toString()) + 1);
+
+        final Dart actualDart = gamePlayer.addDart(new Dart(dart));
+
+        assertEquals(gamePlayer.getScore(), expectedScore);
+        assertEquals(gamePlayer.getDarts().stream().map(Dart::getId).collect(toList()), expectedDartIdList);
+        assertEquals(actualDart.getDartResponseType(), DartResponseType.NEXT_THROW);
+        assertThat(actualDart).isEqualToIgnoringGivenFields(dart, "dartResponseType");
+    }
+
+    @Test
+    void addDart_toCricketGame_onThrowTwo_shouldAddDartToDartList_AndAddToCorrectCategory_AndReturnDartWithTypeRoundOver(){
+        final GamePlayer gamePlayer = getCricketRandomGamePlayerWithDarts();
+        final List<String> expectedDartIdList = gamePlayer.getDarts().stream().map(Dart::getId).collect(toList());
+        final Dart dart = getRandomDart(2, List.of(15,16,17,18,19,20,25));
+        expectedDartIdList.add(dart.getId());
+
+        final Map<String, Integer> expectedScore = gamePlayer.getScore();
+        expectedScore.put(dart.getPie().toString(), expectedScore.get(dart.getPie().toString()) + 1);
+
+        final Dart actualDart = gamePlayer.addDart(new Dart(dart));
+
+        assertEquals(gamePlayer.getScore(), expectedScore);
+        assertEquals(gamePlayer.getDarts().stream().map(Dart::getId).collect(toList()), expectedDartIdList);
+        assertEquals(actualDart.getDartResponseType(), DartResponseType.ROUND_OVER);
+        assertThat(actualDart).isEqualToIgnoringGivenFields(dart, "dartResponseType");
+    }
+
+    @Test
+    void addDart_toCricketGame_shouldAddDartToDartList_AndAddToCorrectCategory_AndReturnDartWithTypeGameOver(){
+        final GamePlayer gamePlayer = getCricketRandomGamePlayerWithDarts();
+        gamePlayer.getScore().keySet().forEach(key -> gamePlayer.getScore().put(key, 3));
+
+        final List<String> expectedDartIdList = gamePlayer.getDarts().stream().map(Dart::getId).collect(toList());
+        final Dart dart = getRandomDart(getRandomNumberBetween(0,2), List.of(15,16,17,18,19,20,25));
+        expectedDartIdList.add(dart.getId());
+
+        final Map<String, Integer> expectedScore = gamePlayer.getScore();
+
+        expectedScore.put(dart.getPie().toString(), expectedScore.get(dart.getPie().toString()) + 1);
+
+        final Dart actualDart = gamePlayer.addDart(new Dart(dart));
+
+        assertEquals(gamePlayer.getScore(), expectedScore);
+        assertEquals(gamePlayer.getDarts().stream().map(Dart::getId).collect(toList()), expectedDartIdList);
+        assertEquals(actualDart.getDartResponseType(), DartResponseType.GAME_OVER);
+        assertThat(actualDart).isEqualToIgnoringGivenFields(dart, "dartResponseType");
+    }
+
+    @Test
+    void addDart_invalidDart_toCricketGame_shouldNotChangeScoreAndThrowException() {
+        final GamePlayer gamePlayer = getCricketRandomGamePlayerWithDarts();
+        final List<String> expectedDartIdList = gamePlayer.getDarts().stream().map(Dart::getId).collect(toList());
+        final Dart dart = getRandomDart(getRandomBoolean() ? 0 : 1, List.of(1,2,3,4,5,6,7,8,9,10,11,12,13,14));
+        expectedDartIdList.add(dart.getId());
+
+        final Map<String, Integer> expectedScore = gamePlayer.getScore();
+        expectedScore.put(dart.getPie().toString(), expectedScore.get(dart.getPie().toString()));
+
+        assertThrows(InvalidDartException.class, () -> gamePlayer.addDart(dart), "");
+
+        assertEquals(gamePlayer.getScore(), expectedScore);
+        gamePlayer.getDarts().forEach(d -> assertTrue(expectedDartIdList.contains(d.getId())));
     }
 
     @Test

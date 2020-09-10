@@ -1,7 +1,6 @@
 package com.pinkladydev.darts.web.helpers;
 
 import com.pinkladydev.darts.game.Dart;
-import com.pinkladydev.darts.game.DartResponseType;
 import com.pinkladydev.darts.game.GameType;
 
 import java.util.HashMap;
@@ -20,8 +19,7 @@ public class ChanceDart {
                 getRandomNumberBetween(0,2),
                 getRandomNumberBetween(1,20),
                 getRandomBoolean(),
-                getRandomBoolean(),
-                DartResponseType.SUCCESS
+                getRandomBoolean()
         );
     }
 
@@ -32,8 +30,7 @@ public class ChanceDart {
                 gameType == GameType.CRICKET
                         ? cricketNumber() : getRandomNumberBetween(1, 20),
                 getRandomBoolean(),
-                getRandomBoolean(),
-                DartResponseType.SUCCESS);
+                getRandomBoolean());
     }
 
     public static Map<String, String> getRandomDartMap(){

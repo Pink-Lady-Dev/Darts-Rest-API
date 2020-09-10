@@ -53,7 +53,7 @@ public class ChanceGamePlayer {
                 getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
                 getRandomAlphaNumericString(getRandomNumberBetween(5,20))
         );
-        generateListOf(() -> getRandomDart(List.of(15,16,17,18,19,20,25)), getRandomNumberBetween(1,5))
+        generateListOf(() -> getRandomDart(getRandomNumberBetween(0,2),List.of(15,16,17,18,19,20,25)), getRandomNumberBetween(1,5))
                 .forEach(tempGamePlayer::addDart);
         return tempGamePlayer;
     }

@@ -24,25 +24,10 @@ public class Dart {
     }
 
     public Dart(
-            String id,
-            Integer throwNumber,
-            Integer pie,
-            boolean isDouble,
-            boolean isTriple,
-            DartResponseType dartResponseType) {
-
-
-        this( id, throwNumber, pie, isDouble, isTriple);
-        this.dartResponseType = dartResponseType;
-    }
-
-    public Dart(
             Integer throwNumber,
             Integer pie,
             boolean isDouble,
             boolean isTriple) {
-
-
         this( UUID.randomUUID().toString(), throwNumber, pie, isDouble, isTriple);
     }
 
@@ -66,7 +51,7 @@ public class Dart {
     }
 
     public Integer getPoints() {
-        return this.pie * Math.max(1, (this.isDouble ? 1 : 0) * 2) * Math.max(1, (this.isTriple ? 1 : 0) * 3);
+        return this.pie * (this.isDouble ? 2 : 1) * (this.isTriple ? 3 : 1);
     }
 
     public Integer getThrowNumber() {
