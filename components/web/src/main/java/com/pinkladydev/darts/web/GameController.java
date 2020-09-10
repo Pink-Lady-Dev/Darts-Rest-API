@@ -4,6 +4,7 @@ import com.pinkladydev.darts.game.Game;
 import com.pinkladydev.darts.game.GamePlayer;
 import com.pinkladydev.darts.game.GameService;
 import com.pinkladydev.darts.web.models.DartRequest;
+import com.pinkladydev.darts.web.models.DartResponse;
 import com.pinkladydev.darts.web.models.GameNotificationRequest;
 import com.pinkladydev.darts.web.models.GameRequest;
 import com.pinkladydev.darts.web.models.GameResponse;
@@ -77,8 +78,9 @@ public class GameController {
     }
 
     @PostMapping("/game/{gameId}/user/{userId}")
-    public void addUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId, @RequestBody DartRequest dart){
-        gameService.addDart(gameId, userId, dart.getThrowNumber(), dart.getPie(), dart.isDouble(), dart.isTriple());
+    public DartResponse addUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId, @RequestBody DartRequest dart){
+        return new DartResponse(
+                gameService.addDart(gameId, userId, dart.getThrowNumber(), dart.getPie(), dart.isDouble(), dart.isTriple()).getDartResponseType());
     }
 
     @DeleteMapping("/game/{gameId}/user/{userId}")

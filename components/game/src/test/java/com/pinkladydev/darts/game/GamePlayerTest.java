@@ -1,6 +1,6 @@
 package com.pinkladydev.darts.game;
 
-import com.pinkladydev.darts.game.exceptions.GamePlayerException;
+import com.pinkladydev.darts.game.exceptions.InvalidDartException;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import static com.pinkladydev.darts.game.chance.ChanceDart.getRandomDart;
 import static com.pinkladydev.darts.game.chance.ChanceGamePlayer.getCricketRandomGamePlayerWithDarts;
 import static com.pinkladydev.darts.game.chance.ChanceGamePlayer.getX01RandomGamePlayerWithDarts;
 import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -60,7 +61,7 @@ class GamePlayerTest {
     }
 
     @Test
-    void addDart_toXO1Game_shouldAddDartToDartListAndSubtractItFromScore() {
+    void addDart_toXO1Game_shouldAddDartToDartList_AndSubtractItFromScore_AndReturnDart() {
         final GamePlayer gamePlayer = getX01RandomGamePlayerWithDarts();
         final List<String> expectedDartIdList = gamePlayer.getDarts().stream().map(Dart::getId).collect(toList());
         final Dart dart = getRandomDart();
@@ -69,10 +70,11 @@ class GamePlayerTest {
         final Map<String, Integer> expectedScore = gamePlayer.getScore();
         expectedScore.put("score", expectedScore.get("score") - dart.getPoints());
 
-        gamePlayer.addDart(dart);
+        final Dart actualDart = gamePlayer.addDart(dart);
 
         assertEquals(gamePlayer.getScore(), expectedScore);
         assertEquals(gamePlayer.getDarts().stream().map(Dart::getId).collect(toList()), expectedDartIdList);
+        assertThat(actualDart).isEqualToComparingFieldByField(dart);
     }
 
     @Test
@@ -85,10 +87,11 @@ class GamePlayerTest {
         final Map<String, Integer> expectedScore = gamePlayer.getScore();
         expectedScore.put(dart.getPie().toString(), expectedScore.get(dart.getPie().toString()) + 1);
 
-        gamePlayer.addDart(dart);
+        final Dart actualDart = gamePlayer.addDart(dart);
 
         assertEquals(gamePlayer.getScore(), expectedScore);
         assertEquals(gamePlayer.getDarts().stream().map(Dart::getId).collect(toList()), expectedDartIdList);
+        assertThat(actualDart).isEqualToComparingFieldByField(dart);
     }
 
     @Test
@@ -101,7 +104,7 @@ class GamePlayerTest {
         final Map<String, Integer> expectedScore = gamePlayer.getScore();
         expectedScore.put(dart.getPie().toString(), expectedScore.get(dart.getPie().toString()));
 
-        assertThrows(GamePlayerException.class, () -> gamePlayer.addDart(dart), "");
+        assertThrows(InvalidDartException.class, () -> gamePlayer.addDart(dart), "");
 
         assertEquals(gamePlayer.getScore(), expectedScore);
         gamePlayer.getDarts().forEach(d -> assertTrue(expectedDartIdList.contains(d.getId())));

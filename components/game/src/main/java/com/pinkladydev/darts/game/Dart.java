@@ -1,26 +1,49 @@
 package com.pinkladydev.darts.game;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.UUID;
+
+import static com.pinkladydev.darts.game.exceptions.InvalidDartException.InvalidDoubleAndTripleDartException;
 
 public class Dart {
 
     // Throw information
     private final String  id; // Identifier for throw
     private final Integer throwNumber;
-    private final Integer points; // Calculated score
     private final Integer pie; // Actual number hit
     private final boolean isDouble;
     private final boolean isTriple;
+    private DartResponseType dartResponseType;
 
     public Dart(Dart dart) {
         this.id = dart.id;
         this.throwNumber = dart.throwNumber;
-        this.points = dart.points;
         this.pie = dart.pie;
         this.isDouble = dart.isDouble;
         this.isTriple = dart.isTriple;
+        this.dartResponseType = dart.dartResponseType;
+    }
+
+    public Dart(
+            String id,
+            Integer throwNumber,
+            Integer pie,
+            boolean isDouble,
+            boolean isTriple,
+            DartResponseType dartResponseType) {
+
+
+        this( id, throwNumber, pie, isDouble, isTriple);
+        this.dartResponseType = dartResponseType;
+    }
+
+    public Dart(
+            Integer throwNumber,
+            Integer pie,
+            boolean isDouble,
+            boolean isTriple) {
+
+
+        this( UUID.randomUUID().toString(), throwNumber, pie, isDouble, isTriple);
     }
 
     public Dart(
@@ -30,53 +53,20 @@ public class Dart {
             boolean isDouble,
             boolean isTriple) {
 
-        // Dart scoring
         this.id = id;
         this.throwNumber = throwNumber;
         this.pie = pie;
 
-
-        // This is just a check to make sure they are not both true
-        // Will most likely need to be an exception
         if (isDouble && isTriple) {
-            this.isDouble = false;
-            this.isTriple = false;
-        } else {
-            this.isDouble = isDouble;
-            this.isTriple = isTriple;
+            throw InvalidDoubleAndTripleDartException();
         }
 
-        this.points = this.pie * Math.max(1, (this.isDouble ? 1 : 0) * 2) * Math.max(1, (this.isTriple ? 1 : 0) * 3);
-
-    }
-
-    public Dart(
-            Integer  throwNumber,
-            Integer pie,
-            boolean isDouble,
-            boolean isTriple) {
-
-        this(UUID.randomUUID().toString(), throwNumber, pie, isDouble, isTriple);
-    }
-
-    public Dart(
-            @JsonProperty("throwNumber") int  throwNumber,
-            @JsonProperty("points") int points,
-            @JsonProperty("pie") int pie,
-            @JsonProperty("isDouble") boolean isDouble,
-            @JsonProperty("isTriple") boolean isTriple) {
-
-        // Dart scoring
-        this.id = "id";
-        this.throwNumber = throwNumber;
-        this.points = points;
-        this.pie = pie;
         this.isDouble = isDouble;
         this.isTriple = isTriple;
     }
 
     public Integer getPoints() {
-        return points;
+        return this.pie * Math.max(1, (this.isDouble ? 1 : 0) * 2) * Math.max(1, (this.isTriple ? 1 : 0) * 3);
     }
 
     public Integer getThrowNumber() {
@@ -97,5 +87,13 @@ public class Dart {
 
     public String getId() {
         return id;
+    }
+
+    public DartResponseType getDartResponseType() {
+        return dartResponseType;
+    }
+
+    public void setDartResponseType(DartResponseType dartResponseType) {
+        this.dartResponseType = dartResponseType;
     }
 }

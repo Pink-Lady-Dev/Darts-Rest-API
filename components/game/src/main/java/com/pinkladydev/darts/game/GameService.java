@@ -38,8 +38,7 @@ public class GameService {
 
     public String createGame(List<String> usernames, String gameType) {
 
-        // Validate player username is real
-        List<GamePlayer> gamePlayers;
+        final List<GamePlayer> gamePlayers;
         usernames.forEach((username) -> {
             if (!playerService.doesPlayerExist(username)) {
                 throw new RuntimeException("Player does not exist");}});
@@ -62,12 +61,12 @@ public class GameService {
         return gameDao.getGamePlayers(gameId);
     }
 
-    public void addDart(String gameId, String userId, int throwNumber, int pie, boolean isDouble, boolean isTriple) {
+    public Dart addDart(String gameId, String userId, int throwNumber, int pie, boolean isDouble, boolean isTriple) {
 
         Dart dart = new Dart(throwNumber, pie, isDouble, isTriple);
 
-        GamePlayer gamePlayer = gameDao.getGamePlayer(gameId,userId);
-        gamePlayer.addDart(dart);
+        final GamePlayer gamePlayer = gameDao.getGamePlayer(gameId,userId);
+        dart = gamePlayer.addDart(dart);
 
         gameDao.save(gamePlayer);
 
@@ -75,6 +74,8 @@ public class GameService {
         template.convertAndSend(
                 "/topic/notification/" + this.webId,
                 new DartNotification(dart, gamePlayer.getUsername(), gamePlayer.getScore().get("score")));
+
+        return dart;
     }
 
     public void removeLastDart(String gameId, String userId) {

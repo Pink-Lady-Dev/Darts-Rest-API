@@ -3,9 +3,11 @@ package com.pinkladydev.darts.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pinkladydev.darts.game.Dart;
 import com.pinkladydev.darts.game.Game;
+import com.pinkladydev.darts.game.GamePlayer;
 import com.pinkladydev.darts.game.GameService;
 import com.pinkladydev.darts.user.User;
 import com.pinkladydev.darts.web.helpers.ChanceUser;
+import com.pinkladydev.darts.web.models.DartResponse;
 import com.pinkladydev.darts.web.models.GameRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -22,8 +24,9 @@ import java.util.stream.Collectors;
 import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
 import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
-import static com.pinkladydev.darts.web.Helpers.randomDart;
 import static com.pinkladydev.darts.web.Helpers.randomGame;
+import static com.pinkladydev.darts.web.helpers.ChanceDart.getRandomAcceptableDart;
+import static com.pinkladydev.darts.web.helpers.ChanceGamePlayer.getRandomGamePlayer;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -115,25 +118,25 @@ class GameControllerTest {
 
     @Test
     void addUserGameDart_shouldReturnWithOk_andCallAddDartForTheCorrectUser() throws Exception {
-        final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
-        final String userId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
+        final GamePlayer gamePlayer = getRandomGamePlayer();
+        final Dart dart = getRandomAcceptableDart(gamePlayer.getGameType());
 
-        final Dart dart = randomDart();
+        when(gameService.addDart(gamePlayer.getGameId(), gamePlayer.getUsername(), dart.getThrowNumber(), dart.getPie(),dart.isDouble(), dart.isTriple())).thenReturn(dart);
 
         final String dartString = "{\"throwNumber\":" + dart.getThrowNumber()
                 + ",\"pie\":" + dart.getPie()
                 + ",\"double\":" + dart.isDouble()
                 + ",\"triple\":" + dart.isTriple()
                 + "}";
-        final ArgumentCaptor<Dart> argument = ArgumentCaptor.forClass(Dart.class);
 
-        this.mockMvc.perform(post("/game/" + gameId + "/user/" + userId)
+        this.mockMvc.perform(post("/game/" + gamePlayer.getGameId() + "/user/" + gamePlayer.getUsername())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(dartString))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().json(asJsonString(new DartResponse(dart.getDartResponseType()))));
 
 
-        verify(gameService,times(1)).addDart(gameId,userId,dart.getThrowNumber(), dart.getPie(), dart.isDouble(), dart.isTriple());
+        verify(gameService,times(1)).addDart(gamePlayer.getGameId(),gamePlayer.getUsername(),dart.getThrowNumber(), dart.getPie(), dart.isDouble(), dart.isTriple());
     }
 
     @Test

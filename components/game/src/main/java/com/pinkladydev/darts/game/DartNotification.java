@@ -2,6 +2,13 @@ package com.pinkladydev.darts.game;
 
 import lombok.Getter;
 
+// TODO separate ones for both Cricket and X01 inherit from base
+// move points into this one for for X01
+/*
+*      Notification
+*   META        AddDart        Remove Dart
+*            X01    Cricket
+* */
 @Getter
 public class DartNotification {
 
@@ -14,6 +21,7 @@ public class DartNotification {
     private final boolean isTriple;
     private final String username;
     private final Integer score;
+    private final DartResponseType dartResponseType;
 
     private final String IDENTIFIER = "DART";
 
@@ -26,5 +34,6 @@ public class DartNotification {
         this.isTriple = dart.isTriple();
         this.username = username;
         this.score = score;
+        this.dartResponseType = dart.getDartResponseType();
     }
 }

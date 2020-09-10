@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.pinkladydev.darts.game.exceptions.GamePlayerException.InvalidCricketDartException;
+import static com.pinkladydev.darts.game.exceptions.InvalidDartException.InvalidCricketDartException;
 
 @Builder
 public class GamePlayer {
@@ -48,12 +48,10 @@ public class GamePlayer {
     }
 
     /** SCORE UPDATERS **/
-    public void addDart(Dart dart){
-        if (GameType.X01 == gameType){
-            addX01(dart);
-        } else if (GameType.CRICKET == gameType){
-            addCricket(dart);
-        }
+    public Dart addDart(Dart dart){
+        if (GameType.X01 == gameType) return addX01(dart);
+        if (GameType.CRICKET == gameType) return addCricket(dart);
+        return null;
     }
 
     public void removeDart(){
@@ -64,11 +62,18 @@ public class GamePlayer {
         }
     }
 
-    private void addX01(Dart dart){
-        // TODO do checks for game over && validity
-        darts.add(dart);
-        score.put("score", score.get("score") - dart.getPoints());
+    private Dart addX01(final Dart dart){
+        int provisionalScore = score.get("score") - dart.getPoints();
 
+        DartResponseType dartResponseType = DartResponseType.SUCCESS;
+        if (provisionalScore == 0) dartResponseType = DartResponseType.GAME_OVER;
+        if (provisionalScore < 0)  dartResponseType = DartResponseType.BUST;
+
+        dart.setDartResponseType(dartResponseType);
+        darts.add(dart);
+        score.put("score", provisionalScore);
+
+        return dart;
     }
 
     private void removeX01(){
@@ -76,15 +81,19 @@ public class GamePlayer {
         score.put("score", score.get("score") + removed.getPoints());
     }
 
-    private void addCricket(Dart dart){
-        // TODO do checks for game over && validity
+    private Dart addCricket(final Dart dart){
         if (!List.of(15,16,17,18,19,20,25).contains(dart.getPie())){
             throw InvalidCricketDartException(dart.getPie().toString());
         }
 
+        DartResponseType dartResponseType = DartResponseType.SUCCESS;
+        if (score.values().stream().noneMatch(pieValue -> pieValue < 3)) dartResponseType = DartResponseType.GAME_OVER;
+
+        dart.setDartResponseType(dartResponseType);
         darts.add(dart);
         score.put(dart.getPie().toString(), score.get(dart.getPie().toString()) + 1);
 
+        return dart;
     }
 
     private void removeCricket(){

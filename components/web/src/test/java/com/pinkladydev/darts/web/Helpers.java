@@ -1,6 +1,5 @@
 package com.pinkladydev.darts.web;
 
-import com.pinkladydev.darts.game.Dart;
 import com.pinkladydev.darts.game.Game;
 import com.pinkladydev.darts.game.GamePlayer;
 import com.pinkladydev.darts.game.GameType;
@@ -9,7 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
-import static com.pinkladydev.darts.chance.Chance.getRandomBoolean;
 import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
 import static com.pinkladydev.darts.game.Game.aGameBuilder;
@@ -43,12 +41,5 @@ public class Helpers {
                 .gamePlayers(gamePlayers)
                 .id(gameId)
                 .gameType(GameType.X01);
-    }
-
-    public static Dart randomDart(){
-        final Integer pie = getRandomNumberBetween(1,20);
-        final Boolean isDouble = getRandomBoolean();
-        final Boolean isTriple = getRandomBoolean();
-        return new Dart(getRandomNumberBetween(0,2), pie, isDouble, isTriple);
     }
 }

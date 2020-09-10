@@ -1,7 +1,8 @@
-package com.pinkladydev.darts.game.chance;
+package com.pinkladydev.darts.web.helpers;
 
 import com.pinkladydev.darts.game.Dart;
 import com.pinkladydev.darts.game.DartResponseType;
+import com.pinkladydev.darts.game.GameType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,11 +25,12 @@ public class ChanceDart {
         );
     }
 
-    public static Dart getRandomDart(List<Integer> acceptablePie){
+    public static Dart getRandomAcceptableDart(GameType gameType){
         return new Dart(
                 UUID.randomUUID().toString(),
                 getRandomNumberBetween(0,2),
-                acceptablePie.get(getRandomNumberBetween(0, acceptablePie.size() - 1)),
+                gameType == GameType.CRICKET
+                        ? cricketNumber() : getRandomNumberBetween(1, 20),
                 getRandomBoolean(),
                 getRandomBoolean(),
                 DartResponseType.SUCCESS);
@@ -45,5 +47,9 @@ public class ChanceDart {
         dart.put("isDouble", isTriple ? "false" : getRandomBoolean().toString());
 
         return dart;
+    }
+
+    private static Integer cricketNumber(){
+        return List.of(15,16,17,18,19,20,25).get(getRandomNumberBetween(0, 6));
     }
 }
