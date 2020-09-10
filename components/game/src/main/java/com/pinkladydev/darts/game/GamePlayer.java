@@ -17,6 +17,8 @@ public class GamePlayer {
     private final GameType gameType;
     private final Map<String, Integer> score;
     private final List<Dart> darts;
+    private final List<String> wins;
+    private final List<String> losses;
 
     private static GamePlayer newGamePlayer(String gameId, String username, GameType gameType) {
         return aGamePlayerBuilder()
@@ -25,6 +27,8 @@ public class GamePlayer {
                 .gameType(gameType)
                 .score(new HashMap<>())
                 .darts(new ArrayList<>())
+                .wins(new ArrayList<>())
+                .losses(new ArrayList<>())
                 .build();
     }
 
@@ -104,6 +108,15 @@ public class GamePlayer {
         score.put(removed.getPie().toString(), Math.max(score.get(removed.getPie().toString()) - 1 , 0));
     }
 
+    /** Winners and Losers **/
+    public void winGame(List<String> loserUsernames){
+        this.wins.add(username);
+        this.losses.addAll(loserUsernames);
+    }
+
+    public void loseGame(String loserUsername){
+        this.losses.add(loserUsername);
+    }
     /** Getters **/
 
     public String getUsername() {

@@ -53,6 +53,7 @@ public class GameService {
         }
 
         gamePlayers.forEach(gameDao::save);
+        // TODO find player and save game id to their log
 
         return gameId;
     }
@@ -68,12 +69,27 @@ public class GameService {
         final GamePlayer gamePlayer = gameDao.getGamePlayer(gameId,userId);
         dart = gamePlayer.addDart(dart);
 
-        gameDao.save(gamePlayer);
+        if (dart.getDartResponseType() == DartResponseType.GAME_OVER){
+            final List<GamePlayer> losers = gameDao.getGamePlayers(gameId).stream()
+                    .filter(player -> gamePlayer.getUsername().equals(player.getUsername()))
+                    .collect(toList());
 
-        // We should check if this is actually listening ( aka if webId is empty or not)
-        template.convertAndSend(
-                "/topic/notification/" + this.webId,
-                new DartNotification(dart, gamePlayer.getUsername(), gamePlayer.getScore().get("score")));
+            gamePlayer.winGame(losers.stream().map(GamePlayer::getUsername).collect(toList()));
+            gameDao.save(gamePlayer);
+
+            losers.forEach(player -> {
+                player.loseGame(gamePlayer.getUsername());
+                gameDao.save(player);
+            });
+        } else{
+            gameDao.save(gamePlayer);
+
+            // We should check if this is actually listening ( aka if webId is empty or not)
+            template.convertAndSend(
+                    "/topic/notification/" + this.webId,
+                    new DartNotification(dart, gamePlayer.getUsername(), gamePlayer.getScore().get("score")));
+        }
+
 
         return dart;
     }
