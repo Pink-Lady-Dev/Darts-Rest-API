@@ -20,6 +20,7 @@ import static com.pinkladydev.darts.game.chance.Helpers.randomGame;
 import static com.pinkladydev.darts.game.chance.Helpers.randomX01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -66,6 +67,7 @@ class GameServiceTest {
                 () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
                 getRandomNumberBetween(1,4));
 
+        when(playerService.doesPlayerExist(any(String.class))).thenReturn(true);
         doNothing().when(gameDao).save(any());
 
         gameService.createGame(gamePlayerUsernames, "X01");
@@ -84,37 +86,49 @@ class GameServiceTest {
         assertThat(actual).isEqualTo(game.getGamePlayers());
     }
 
-    // Needs test in game to verify scoring and these should just make sure it calls it
-    // Agnostic of Game
     @Test
-    void addDart_forX01Game_shouldUpdateUserScore_andSendMessageTemplate() {
+    void addDart_shouldAddDartToPlayer_andSavePlayerToDao_andSendMessageTemplate_whenGameIsNotOver() {
         gameService.setWebId(getRandomNumberBetween(1,9999).toString());
 
         final Dart dart = getRandomDart();
-        final Integer startingScore = (getRandomNumberBetween(0,7) * 100) + 301;
         final String socketAddress = "/topic/notification/" + gameService.getWebId();
 
-        final Game game = randomX01(startingScore).build();
+        final Game game = randomGame();
         final GamePlayer gamePlayer = game.getGamePlayers().get(getRandomNumberBetween(0,game.getGamePlayers().size() - 1));
-
-
-        final int dartThrows = getRandomNumberBetween(2,7);
-        final HashMap<String, Integer> expectedScore = new HashMap<>();
 
         when(gameDao.getGamePlayer(game.getId(), gamePlayer.getUsername())).thenReturn(gamePlayer);
         doNothing().when(template).convertAndSend(eq(socketAddress), (Object) any());
 
-        expectedScore.put("score", startingScore);
+        gameService.addDart(game.getId(), gamePlayer.getUsername(), dart.getThrowNumber(), dart.getPie(), dart.isDouble(), dart.isTriple());
 
-        for (int dNumber = 0; dNumber < dartThrows; dNumber++){
-            final Dart tempDart = getRandomDart();
+        verify(gameDao, times(1)).save(eq(gamePlayer));
+        verify(template, times(1)).convertAndSend(eq(socketAddress), any(DartNotification.class));
+    }
 
-            expectedScore.put("score", expectedScore.get("score") - tempDart.getPoints());
-            gameService.addDart(game.getId(), gamePlayer.getUsername(), tempDart.getThrowNumber(), tempDart.getPie(), tempDart.isDouble(),tempDart.isTriple());
+    @Test
+    void addDart_shouldUpdateWinsAndLosses_andSaveAllPlayersToDao_whenGameIsOver() {
+        gameService.setWebId(getRandomNumberBetween(1,9999).toString());
+
+        final Dart dart = getRandomDart();
+        final String socketAddress = "/topic/notification/" + gameService.getWebId();
+
+        Game game = randomGame();
+        while (game.getGamePlayers().size() == 1){
+            game = randomGame();
         }
+        final GamePlayer gamePlayer = game.getGamePlayers().get(getRandomNumberBetween(0,game.getGamePlayers().size() - 1));
+        gamePlayer.getScore().put("score", dart.getPoints());
 
-        assertThat(gamePlayer.getScore()).isEqualTo(expectedScore);
-        verify(template, times(dartThrows)).convertAndSend(eq(socketAddress), any(DartNotification.class));
+
+        when(gameDao.getGamePlayer(game.getId(), gamePlayer.getUsername())).thenReturn(gamePlayer);
+        when(gameDao.getGamePlayers(game.getId())).thenReturn(game.getGamePlayers());
+        doNothing().when(template).convertAndSend(eq(socketAddress), (Object) any());
+
+        gameService.addDart(game.getId(), gamePlayer.getUsername(), dart.getThrowNumber(), dart.getPie(), dart.isDouble(), dart.isTriple());
+
+        assertTrue(gamePlayer.getWins().contains(game.getGamePlayers().get(1).getUsername()));
+        assertTrue(game.getGamePlayers().get(1).getLosses().contains(gamePlayer.getUsername()));
+        verify(gameDao, times(game.getGamePlayers().size())).save(any(GamePlayer.class));
     }
 
     @Test

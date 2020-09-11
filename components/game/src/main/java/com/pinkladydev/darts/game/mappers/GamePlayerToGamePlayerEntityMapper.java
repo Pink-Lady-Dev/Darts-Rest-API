@@ -4,7 +4,6 @@ import com.pinkladydev.darts.game.Dart;
 import com.pinkladydev.darts.game.GamePlayer;
 import com.pinkladydev.darts.game.GamePlayerEntity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +28,8 @@ public class GamePlayerToGamePlayerEntityMapper {
                     .gameType(gamePlayer.getGameType())
                     .score(gamePlayer.getScore())
                     .darts(darts)
-                    .wins(new ArrayList<>())
-                    .losses(new ArrayList<>())
+                    .wins(gamePlayer.getWins())
+                    .losses(gamePlayer.getLosses())
                     .build();
         } catch (Exception ignored){
 

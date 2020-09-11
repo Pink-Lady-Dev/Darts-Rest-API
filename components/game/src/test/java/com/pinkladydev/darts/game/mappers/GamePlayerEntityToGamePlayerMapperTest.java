@@ -5,11 +5,13 @@ import com.pinkladydev.darts.game.GamePlayer;
 import com.pinkladydev.darts.game.GamePlayerEntity;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
+import static com.pinkladydev.darts.chance.Chance.getRandomBoolean;
+import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
+import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
 import static com.pinkladydev.darts.game.GamePlayerEntity.aGamePlayerEntityBuilder;
 import static com.pinkladydev.darts.game.chance.ChanceGamePlayer.getRandomGamePlayerWithDarts;
 import static com.pinkladydev.darts.game.mappers.GamePlayerEntityToGamePlayerMapper.map;
@@ -22,24 +24,29 @@ class GamePlayerEntityToGamePlayerMapperTest {
     @Test
     void map_shouldReturnGamePlayerCorrespondingToGamePlayerEntity() {
         final GamePlayer expectedGamePlayer = getRandomGamePlayerWithDarts();
-        // Use Map.of() in +1.9
-        final List<Map<String, String>> expectedDartMapList = expectedGamePlayer.getDarts().stream().map(dart -> {
-            HashMap<String, String> map = new HashMap<String, String>(){};
-            map.put("id", dart.getId());
-            map.put("throwNumber", dart.getThrowNumber().toString());
-            map.put("pie", dart.getPie().toString());
-            map.put("isDouble", dart.isDouble().toString());
-            map.put("isTriple", dart.isTriple().toString());
-            return map;
-        }).collect(toList());
+        if (getRandomBoolean()){
+            expectedGamePlayer.loseGame(getRandomAlphaNumericString(getRandomNumberBetween(5,20)));
+        }
+        expectedGamePlayer.winGame(generateListOf(
+                () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
+                getRandomNumberBetween(0,3)));
+
+        final List<Map<String, String>> expectedDartMapList = expectedGamePlayer.getDarts().stream().map(dart ->
+                Map.of(
+                    "id", dart.getId(),
+                    "throwNumber", dart.getThrowNumber().toString(),
+                    "pie", dart.getPie().toString(),
+                    "isDouble", dart.isDouble().toString(),
+                    "isTriple", dart.isTriple().toString()))
+                .collect(toList());
 
         final GamePlayerEntity gamePlayerEntity = aGamePlayerEntityBuilder()
                 .gameId(expectedGamePlayer.getGameId())
                 .id(expectedGamePlayer.getGameId())
                 .username(expectedGamePlayer.getUsername())
                 .gameType(expectedGamePlayer.getGameType())
-                .wins(new ArrayList<>())
-                .losses(new ArrayList<>())
+                .wins(expectedGamePlayer.getWins())
+                .losses(expectedGamePlayer.getLosses())
                 .score(expectedGamePlayer.getScore())
                 .darts(expectedDartMapList)
                 .build();

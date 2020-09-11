@@ -7,6 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
+import static com.pinkladydev.darts.chance.Chance.getRandomBoolean;
+import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
+import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
 import static com.pinkladydev.darts.game.GamePlayer.aGamePlayerBuilder;
 import static com.pinkladydev.darts.game.chance.Helpers.getRandomGamePlayerEntityBuilder;
 import static com.pinkladydev.darts.game.mappers.GamePlayerToGamePlayerEntityMapper.map;
@@ -21,6 +25,13 @@ class GamePlayerToGamePlayerEntityMapperTest {
     void map_shouldReturnGamePlayerEntityCorrespondingToGamePlayer() {
         final GamePlayerEntity expectedGamePlayerEntity = getRandomGamePlayerEntityBuilder()
                 .build();
+        if (getRandomBoolean()){
+            expectedGamePlayerEntity.getLosses().add(getRandomAlphaNumericString(getRandomNumberBetween(5,20)));
+        }
+        expectedGamePlayerEntity.getLosses().addAll(generateListOf(
+                () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
+                getRandomNumberBetween(0,3)));
+
         final List<Dart> expectedDartList = expectedGamePlayerEntity.getDarts().stream().map(dartMap -> new Dart(
                 dartMap.get("id"),
                 parseInt(dartMap.get("throwNumber")),
@@ -35,10 +46,12 @@ class GamePlayerToGamePlayerEntityMapperTest {
                 .gameType(expectedGamePlayerEntity.getGameType())
                 .score(expectedGamePlayerEntity.getScore())
                 .darts(expectedDartList)
+                .wins(expectedGamePlayerEntity.getWins())
+                .losses(expectedGamePlayerEntity.getLosses())
                 .build();
 
         final GamePlayerEntity actualGamePlayerEntity = map(tempGamePlayer);
         assertThat(actualGamePlayerEntity)
-                .isEqualToIgnoringGivenFields(expectedGamePlayerEntity,  "id","wins","losses");
+                .isEqualToIgnoringGivenFields(expectedGamePlayerEntity,  "id");
     }
 }

@@ -1,6 +1,7 @@
 package com.pinkladydev.darts.game;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Map;
 import static com.pinkladydev.darts.game.exceptions.InvalidDartException.InvalidCricketDartException;
 
 @Builder
+@Getter
 public class GamePlayer {
 
     private final String username;
@@ -110,33 +112,11 @@ public class GamePlayer {
 
     /** Winners and Losers **/
     public void winGame(List<String> loserUsernames){
-        this.wins.add(username);
-        this.losses.addAll(loserUsernames);
+        this.wins.addAll(loserUsernames);
     }
 
     public void loseGame(String loserUsername){
         this.losses.add(loserUsername);
-    }
-    /** Getters **/
-
-    public String getUsername() {
-        return username;
-    }
-
-    public List<Dart> getDarts() {
-        return darts;
-    }
-
-    public GameType getGameType() {
-        return gameType;
-    }
-
-    public Map<String, Integer> getScore() {
-        return score;
-    }
-
-    public String getGameId() {
-        return gameId;
     }
 
     public static GamePlayerBuilder aGamePlayerBuilder(){

@@ -11,8 +11,10 @@ import java.util.Map;
 import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
 import static com.pinkladydev.darts.chance.Chance.getRandomBoolean;
 import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
+import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
 import static com.pinkladydev.darts.game.chance.ChanceDart.getRandomDart;
 import static com.pinkladydev.darts.game.chance.ChanceGamePlayer.getCricketRandomGamePlayerWithDarts;
+import static com.pinkladydev.darts.game.chance.ChanceGamePlayer.getRandomGamePlayerWithDarts;
 import static com.pinkladydev.darts.game.chance.ChanceGamePlayer.getX01RandomGamePlayerWithDarts;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -242,7 +244,36 @@ class GamePlayerTest {
 
     }
 
-    // TODO test dart game rules  here
+    /** Wins and Losses **/
+    @Test
+    void winGame_shouldAddRemainingOpponentsToWinsList(){
+        final GamePlayer gamePlayer = getRandomGamePlayerWithDarts();
+        gamePlayer.getWins().addAll(
+                generateListOf(
+                    () -> getRandomAlphaNumericString(getRandomNumberBetween(5, 20)),
+                    getRandomNumberBetween(0,2)));
 
-    // ie bust, game over, round over, filled or how full in cricket -> will require response from dart throw
+        final List<String> opponents = generateListOf(
+                () -> getRandomAlphaNumericString(getRandomNumberBetween(5, 20)),
+                getRandomNumberBetween(1,3));
+
+        gamePlayer.winGame(opponents);
+
+        opponents.forEach(opponent -> assertTrue(gamePlayer.getWins().contains(opponent)));
+    }
+
+    @Test
+    void loseGame_shouldAddOpponentsToLossesList(){
+        final GamePlayer gamePlayer = getRandomGamePlayerWithDarts();
+        gamePlayer.getLosses().addAll(
+                generateListOf(
+                        () -> getRandomAlphaNumericString(getRandomNumberBetween(5, 20)),
+                        getRandomNumberBetween(0,2)));
+
+        final String opponent = getRandomAlphaNumericString(getRandomNumberBetween(5, 20));
+
+        gamePlayer.loseGame(opponent);
+
+        assertTrue( gamePlayer.getLosses().contains(opponent));
+    }
 }

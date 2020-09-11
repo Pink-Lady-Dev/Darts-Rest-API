@@ -11,6 +11,6 @@ public class InvalidDartException extends RuntimeException{
     }
 
     static public InvalidDartException InvalidDoubleAndTripleDartException(){
-        return new InvalidDartException("Invalid Dart in Cricket | Dart could not be created because a dart cannot be both double and triple");
+        return new InvalidDartException("Invalid Dart | Dart could not be created because a dart cannot be both double and triple");
     }
 }

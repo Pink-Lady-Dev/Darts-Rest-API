@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+import static com.pinkladydev.darts.game.exceptions.GameException.GamePlayerNotFound;
+import static com.pinkladydev.darts.game.exceptions.GameException.InvalidGameType;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -41,15 +43,14 @@ public class GameService {
         final List<GamePlayer> gamePlayers;
         usernames.forEach((username) -> {
             if (!playerService.doesPlayerExist(username)) {
-                throw new RuntimeException("Player does not exist");}});
+                throw GamePlayerNotFound(username);}});
 
         final String gameId = UUID.randomUUID().toString();
 
         if (gameType.equals("X01")){
             gamePlayers = usernames.stream().map(player -> GamePlayer.StartX01(gameId, player, 301)).collect(toList());
         } else {
-            //throw something about improper game type
-            throw new RuntimeException("e");
+            throw InvalidGameType(gameType);
         }
 
         gamePlayers.forEach(gameDao::save);
@@ -71,7 +72,7 @@ public class GameService {
 
         if (dart.getDartResponseType() == DartResponseType.GAME_OVER){
             final List<GamePlayer> losers = gameDao.getGamePlayers(gameId).stream()
-                    .filter(player -> gamePlayer.getUsername().equals(player.getUsername()))
+                    .filter(player -> !gamePlayer.getUsername().equals(player.getUsername()))
                     .collect(toList());
 
             gamePlayer.winGame(losers.stream().map(GamePlayer::getUsername).collect(toList()));

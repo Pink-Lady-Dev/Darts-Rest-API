@@ -23,6 +23,8 @@ public class GamePlayerEntityToGamePlayerMapper {
                 .gameType(gamePlayerEntity.getGameType())
                 .darts(dartList)
                 .score(gamePlayerEntity.getScore())
+                .wins(gamePlayerEntity.getWins())
+                .losses(gamePlayerEntity.getLosses())
                 .build();
     }
 
