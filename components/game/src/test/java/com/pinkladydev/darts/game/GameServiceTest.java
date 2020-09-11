@@ -1,5 +1,6 @@
 package com.pinkladydev.darts.game;
 
+import com.pinkladydev.darts.game.exceptions.GameException;
 import com.pinkladydev.darts.player.PlayerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import static com.pinkladydev.darts.game.chance.Helpers.randomGame;
 import static com.pinkladydev.darts.game.chance.Helpers.randomX01;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -62,7 +64,7 @@ class GameServiceTest {
     }
 
     @Test
-    void createGame_shouldCreateGameOfX01ForEachUser_whenXO1IsGameType() {
+    void createGame_shouldCreateGameOfX01ForEachUser_whenGameTypeIsX01() {
         final List<String> gamePlayerUsernames = generateListOf(
                 () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
                 getRandomNumberBetween(1,4));
@@ -72,7 +74,55 @@ class GameServiceTest {
 
         gameService.createGame(gamePlayerUsernames, "X01");
 
-        verify(gameDao, times(gamePlayerUsernames.size() )).save(any(GamePlayer.class));
+        ArgumentCaptor<GamePlayer> gamePlayerArgumentCaptor = ArgumentCaptor.forClass(GamePlayer.class);
+        gamePlayerUsernames.forEach(username -> {
+            verify(playerService, times(1 )).addGameLog(eq(username), any());
+        });
+        verify(gameDao, times(gamePlayerUsernames.size() )).save(gamePlayerArgumentCaptor.capture());
+        assertEquals(gamePlayerArgumentCaptor.getValue().getGameType(), GameType.X01);
+    }
+
+    @Test
+    void createGame_shouldCreateGameOfCricketForEachUser_whenGameTypeIsCricket() {
+        final List<String> gamePlayerUsernames = generateListOf(
+                () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
+                getRandomNumberBetween(1,4));
+
+        when(playerService.doesPlayerExist(any(String.class))).thenReturn(true);
+        doNothing().when(gameDao).save(any());
+
+        gameService.createGame(gamePlayerUsernames, "CRICKET");
+
+        ArgumentCaptor<GamePlayer> gamePlayerArgumentCaptor = ArgumentCaptor.forClass(GamePlayer.class);
+        gamePlayerUsernames.forEach(username -> {
+            verify(playerService, times(1 )).addGameLog(eq(username), any());
+        });
+        verify(gameDao, times(gamePlayerUsernames.size() )).save(gamePlayerArgumentCaptor.capture());
+        assertEquals(gamePlayerArgumentCaptor.getValue().getGameType(), GameType.CRICKET);
+    }
+
+    @Test
+    void createGame_shouldThrowPlayerNotFound_whenDoesPlayerExistReturnsFalse() {
+        final List<String> gamePlayerUsernames = generateListOf(
+                () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
+                getRandomNumberBetween(1,4));
+
+        when(playerService.doesPlayerExist(any(String.class))).thenReturn(false);
+        doNothing().when(gameDao).save(any());
+        assertThrows(GameException.class,
+                () -> gameService.createGame(gamePlayerUsernames, "X01"), "");
+    }
+
+    @Test
+    void createGame_shouldThrowInvalidGameType_whenGameTypeIsBad() {
+        final List<String> gamePlayerUsernames = generateListOf(
+                () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
+                getRandomNumberBetween(1,4));
+
+        when(playerService.doesPlayerExist(any(String.class))).thenReturn(true);
+        doNothing().when(gameDao).save(any());
+        assertThrows(GameException.class,
+                () -> gameService.createGame(gamePlayerUsernames, getRandomAlphaNumericString(getRandomNumberBetween(5,20))), "");
     }
 
     @Test

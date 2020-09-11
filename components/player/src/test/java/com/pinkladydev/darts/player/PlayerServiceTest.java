@@ -39,6 +39,18 @@ class PlayerServiceTest {
     }
 
     @Test
+    void addGameLog_shouldGetPlayer_andUpdateTheGameLog() {
+        final Player player = getRandomPlayer();
+        final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(5,20));
+
+        when(playerDao.getPlayer(player.getUsername())).thenReturn(player);
+
+        playerService.addGameLog(player.getUsername(), gameId);
+
+        assertTrue(player.getGameLog().contains(gameId));
+    }
+
+    @Test
     void doesPlayerExist_shouldReturnFalseWhenAUserDoesNotExist() {
         final Player player = getRandomPlayer();
 
@@ -59,4 +71,6 @@ class PlayerServiceTest {
 
         assertTrue(playerService.doesPlayerExist(player.getUsername()));
     }
+
+
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+import static com.pinkladydev.darts.game.HashGenerator.generateGamePlayerHash;
 import static com.pinkladydev.darts.game.exceptions.GameException.GamePlayerNotFound;
 import static com.pinkladydev.darts.game.exceptions.GameException.InvalidGameType;
 import static java.util.stream.Collectors.toList;
@@ -49,13 +50,16 @@ public class GameService {
 
         if (gameType.equals("X01")){
             gamePlayers = usernames.stream().map(player -> GamePlayer.StartX01(gameId, player, 301)).collect(toList());
+        } else if (gameType.equals("CRICKET")){
+            gamePlayers = usernames.stream().map(player -> GamePlayer.StartCricket(gameId, player)).collect(toList());
         } else {
             throw InvalidGameType(gameType);
         }
 
-        gamePlayers.forEach(gameDao::save);
-        // TODO find player and save game id to their log
-
+        gamePlayers.forEach(gamePlayer -> {
+          gameDao.save(gamePlayer);
+          playerService.addGameLog(gamePlayer.getUsername(), generateGamePlayerHash(gamePlayer.getUsername(), gamePlayer.getGameId()));
+        });
         return gameId;
     }
 

@@ -18,6 +18,10 @@ public class PlayerService {
         playerDao.insertPlayer(username);
     }
 
+    public void addGameLog (String username, String gameId) {
+        playerDao.getPlayer(username).getGameLog().add(gameId);
+    }
+
     public boolean doesPlayerExist(String username){
         return playerDao.getPlayer(username) != null;
     }
