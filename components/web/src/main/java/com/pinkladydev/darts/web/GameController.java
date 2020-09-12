@@ -61,8 +61,8 @@ public class GameController {
     /**   PATH: /game/{gameid}/user   **/
     /**   GET users in game  **/
 
-    @GetMapping("/game/{gameId}/user")
-    public List<GamePlayer> getGameUsers(@PathVariable String gameId) {
+    @GetMapping("/game/{gameId}/player")
+    public List<GamePlayer> getGamePlayers(@PathVariable String gameId) {
         return gameService.getGamePlayers(gameId);
     }
 
@@ -72,19 +72,19 @@ public class GameController {
     /**   POST new user dart to game  **/
     /**   DELETE user dart from game  **/
 
-    @GetMapping("/game/{gameId}/user/{userId}")
-    public GamePlayer getUserGameData(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId) {
+    @GetMapping("/game/{gameId}/player/{playerId}")
+    public GamePlayer getPlayerGameData(@PathVariable("gameId") String gameId, @PathVariable("playerId") String userId) {
         return gameService.getGameData(gameId).getGameUser(userId);
     }
 
-    @PostMapping("/game/{gameId}/user/{userId}")
-    public DartResponse addUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId, @RequestBody DartRequest dart){
+    @PostMapping("/game/{gameId}/player/{playerId}")
+    public DartResponse addPlayerGameDart(@PathVariable("gameId") String gameId, @PathVariable("playerId") String userId, @RequestBody DartRequest dart){
         return new DartResponse(
                 gameService.addDart(gameId, userId, dart.getThrowNumber(), dart.getPie(), dart.isDouble(), dart.isTriple()).getDartResponseType());
     }
 
-    @DeleteMapping("/game/{gameId}/user/{userId}")
-    public void removeUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId){
+    @DeleteMapping("/game/{gameId}/player/{playerId}")
+    public void removePlayerGameDart(@PathVariable("gameId") String gameId, @PathVariable("playerId") String userId){
         gameService.removeLastDart(gameId, userId);
     }
 

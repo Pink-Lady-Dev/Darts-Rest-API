@@ -122,14 +122,14 @@ class GamePlayerTest {
     void addDart_toXO1Game_andPlayerScoreGoesPastZero_shouldAddDartToDartList_AndNotChangeScore_AndReturnDartWithTypeBust() {
         final GamePlayer gamePlayer = getX01RandomGamePlayerWithDarts();
         final List<String> expectedDartIdList = gamePlayer.getDarts().stream().map(Dart::getId).collect(toList());
-        final Dart dart = getRandomDart();
+        final Dart dart = new Dart(0, getRandomNumberBetween(1,20), false, true);
         expectedDartIdList.add(dart.getId());
 
-        gamePlayer.getScore().put("score", 0);
+        gamePlayer.getScore().put("score", 2);
 
         final Dart actualDart = gamePlayer.addDart(new Dart(dart));
 
-        assertEquals(gamePlayer.getScore(), Map.of("score",0 ));
+        assertEquals(gamePlayer.getScore(), Map.of("score",1 ));
         assertEquals(gamePlayer.getDarts().stream().map(Dart::getId).collect(toList()), expectedDartIdList);
         assertEquals(actualDart.getDartResponseType(), DartResponseType.BUST);
         assertThat(actualDart).isEqualToIgnoringGivenFields(dart, "dartResponseType");

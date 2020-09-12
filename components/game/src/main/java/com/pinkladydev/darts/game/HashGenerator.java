@@ -13,7 +13,7 @@ public class HashGenerator {
             return toHexString(messageDigest.digest(
                     (gameId + userId).getBytes(StandardCharsets.UTF_8)));
         } catch (NoSuchAlgorithmException noSuchAlgorithmException){
-            throw new RuntimeException("Throw custom exceptions");
+            throw new RuntimeException("Message Digest failed to find instance.");
         }
     }
 

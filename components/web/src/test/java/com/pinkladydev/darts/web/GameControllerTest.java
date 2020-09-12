@@ -93,12 +93,12 @@ class GameControllerTest {
     }
 
     @Test
-    void getGameUsers_shouldReturnWithOk_andReturnGameUsers() throws Exception {
+    void getGamePlayers_shouldReturnWithOk_andReturnGameUsers() throws Exception {
         final Game game = randomGame();
 
         when(gameService.getGamePlayers(game.getId())).thenReturn(game.getGamePlayers());
 
-        this.mockMvc.perform(get("/game/" + game.getId() + "/user/"))
+        this.mockMvc.perform(get("/game/" + game.getId() + "/player/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(asJsonString(game.getGamePlayers())));
 
@@ -106,18 +106,18 @@ class GameControllerTest {
     }
 
     @Test
-    void getUserGameData_shouldReturnWithOk_andReturnUserDateForASpecificUser() throws Exception {
+    void getPlayerGameData_shouldReturnWithOk_andReturnUserDateForASpecificUser() throws Exception {
         final Game game = randomGame();
         final String playerName = game.getGamePlayers().get(0).getUsername();
         when(gameService.getGameData(game.getId())).thenReturn(game);
 
-        this.mockMvc.perform(get("/game/" + game.getId() + "/user/" + playerName))
+        this.mockMvc.perform(get("/game/" + game.getId() + "/player/" + playerName))
                 .andExpect(status().isOk())
                 .andExpect(content().json(asJsonString(game.getGamePlayers().get(0))));
     }
 
     @Test
-    void addUserGameDart_shouldReturnWithOk_andCallAddDartForTheCorrectUser() throws Exception {
+    void addPlayerGameDart_shouldReturnWithOk_andCallAddDartForTheCorrectUser() throws Exception {
         final GamePlayer gamePlayer = getRandomGamePlayer();
         final Dart dart = getRandomAcceptableDart(gamePlayer.getGameType());
 
@@ -129,7 +129,7 @@ class GameControllerTest {
                 + ",\"triple\":" + dart.isTriple()
                 + "}";
 
-        this.mockMvc.perform(post("/game/" + gamePlayer.getGameId() + "/user/" + gamePlayer.getUsername())
+        this.mockMvc.perform(post("/game/" + gamePlayer.getGameId() + "/player/" + gamePlayer.getUsername())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(dartString))
                 .andExpect(status().isOk())
@@ -140,14 +140,14 @@ class GameControllerTest {
     }
 
     @Test
-    void removeUserGameDart() throws Exception {
+    void removePlayerGameDart() throws Exception {
         final String gameId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
         final String userId = getRandomAlphaNumericString(getRandomNumberBetween(15,20));
 
 
         final ArgumentCaptor<Dart> argument = ArgumentCaptor.forClass(Dart.class);
 
-        this.mockMvc.perform(delete("/game/" + gameId + "/user/" + userId)
+        this.mockMvc.perform(delete("/game/" + gameId + "/player/" + userId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

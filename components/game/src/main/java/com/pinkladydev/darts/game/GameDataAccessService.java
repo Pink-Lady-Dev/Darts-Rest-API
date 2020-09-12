@@ -24,7 +24,7 @@ public class GameDataAccessService implements GameDao {
     @Override
     public GamePlayer getGamePlayer(String gameId, String gamePlayerId) {
         return GamePlayerEntityToGamePlayerMapper.map((
-                gameRepository.findGamePlayerEntityById(generateGamePlayerHash(gameId,gamePlayerId))));
+                gameRepository.findGamePlayerEntityById(generateGamePlayerHash(gamePlayerId, gameId))));
     }
 
     @Override

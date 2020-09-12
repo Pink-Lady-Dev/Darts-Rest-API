@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
+import static com.pinkladydev.darts.game.HashGenerator.generateGamePlayerHash;
 import static com.pinkladydev.darts.game.chance.ChanceGamePlayer.getRandomGamePlayer;
 import static com.pinkladydev.darts.game.chance.Helpers.randomGame;
 import static java.util.stream.Collectors.toList;
@@ -38,7 +39,7 @@ class GameDataAccessServiceTest {
     void getGamePlayer_shouldReturnGamePlayerForGivenGameIdAndUsername() {
         final GamePlayer gamePlayer = getRandomGamePlayer();
 
-        when(gameRepository.findGamePlayerEntityById(anyString())).thenReturn(GamePlayerToGamePlayerEntityMapper.map(gamePlayer));
+        when(gameRepository.findGamePlayerEntityById(generateGamePlayerHash(gamePlayer.getUsername(), gamePlayer.getGameId()))).thenReturn(GamePlayerToGamePlayerEntityMapper.map(gamePlayer));
 
         final GamePlayer actualGamePlayer = gameDataAccessService.getGamePlayer(gamePlayer.getGameId(),gamePlayer.getUsername());
 

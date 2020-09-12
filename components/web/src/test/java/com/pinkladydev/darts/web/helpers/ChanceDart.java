@@ -14,23 +14,25 @@ import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 public class ChanceDart {
 
     public static Dart getRandomDart(){
+        boolean isDouble = getRandomBoolean();
         return new Dart(
                 UUID.randomUUID().toString(),
                 getRandomNumberBetween(0,2),
                 getRandomNumberBetween(1,20),
-                getRandomBoolean(),
-                getRandomBoolean()
+                isDouble,
+                !isDouble && getRandomBoolean()
         );
     }
 
     public static Dart getRandomAcceptableDart(GameType gameType){
+        boolean isDouble = getRandomBoolean();
         return new Dart(
                 UUID.randomUUID().toString(),
                 getRandomNumberBetween(0,2),
                 gameType == GameType.CRICKET
                         ? cricketNumber() : getRandomNumberBetween(1, 20),
-                getRandomBoolean(),
-                getRandomBoolean());
+                isDouble,
+                !isDouble && getRandomBoolean());
     }
 
     public static Map<String, String> getRandomDartMap(){

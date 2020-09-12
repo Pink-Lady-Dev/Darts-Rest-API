@@ -22,7 +22,7 @@ public class GamePlayerToGamePlayerEntityMapper {
                     .map(GamePlayerToGamePlayerEntityMapper::mapDartToDictionary).collect(toList());
 
             return aGamePlayerEntityBuilder()
-                    .id(generateGamePlayerHash(gamePlayer.getGameId(), gamePlayer.getGameId()))
+                    .id(generateGamePlayerHash(gamePlayer.getUsername(), gamePlayer.getGameId()))
                     .gameId(gamePlayer.getGameId())
                     .username(gamePlayer.getUsername())
                     .gameType(gamePlayer.getGameType())

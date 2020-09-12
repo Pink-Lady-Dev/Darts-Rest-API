@@ -75,7 +75,7 @@ public class GamePlayer {
         if (provisionalScore == 0) dartResponseType = DartResponseType.GAME_OVER;
         if (provisionalScore < 0) {
             dartResponseType = DartResponseType.BUST;
-            provisionalScore = 0;
+            provisionalScore = score.get("score");
         };
 
         dart.setDartResponseType(dartResponseType);
