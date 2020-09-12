@@ -6,16 +6,20 @@ plugins {
 
 group 'com.pinkladydev'
 version '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '1.12'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation project (':components:user')
+    implementation project (':components:player')
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:2.3.3.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.3.3.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-websocket:2.3.3.RELEASE'
+    implementation 'org.projectlombok:lombok:1.18.10'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     testImplementation project (':components:chance')
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.3.3.RELEASE'

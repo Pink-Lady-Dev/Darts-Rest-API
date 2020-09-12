@@ -7,15 +7,16 @@ plugins {
 
 group 'com.pinkladydev'
 version '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '1.12'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation project (':components:game')
     implementation project (':components:user')
+    implementation project (':components:game')
+    implementation project (':components:player')
     implementation project (':components:authentication')
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.3.3.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-websocket:2.3.3.RELEASE'

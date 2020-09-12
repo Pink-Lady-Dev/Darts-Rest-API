@@ -8,9 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Builder
 public class User implements UserDetails {
@@ -19,10 +17,6 @@ public class User implements UserDetails {
     private final String username;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
-
-    private HashMap<String, Integer> score;
-    private List<Dart> darts;
-    private GameType gameType;
 
     // TODO add player dart stats
     // we want to store wins and losses in each type of game
@@ -61,38 +55,38 @@ public class User implements UserDetails {
 //        StartX01(301);
 //    }
 
-    /**   Game Initializers   **/
-    public void StartX01(int score){
-        this.score = new HashMap<>();
-        this.score.put("score", score);
+//    /**   Game Initializers   **/
+//    public void StartX01(int score){
+//        this.score = new HashMap<>();
+//        this.score.put("score", score);
+//
+//        gameType = GameType.X01;
+//    }
 
-        gameType = GameType.X01;
-    }
-
-    /** SCORE UPDATERS **/
-
-    public void addX01(Dart dart){
-        darts.add(dart);
-        int points = dart.getPoints();
-        score.put("score", score.get("score") - points);
-
-        // TODO do checks for game over
-    }
-
-    public Dart removeX01(Dart dart){
-        int points = dart.getPoints();
-        score.put("score", score.get("score") + points);
-        darts.remove(dart);
-        return dart;
-    }
+//    /** SCORE UPDATERS **/
+//
+//    public void addX01(Dart dart){
+//        darts.add(dart);
+//        int points = dart.getPoints();
+//        score.put("score", score.get("score") - points);
+//
+//        // TODO do checks for game over
+//    }
+//
+//    public Dart removeX01(Dart dart){
+//        int points = dart.getPoints();
+//        score.put("score", score.get("score") + points);
+//        darts.remove(dart);
+//        return dart;
+//    }
 
 
-    /**  SETTERS ( AND MANIPULATORS )  **/
-    public Dart removeDart(){
-        Dart temp = darts.get(darts.size() - 1);
-        darts.remove(darts.size() - 1);
-        return temp;
-    }
+//    /**  SETTERS ( AND MANIPULATORS )  **/
+//    public Dart removeDart(){
+//        Dart temp = darts.get(darts.size() - 1);
+//        darts.remove(darts.size() - 1);
+//        return temp;
+//    }
 
     /**  GETTERS  **/
 
@@ -138,18 +132,6 @@ public class User implements UserDetails {
         return true;
     }
 
-    public Map<String, Integer> getScore() {
-        return score;
-    }
-
-    public GameType getGameType() {
-        return gameType;
-    }
-
-    public List<Dart> getDarts() {
-        return darts;
-    }
-
     public static UserBuilder aUserBuilder(){
 
         List<GrantedAuthority> tempAuthorities = new ArrayList<>();
@@ -158,9 +140,6 @@ public class User implements UserDetails {
 
 
         return User.builder()
-                .authorities(tempAuthorities)
-                .darts(new ArrayList<>())
-                .score(new HashMap<>())
-                .gameType(GameType.X01);
+                .authorities(tempAuthorities);
     }
 }

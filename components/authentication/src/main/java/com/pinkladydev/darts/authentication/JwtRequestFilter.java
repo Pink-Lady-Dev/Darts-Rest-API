@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.pinkladydev.darts.authentication.exceptions.UserException.invalidKeyWhenAuthenticatingUser;
+import static com.pinkladydev.darts.authentication.exceptions.UserException.invalidKeyWhenCreatingUser;
+
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -51,14 +54,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 && httpServletRequest.getMethod().equals("POST")
                 && !httpServletRequest.getHeader("Secret").equals(System.getenv("SECRET_KEY"))) {
 
-            throw InvalidKeyException.invalidKeyWhenCreatingUser();
+            throw invalidKeyWhenCreatingUser();
         }
         // TODO - set actual private key
         if ( httpServletRequest.getRequestURI().equals("/authenticate")
                 && httpServletRequest.getMethod().equals("POST")
                 && !httpServletRequest.getHeader("Secret").equals(System.getenv("SECRET_KEY"))) {
 
-            throw InvalidKeyException.invalidKeyWhenAuthenticatingUser();
+            throw invalidKeyWhenAuthenticatingUser();
         }
 
         // TODO when editing users -- we need to use something like this to make sure that users are only

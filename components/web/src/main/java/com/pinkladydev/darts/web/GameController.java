@@ -1,11 +1,13 @@
 package com.pinkladydev.darts.web;
 
 import com.pinkladydev.darts.game.Game;
+import com.pinkladydev.darts.game.GamePlayer;
 import com.pinkladydev.darts.game.GameService;
+import com.pinkladydev.darts.web.models.DartRequest;
+import com.pinkladydev.darts.web.models.DartResponse;
 import com.pinkladydev.darts.web.models.GameNotificationRequest;
 import com.pinkladydev.darts.web.models.GameRequest;
-import com.pinkladydev.darts.user.Dart;
-import com.pinkladydev.darts.user.User;
+import com.pinkladydev.darts.web.models.GameResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -39,8 +41,8 @@ public class GameController {
 
     @PostMapping("/game")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createGame(@RequestBody GameRequest gameRequest) {
-        gameService.createGame(gameRequest.getId(), gameRequest.getUsers(), gameRequest.getGameType());
+    public GameResponse createGame(@RequestBody GameRequest gameRequest) {
+         return new GameResponse(gameService.createGame(gameRequest.getUsers(), gameRequest.getGameType()));
     }
 
     /**   PATH: /game/{gameid}   **/
@@ -59,9 +61,9 @@ public class GameController {
     /**   PATH: /game/{gameid}/user   **/
     /**   GET users in game  **/
 
-    @GetMapping("/game/{gameId}/user")
-    public List<User> getGameUsers(@PathVariable String gameId) {
-        return gameService.getUsersInGame(gameId);
+    @GetMapping("/game/{gameId}/player")
+    public List<GamePlayer> getGamePlayers(@PathVariable String gameId) {
+        return gameService.getGamePlayers(gameId);
     }
 
 
@@ -70,19 +72,20 @@ public class GameController {
     /**   POST new user dart to game  **/
     /**   DELETE user dart from game  **/
 
-    @GetMapping("/game/{gameId}/user/{userId}")
-    public User getUserGameData(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId) {
+    @GetMapping("/game/{gameId}/player/{playerId}")
+    public GamePlayer getPlayerGameData(@PathVariable("gameId") String gameId, @PathVariable("playerId") String userId) {
         return gameService.getGameData(gameId).getGameUser(userId);
     }
 
-    @PostMapping("/game/{gameId}/user/{userId}")
-    public void addUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId, @RequestBody Dart dart){
-        gameService.addDart(gameId, userId, dart);
+    @PostMapping("/game/{gameId}/player/{playerId}")
+    public DartResponse addPlayerGameDart(@PathVariable("gameId") String gameId, @PathVariable("playerId") String userId, @RequestBody DartRequest dart){
+        return new DartResponse(
+                gameService.addDart(gameId, userId, dart.getThrowNumber(), dart.getPie(), dart.isDouble(), dart.isTriple()).getDartResponseType());
     }
 
-    @DeleteMapping("/game/{gameId}/user/{userId}")
-    public Dart removeUserGameDart(@PathVariable("gameId") String gameId, @PathVariable("userId") String userId, @RequestBody Dart dart){
-        return gameService.removeDart(gameId, userId, dart);
+    @DeleteMapping("/game/{gameId}/player/{playerId}")
+    public void removePlayerGameDart(@PathVariable("gameId") String gameId, @PathVariable("playerId") String userId){
+        gameService.removeLastDart(gameId, userId);
     }
 
 }

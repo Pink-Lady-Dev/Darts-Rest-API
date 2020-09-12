@@ -1,8 +1,9 @@
 package com.pinkladydev.darts.web;
 
-import com.pinkladydev.darts.web.models.UserRequest;
+import com.pinkladydev.darts.player.PlayerService;
 import com.pinkladydev.darts.user.User;
 import com.pinkladydev.darts.user.UserService;
+import com.pinkladydev.darts.web.models.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +23,12 @@ public class UserController {
 
     private final UserService userService;
 
+    private final PlayerService playerService;
+
     @Autowired
-    public UserController(UserService userService){
+    public UserController(final UserService userService, final PlayerService playerService){
         this.userService = userService;
+        this.playerService = playerService;
     }
 
     /********** User ************/
@@ -38,6 +42,7 @@ public class UserController {
     public void insertUser (@RequestBody UserRequest userRequest)
     {
         userService.insertUser(userRequest.getUsername(), userRequest.getPassword());
+        playerService.newPlayer(userRequest.getUsername());
     }
 
     /**   PATH: /user/all   **/

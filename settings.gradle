@@ -8,4 +8,5 @@ include ':components:web'
 include ':components:chance'
 include ':components:user'
 include ':components:authentication'
+include ':components:player'
 

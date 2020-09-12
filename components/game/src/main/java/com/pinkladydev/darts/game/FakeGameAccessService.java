@@ -11,22 +11,26 @@ import java.util.List;
 @Repository("FakeGameDao")
 public class FakeGameAccessService implements GameDao {
 
-    private List<Game> games = new ArrayList<Game>();
+    private List<GamePlayer> gamePlayers = new ArrayList<>();
 
     @Override
-    public Game getGameData(String gameId) {
-        Game temp = games
-                .stream()
-                .filter(
-                        game -> (game.getId().equals(gameId)))
-                .findFirst().orElse(null);
-
-        return temp;
+    public GamePlayer getGamePlayer(String gameId, String gamePlayerId) {
+        return null;
     }
 
     @Override
-    public void createGame(Game game) {
-        games.add(game);
+    public List<GamePlayer> getGamePlayers(String gameId) {
+        return null;
+    }
+
+    @Override
+    public Game getTotalGame(String gameId) {
+        return null;
+    }
+
+    @Override
+    public void save(GamePlayer gamePlayer) {
+        gamePlayers.add(gamePlayer);
     }
 
 }

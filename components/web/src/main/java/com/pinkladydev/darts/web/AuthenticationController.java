@@ -1,8 +1,7 @@
 package com.pinkladydev.darts.web;
 
-import com.pinkladydev.darts.user.UserService;
-import com.pinkladydev.darts.game.GameService;
 import com.pinkladydev.darts.authentication.JwtUtil;
+import com.pinkladydev.darts.user.UserService;
 import com.pinkladydev.darts.web.models.AuthenticationRequest;
 import com.pinkladydev.darts.web.models.AuthenticationResponce;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import static com.pinkladydev.darts.authentication.exceptions.UserException.InvalidUserCredentials;
 
 @RestController
 @RequestMapping("")
@@ -36,16 +37,13 @@ public class AuthenticationController {
     }
     
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
-            // TODO - lol Just exception
-            throw new Exception("Incorrect Username or Password");
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw InvalidUserCredentials(authenticationRequest.getUsername());
         }
 
 

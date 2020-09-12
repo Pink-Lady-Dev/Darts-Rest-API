@@ -4,10 +4,12 @@ plugins {
     id 'java'
 }
 
+apply plugin: 'idea'
+
 group = 'com.pinkladydev'
 version = '0.0.1-SNAPSHOT'
 description = 'Darts-Rest-API'
-sourceCompatibility = '1.8'
+sourceCompatibility = '1.11'
 
 repositories {
     mavenCentral()
@@ -34,6 +36,7 @@ dependencies {
     implementation project (':components:game')
     implementation project (':components:authentication')
     implementation project (':components:web')
+    implementation project (':components:player')
 
     // TODO - Can probably remove most of these
     // TODO - Inspect dependencies and versions for each module
