@@ -1,4 +1,4 @@
-package com.pinkladydev.darts.web;
+package com.pinkladydev.darts.web.helpers;
 
 import com.pinkladydev.darts.game.Game;
 import com.pinkladydev.darts.game.GamePlayer;
@@ -8,20 +8,16 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
+import static com.pinkladydev.darts.chance.Chance.getRandomBoolean;
 import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
 import static com.pinkladydev.darts.game.Game.aGameBuilder;
 import static java.util.stream.Collectors.toList;
 
-public class Helpers {
+public class ChanceGame {
 
     public static Game randomGame(){
-        final List<String> usernames = generateListOf(
-                () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
-                getRandomNumberBetween(1,4));
-
-        // Make this randomize gameType
-        return randomX01().build();
+        return  (getRandomBoolean() ? randomCricket() : randomX01()).build();
     }
 
 
@@ -41,5 +37,17 @@ public class Helpers {
                 .gamePlayers(gamePlayers)
                 .id(gameId)
                 .gameType(GameType.X01);
+    }
+
+    public static Game.GameBuilder randomCricket(){
+        final String gameId = UUID.randomUUID().toString();
+        final List<GamePlayer> gamePlayers = generateListOf(
+                () -> getRandomAlphaNumericString(getRandomNumberBetween(5,20)),
+                getRandomNumberBetween(1,4)).stream().map(player -> GamePlayer.StartCricket(gameId, player)).collect(toList());
+
+        return aGameBuilder()
+                .gamePlayers(gamePlayers)
+                .id(gameId)
+                .gameType(GameType.CRICKET);
     }
 }

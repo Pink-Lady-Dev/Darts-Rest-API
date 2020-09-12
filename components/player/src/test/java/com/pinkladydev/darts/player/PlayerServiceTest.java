@@ -8,7 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
 import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
-import static com.pinkladydev.darts.player.Helpers.getRandomPlayer;
+import static com.pinkladydev.darts.player.helpers.ChancePlayer.getRandomPlayer;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;

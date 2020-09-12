@@ -4,7 +4,7 @@ import com.pinkladydev.darts.player.Player;
 import com.pinkladydev.darts.player.PlayerEntity;
 import org.junit.jupiter.api.Test;
 
-import static com.pinkladydev.darts.player.Helpers.getRandomPlayerEntity;
+import static com.pinkladydev.darts.player.helpers.ChancePlayerEntity.getRandomPlayerEntity;
 import static com.pinkladydev.darts.player.Player.aPlayerBuilder;
 import static com.pinkladydev.darts.player.mappers.PlayerToPlayerEntityMapper.map;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

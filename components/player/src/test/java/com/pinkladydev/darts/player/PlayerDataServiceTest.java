@@ -1,6 +1,7 @@
 package com.pinkladydev.darts.player;
 
 import com.pinkladydev.darts.chance.Chance;
+import com.pinkladydev.darts.player.helpers.ChancePlayer;
 import com.pinkladydev.darts.player.mappers.PlayerToPlayerEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,8 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
 
 import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
-import static com.pinkladydev.darts.player.Helpers.getRandomNewPlayerEntity;
-import static com.pinkladydev.darts.player.Helpers.getRandomPlayer;
+import static com.pinkladydev.darts.player.helpers.ChancePlayer.getRandomPlayer;
+import static com.pinkladydev.darts.player.helpers.ChancePlayerEntity.getRandomNewPlayerEntity;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -63,7 +64,7 @@ class PlayerDataServiceTest {
 
     @Test
     void getAllPlayers() {
-        final List<Player> players = generateListOf(Helpers::getRandomPlayer, Chance.getRandomNumberBetween(5, 20));
+        final List<Player> players = generateListOf(ChancePlayer::getRandomPlayer, Chance.getRandomNumberBetween(5, 20));
         final List<PlayerEntity> playerEntities = players.stream().map(PlayerToPlayerEntityMapper::map).collect(toList());
 
         when(playerRepository.findAll()).thenReturn(playerEntities);

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import static com.pinkladydev.darts.chance.Chance.getRandomAlphaNumericString;
 import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
-import static com.pinkladydev.darts.web.Helpers.randomGame;
+import static com.pinkladydev.darts.web.helpers.ChanceGame.randomGame;
 import static com.pinkladydev.darts.web.helpers.ChanceDart.getRandomAcceptableDart;
 import static com.pinkladydev.darts.web.helpers.ChanceGamePlayer.getRandomGamePlayer;
 import static org.mockito.Mockito.eq;

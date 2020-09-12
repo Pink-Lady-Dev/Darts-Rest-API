@@ -12,7 +12,7 @@ import static com.pinkladydev.darts.chance.Chance.getRandomBoolean;
 import static com.pinkladydev.darts.chance.Chance.getRandomNumberBetween;
 import static com.pinkladydev.darts.chance.GenerateMany.generateListOf;
 import static com.pinkladydev.darts.game.GamePlayer.aGamePlayerBuilder;
-import static com.pinkladydev.darts.game.chance.Helpers.getRandomGamePlayerEntityBuilder;
+import static com.pinkladydev.darts.game.chance.ChanceGamePlayerEntity.getRandomGamePlayerEntityBuilder;
 import static com.pinkladydev.darts.game.mappers.GamePlayerToGamePlayerEntityMapper.map;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;

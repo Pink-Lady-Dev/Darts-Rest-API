@@ -1,6 +1,5 @@
 package com.pinkladydev.darts.game;
 
-import com.pinkladydev.darts.game.chance.Helpers;
 import com.pinkladydev.darts.game.mappers.GamePlayerToGamePlayerEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,8 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
 
 import static com.pinkladydev.darts.game.HashGenerator.generateGamePlayerHash;
+import static com.pinkladydev.darts.game.chance.ChanceGame.randomGame;
 import static com.pinkladydev.darts.game.chance.ChanceGamePlayer.getRandomGamePlayer;
-import static com.pinkladydev.darts.game.chance.Helpers.randomGame;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -61,7 +60,7 @@ class GameDataAccessServiceTest {
 
     @Test
     void getTotalGame_shouldReturnTotalGameForGivenGameId() {
-        final Game expectedGame = Helpers.randomGame();
+        final Game expectedGame = randomGame();
         final List<String> expectedUsernames = expectedGame.getGamePlayers().stream().map(GamePlayer::getUsername).collect(toList());
 
         when(gameRepository.findAllByGameId(anyString()))

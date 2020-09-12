@@ -5,8 +5,8 @@ import com.pinkladydev.darts.player.PlayerEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static com.pinkladydev.darts.player.Helpers.getRandomPlayer;
 import static com.pinkladydev.darts.player.PlayerEntity.aPlayerEntityBuilder;
+import static com.pinkladydev.darts.player.helpers.ChancePlayer.getRandomPlayer;
 import static com.pinkladydev.darts.player.mappers.PlayerEntityToPlayerMapper.map;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
