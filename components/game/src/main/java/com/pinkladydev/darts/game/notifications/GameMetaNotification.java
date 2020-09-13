@@ -1,20 +1,23 @@
-package com.pinkladydev.darts.game;
+package com.pinkladydev.darts.game.notifications;
 
+import com.pinkladydev.darts.game.GamePlayer;
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
-public class GameMetaNotification {
+public class GameMetaNotification extends Notification{
 
     private final List<GamePlayer> players;
     private final String gameType;
 
-    // TODO - Add current game data for reconnect
-    private final String IDENTIFIER = "GAME_META";
-
     public GameMetaNotification(List<GamePlayer> players, String gameType) {
         this.players = players;
         this.gameType = gameType;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return "GAME_META";
     }
 }
