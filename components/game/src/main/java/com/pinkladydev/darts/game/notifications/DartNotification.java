@@ -1,5 +1,7 @@
-package com.pinkladydev.darts.game;
+package com.pinkladydev.darts.game.notifications;
 
+import com.pinkladydev.darts.game.Dart;
+import com.pinkladydev.darts.game.DartResponseType;
 import lombok.Getter;
 
 // TODO separate ones for both Cricket and X01 inherit from base
@@ -10,7 +12,7 @@ import lombok.Getter;
 *            X01    Cricket
 * */
 @Getter
-public class DartNotification {
+public class DartNotification extends Notification{
 
     // Throw information
     private final String  id; // Identifier for throw
@@ -23,8 +25,6 @@ public class DartNotification {
     private final Integer score;
     private final DartResponseType dartResponseType;
 
-    private final String IDENTIFIER = "DART";
-
     public DartNotification(Dart dart, String username, Integer score) {
         this.id = dart.getId();
         this.throwNumber = dart.getThrowNumber();
@@ -35,5 +35,10 @@ public class DartNotification {
         this.username = username;
         this.score = score;
         this.dartResponseType = dart.getDartResponseType();
+    }
+
+    @Override
+    public String getIdentifier() {
+        return "DART";
     }
 }
